@@ -112,3 +112,126 @@ GIF gif = CREATE GIF: frames, "~/Downloads"
 * Have the features we want to include in our language
 * Responsibilities have been scheduled and divided
 
+# Milestone 3 (WIP)
+Parser DSL
+```
+program          : (statement (NL statement)*)? EOF ;
+
+statement        : INDENT? (function | control | with_statement) ;
+
+control          : control_type COLON ;
+control_type     : define_statement | loop_statement | if_statement ;
+
+define_statement : DEFINE VARIABLE define_params ;
+define_params    : BRACKET_START VARIABLE (BRACKET_SEP VARIABLE)* BRACKET_END ;
+
+if_statement     : IF BRACKET_START comparison BRACKET_END ;
+comparison       : num_or_var COMPARE num_or_var ;
+loop_statement   : LOOP VARIABLE IN (range | VARIABLE) ;
+range            : BRACKET_START num_or_var BRACKET_SEP num_or_var BRACKET_END ;
+
+function         : FUNCTION_NAME value? (ON value)? (AS value)? ;
+with_statement   : WITH VARIABLE COLON value ;
+
+value            : num_or_var | TEXT ;
+num_or_var       : (NUMBER | VARIABLE) (OPERATOR (NUMBER | VARIABLE))? ;
+```
+Lexer DSL
+```
+options { caseInsensitive=true; }
+
+INDENT        : [ \t]+ ;
+COMMENT       : '//' ~[\r\n] [\r\n]+ ;
+DEFINE        : 'DEFINE' -> mode(OPTIONS_MODE);
+IF            : 'IF' -> mode(OPTIONS_MODE);
+LOOP          : 'LOOP' -> mode(OPTIONS_MODE);
+WITH          : 'WITH' -> mode(OPTIONS_MODE);
+FUNCTION_NAME : [a-z]+[a-z0-9]* -> mode(OPTIONS_MODE);
+
+mode OPTIONS_MODE;
+AS            : 'AS' ;
+IN            : 'IN' ;
+ON            : 'ON' ;
+COLON         : ':' ;
+BRACKET_START : '(' ;
+BRACKET_SEP   : ',' ;
+BRACKET_END   : ')' ;
+OPERATOR      : '+' | '-' | '*' | '/' ;
+COMPARE       : '>=' | '<=' | '>' | '<' | '=' ;
+VARIABLE      : [a-z]+[a-z0-9]* ;
+NUMBER        : '-'?[0-9]+ ;
+TEXT          : '"' ~[\r\n"]* '"' ;
+SP            : [ \t] -> channel(HIDDEN);
+NL            : [\r\n]+ -> mode(DEFAULT_MODE);
+```
+Reference
+- Variables:
+  - Numbers:
+    - Integers
+    - Anywhere with a number value can have an equation
+      - Equations are ```[number] [+|-|*|/] [number]```
+        - Division rounds down
+  - Images:
+    - Stores pixels, width, and height
+      - Fields are accessed by (?)
+    - (Potentially?) Store images overlayed on it
+  - List:
+    - Stores a list of images
+  - (Potentially?) Colours:
+    - Stores r, g, b values
+  - (Potentially?) Vectors:
+    - Stores x, y, z values
+- All variables/functions are case insensitive
+- Variables are global scoped and can be accessed anywhere(?)
+  - Parameters are function scoped
+- Indents indicate function parameters and functions inside of if/loop/defines
+```
+// Load - Create an image variable from a image file
+LOAD AS [variable name]
+  WITH location: [file path]     // file path of image to be loaded
+
+// Save - Create and save a gif from list of images
+SAVE
+  WITH frames: [list of images]  // list of images in sequence
+  WITH duration: 30              // total time of gif in seconds
+  WITH location: [file path]     // file path of the gif to be saved
+
+// Custom functions
+// - Parameters get deleted at the end of the function
+DEFINE [function name] ([parameter 1], [parameter 2], [...]):
+  [...]
+
+// Calling custom functions
+[function name]
+  WITH [parameter 1]: [value]
+  WITH [parameter 2]: [value]
+  [...]
+
+// Conditional
+IF ([value] [>=, <=, >, <, =] [value]):
+  [...]
+
+// Loop - Loop over the inner statements from "from" to "to"
+LOOP [variable name] IN ([from], [to]):
+  [...]
+
+// Loop - Loop over list
+LOOP [variable name] IN [list of images]:
+
+// Set - Assign value to global variable
+SET [value] AS [variable name]
+
+// Overlay - Create an image with an overlay of an image on top of another image
+OVERLAY [above image] ON [below image] AS [variable name]
+  WITH x: [x position]           // x position of the top-left corner of the above image
+  WITH y: [y: position]          // y position of the top-left corner of the above image
+  WITH rotation: [degrees]       // [Default=0] degrees in rotation of image
+
+// List - Create an empty list and assign to a variable
+LIST AS [variable name]
+
+// Add - Add a copy of the image to list
+ADD [image]
+  WITH list: [list]
+...
+```
