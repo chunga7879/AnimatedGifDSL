@@ -9,15 +9,16 @@ DEFINE RANDOMCOLOUR (image):
   RANDOM AS b
     WITH min: 0
     WITH max: 200
-  COLOR image AS dvd
+  COLOR image AS image
     WITH r: r
     WITH g: g
     WITH b: b
+  RETURN image
 
 LOAD AS dvd
   WITH location: "~/dvd.png"
 
-RESIZE dvd AS image
+RESIZE dvd AS dvd
   WITH width: 40
   WITH height: 20
 
@@ -43,16 +44,24 @@ LOOP i IN (1, 360):
   IF (positionX < 0):
     SET 0 AS x
     SET xDir * -1 AS xDir
+    RANDOMCOLOUR AS dvd
+      WITH image: dvd
   IF (positionX > 1960):
     SET 1960 AS x
     SET xDir * -1 AS xDir
+    RANDOMCOLOUR AS dvd
+      WITH image: dvd
   IF (positionY < 0):
     SET 0 AS y
     SET yDir * -1 AS yDir
+    RANDOMCOLOUR AS dvd
+      WITH image: dvd
   IF (positionY > 1960):
     SET 1960 AS y
     SET yDir * -1 AS yDir
-  OVERLAY image ON background AS frame
+    RANDOMCOLOUR AS dvd
+      WITH image: dvd
+  OVERLAY dvd ON background AS frame
     WITH x: x
     WITH y: y
     WITH angle: i
