@@ -1,3 +1,4 @@
+// Set image to a random colour
 DEFINE RANDOMCOLOUR (image):
   RANDOM AS r
     WITH min: 0

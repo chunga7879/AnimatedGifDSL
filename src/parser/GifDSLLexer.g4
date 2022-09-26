@@ -3,7 +3,7 @@ lexer grammar GifDSLLexer;
 options { caseInsensitive=true; }
 
 INDENT        : [ \t]+ ;
-COMMENT       : '//' ~[\r\n] [\r\n]+ ;
+COMMENT       : '//' ~[\r\n]* -> mode(OPTIONS_MODE);
 DEFINE        : 'DEFINE' -> mode(OPTIONS_MODE);
 IF            : 'IF' -> mode(OPTIONS_MODE);
 LOOP          : 'LOOP' -> mode(OPTIONS_MODE);

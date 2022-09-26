@@ -117,7 +117,7 @@ Parser DSL
 ```
 program          : (statement (NL statement)*)? EOF ;
 
-statement        : INDENT? (function | control | with_statement) ;
+statement        : INDENT? (function | control | with_statement | COMMENT) ;
 
 control          : control_type COLON ;
 control_type     : define_statement | loop_statement | if_statement ;
@@ -141,7 +141,7 @@ Lexer DSL
 options { caseInsensitive=true; }
 
 INDENT        : [ \t]+ ;
-COMMENT       : '//' ~[\r\n] [\r\n]+ ;
+COMMENT       : '//' ~[\r\n]* -> mode(OPTIONS_MODE);
 DEFINE        : 'DEFINE' -> mode(OPTIONS_MODE);
 IF            : 'IF' -> mode(OPTIONS_MODE);
 LOOP          : 'LOOP' -> mode(OPTIONS_MODE);

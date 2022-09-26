@@ -3,7 +3,7 @@ options { tokenVocab=GifDSLLexer; }
 
 program          : (statement (NL statement)*)? EOF ;
 
-statement        : INDENT? (function | control | with_statement) ;
+statement        : INDENT? (function | control | with_statement | COMMENT) ;
 
 control          : control_type COLON ;
 control_type     : define_statement | loop_statement | if_statement ;
