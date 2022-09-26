@@ -1,14 +1,14 @@
 // Set image to a random colour
-DEFINE RANDOMCOLOUR (image):
+DEFINE RANDOMCOLOUR image WITH (min, max):
   RANDOM AS r
-    WITH min: 0
-    WITH max: 200
+    WITH min: min
+    WITH max: max
   RANDOM AS g
-    WITH min: 0
-    WITH max: 200
+    WITH min: min
+    WITH max: max
   RANDOM AS b
-    WITH min: 0
-    WITH max: 200
+    WITH min: min
+    WITH max: max
   COLOR image AS image
     WITH r: r
     WITH g: g
@@ -21,6 +21,9 @@ LOAD AS dvd
 RESIZE dvd AS dvd
   WITH width: 40
   WITH height: 20
+RANDOMCOLOUR dvd AS dvd
+  WITH min: 0
+  WITH max: 200
 
 RECTANGLE AS background
   WITH width: 400
@@ -44,23 +47,27 @@ LOOP i IN (1, 360):
   IF (positionX < 0):
     SET 0 AS x
     SET xDir * -1 AS xDir
-    RANDOMCOLOUR AS dvd
-      WITH image: dvd
+    RANDOMCOLOUR dvd AS dvd
+      WITH min: 0
+      WITH max: 200
   IF (positionX > 1960):
     SET 1960 AS x
     SET xDir * -1 AS xDir
-    RANDOMCOLOUR AS dvd
-      WITH image: dvd
+    RANDOMCOLOUR dvd AS dvd
+      WITH min: 0
+      WITH max: 200
   IF (positionY < 0):
     SET 0 AS y
     SET yDir * -1 AS yDir
-    RANDOMCOLOUR AS dvd
-      WITH image: dvd
+    RANDOMCOLOUR dvd AS dvd
+      WITH min: 0
+      WITH max: 200
   IF (positionY > 1960):
     SET 1960 AS y
     SET yDir * -1 AS yDir
-    RANDOMCOLOUR AS dvd
-      WITH image: dvd
+    RANDOMCOLOUR dvd AS dvd
+      WITH min: 0
+      WITH max: 200
   OVERLAY dvd ON background AS frame
     WITH x: x
     WITH y: y

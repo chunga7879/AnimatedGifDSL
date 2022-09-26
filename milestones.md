@@ -117,12 +117,12 @@ Parser DSL
 ```
 program          : (statement (NL statement)*)? EOF ;
 
-statement        : INDENT? (function | control | with_statement | COMMENT) ;
+statement        : INDENT? (function | with_statement | return_statement | control | COMMENT) ;
 
 control          : control_type COLON ;
 control_type     : define_statement | loop_statement | if_statement ;
 
-define_statement : DEFINE VARIABLE define_params ;
+define_statement : DEFINE VARIABLE VARIABLE (DEFINE_WITH define_params)? ;
 define_params    : BRACKET_START VARIABLE (BRACKET_SEP VARIABLE)* BRACKET_END ;
 
 if_statement     : IF BRACKET_START comparison BRACKET_END ;
@@ -132,6 +132,8 @@ range            : BRACKET_START num_or_var BRACKET_SEP num_or_var BRACKET_END ;
 
 function         : FUNCTION_NAME value? (ON value)? (AS value)? ;
 with_statement   : WITH VARIABLE COLON value ;
+
+return_statement : RETURN value ;
 
 value            : num_or_var | TEXT ;
 num_or_var       : (NUMBER | VARIABLE) (OPERATOR (NUMBER | VARIABLE))? ;
@@ -146,12 +148,14 @@ DEFINE        : 'DEFINE' -> mode(OPTIONS_MODE);
 IF            : 'IF' -> mode(OPTIONS_MODE);
 LOOP          : 'LOOP' -> mode(OPTIONS_MODE);
 WITH          : 'WITH' -> mode(OPTIONS_MODE);
+RETURN        : 'RETURN' -> mode(OPTIONS_MODE);
 FUNCTION_NAME : [a-z]+[a-z0-9]* -> mode(OPTIONS_MODE);
 
 mode OPTIONS_MODE;
 AS            : 'AS' ;
 IN            : 'IN' ;
 ON            : 'ON' ;
+DEFINE_WITH   : 'WITH' ;
 COLON         : ':' ;
 BRACKET_START : '(' ;
 BRACKET_SEP   : ',' ;

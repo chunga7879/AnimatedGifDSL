@@ -8,7 +8,7 @@ statement        : INDENT? (function | with_statement | return_statement | contr
 control          : control_type COLON ;
 control_type     : define_statement | loop_statement | if_statement ;
 
-define_statement : DEFINE VARIABLE define_params ;
+define_statement : DEFINE VARIABLE VARIABLE (DEFINE_WITH define_params)? ;
 define_params    : BRACKET_START VARIABLE (BRACKET_SEP VARIABLE)* BRACKET_END ;
 
 if_statement     : IF BRACKET_START comparison BRACKET_END ;

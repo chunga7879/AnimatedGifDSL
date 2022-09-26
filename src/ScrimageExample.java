@@ -26,10 +26,10 @@ public class ScrimageExample {
         return image.map((p) -> new RGBColor(255 - p.red(), 255 - p.green(), 255 - p.blue()).awt());
     }
 
-    private static ImmutableImage RandomColor(Random random, ImmutableImage image) {
-        int r = Random(random, 0, 200);
-        int g = Random(random, 0, 200);
-        int b = Random(random, 0, 200);
+    private static ImmutableImage RandomColor(Random random, ImmutableImage image, int min, int max) {
+        int r = Random(random, min, max);
+        int g = Random(random, min, max);
+        int b = Random(random, min, max);
         return Color(image, r, g, b);
     }
 
@@ -40,7 +40,7 @@ public class ScrimageExample {
 
         ImmutableImage dvd = ImmutableImage.loader().fromFile("dvd-logo.png");
         dvd = dvd.scaleTo(40, 20);
-        dvd = RandomColor(random, dvd);
+        dvd = RandomColor(random, dvd, 0, 200);
 
         ImmutableImage background = ImmutableImage.filled(400, 400, Color.WHITE);
 
@@ -57,22 +57,22 @@ public class ScrimageExample {
             if (x < 0) {
                 x = 0;
                 dx = dx * -1;
-                dvd = RandomColor(random, dvd);
+                dvd = RandomColor(random, dvd, 0, 200);
             }
             if (x > background.width - dvd.width) {
                 x = background.width - dvd.width;
                 dx = dx * -1;
-                dvd = RandomColor(random, dvd);
+                dvd = RandomColor(random, dvd, 0, 200);
             }
             if (y < 0) {
                 y = 0;
                 dy = dy * -1;
-                dvd = RandomColor(random, dvd);
+                dvd = RandomColor(random, dvd, 0, 200);
             }
             if (y > background.height - dvd.height) {
                 y = background.height - dvd.height;
                 dy = dy * -1;
-                dvd = RandomColor(random, dvd);
+                dvd = RandomColor(random, dvd, 0, 200);
             }
             ImmutableImage frame = background.copy().overlay(dvd, x, y);
             frames.add(frame);

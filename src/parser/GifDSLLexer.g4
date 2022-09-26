@@ -15,6 +15,7 @@ mode OPTIONS_MODE;
 AS            : 'AS' ;
 IN            : 'IN' ;
 ON            : 'ON' ;
+DEFINE_WITH   : 'WITH' ;
 COLON         : ':' ;
 BRACKET_START : '(' ;
 BRACKET_SEP   : ',' ;
