@@ -184,11 +184,12 @@ NL            : [\r\n]+ -> mode(DEFAULT_MODE);
   - (Potentially?) Colours:
     - Stores r, g, b values
   - (Potentially?) Vectors:
-    - Stores x, y, z values
+    - Stores x, y values
 - All variables/functions are case insensitive
 - Variables are global scoped and can be accessed anywhere(?)
   - Parameters are function scoped
 - Indents indicate function parameters and functions inside of if/loop/defines
+- Shortcut: If a function returns a value, and you insert a variable into the target. You can omit the `AS [variable]` to assign the return value to the same variable. (e.g. `FUNCTION var1` is equivalent to `FUNCTION var1 AS var1`)
 
 #### File System
 Load - Create an image variable from a image file
@@ -240,6 +241,12 @@ RECTANGLE AS [variable name]
   WITH g: [number]
   WITH b: [number]
 ```
+Write - Write text as an image
+```
+WRITE [text] AS [variable name]
+  WITH size: [font size]
+  WITH font: [font]
+```
 Color - Colour each pixel of an image with a color but maintain it's transparency
 ```
 COLOR [image] AS [variable name]
@@ -256,14 +263,14 @@ FILTER [image] AS [variable name]
 Define - Create a custom function
  - Parameters get deleted at the end of the function
 ```
-DEFINE [function name] ([parameter 1], [parameter 2], [...]):
+DEFINE [function name] [target] WITH ([parameter 1], [parameter 2], [...]):
   [...]
   RETURN [value]
 ```
 Calling custom functions
  - Return value gets assigned to return variable
 ```
-[function name] AS [return variable]
+[function name] [target] AS [return variable]
   WITH [parameter 1]: [value]
   WITH [parameter 2]: [value]
   [...]
@@ -287,6 +294,12 @@ Add - Add a copy of an item to list
 ```
 ADD [list]
   WITH item: [item]
+```
+Add - Add a list to another list (items will be copied)
+ - The final result will have order: `list1`, `list2`
+```
+ADD [list1]
+  WITH list: [item2]
 ```
 
 ...
