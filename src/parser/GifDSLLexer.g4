@@ -9,7 +9,7 @@ IF            : 'IF' -> mode(OPTIONS_MODE);
 LOOP          : 'LOOP' -> mode(OPTIONS_MODE);
 WITH          : 'WITH' -> mode(OPTIONS_MODE);
 RETURN        : 'RETURN' -> mode(OPTIONS_MODE);
-FUNCTION_NAME : [a-z]+[a-z0-9]* -> mode(OPTIONS_MODE);
+FUNCTION_NAME : [a-z]+[_\-a-z0-9]* -> mode(OPTIONS_MODE);
 
 mode OPTIONS_MODE;
 AS            : 'AS' ;
@@ -22,7 +22,7 @@ BRACKET_SEP   : ',' ;
 BRACKET_END   : ')' ;
 OPERATOR      : '+' | '-' | '*' | '/' ;
 COMPARE       : '>=' | '<=' | '>' | '<' | '=' ;
-VARIABLE      : [a-z]+[a-z0-9]* ;
+VARIABLE      : [a-z]+[_\-a-z0-9]* ;
 NUMBER        : '-'?[0-9]+ ;
 TEXT          : '"' ~[\r\n"]* '"' ;
 SP            : [ \t] -> channel(HIDDEN);

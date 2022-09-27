@@ -15,8 +15,7 @@ DEFINE RANDOMCOLOUR image WITH (min, max):
     WITH b: b
   RETURN image
 
-LOAD AS dvd
-  WITH location: "~/dvd.png"
+LOAD "~/dvd.png" AS dvd
 
 RESIZE dvd AS dvd
   WITH width: 40
@@ -72,18 +71,17 @@ LOOP i IN (1, 360):
     WITH x: x
     WITH y: y
     WITH angle: i
-  ADD frame
-    WITH list: frames
+  ADD frames
+    WITH item: frame
 
 LIST AS editedFrames
 
 LOOP f IN frames:
   FILTER f AS f
     WITH filter: "invert"
-  ADD f
-    WITH list: editedFrames
+  ADD editedFrames
+    WITH item: f
 
-SAVE
-  WITH frames: frame
+SAVE frames
   WITH duration: 4
   WITH location: "~/final.gif"

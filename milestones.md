@@ -113,7 +113,7 @@ GIF gif = CREATE GIF: frames, "~/Downloads"
 * Responsibilities have been scheduled and divided
 
 # Milestone 3 (WIP)
-Parser DSL
+### Parser DSL
 ```
 program          : (statement (NL statement)*)? EOF ;
 
@@ -138,7 +138,7 @@ return_statement : RETURN value ;
 value            : num_or_var | TEXT ;
 num_or_var       : (NUMBER | VARIABLE) (OPERATOR (NUMBER | VARIABLE))? ;
 ```
-Lexer DSL
+### Lexer DSL
 ```
 options { caseInsensitive=true; }
 
@@ -168,7 +168,7 @@ TEXT          : '"' ~[\r\n"]* '"' ;
 SP            : [ \t] -> channel(HIDDEN);
 NL            : [\r\n]+ -> mode(DEFAULT_MODE);
 ```
-Reference
+### Reference
 - Variables:
   - Numbers:
     - Integers
@@ -189,53 +189,104 @@ Reference
 - Variables are global scoped and can be accessed anywhere(?)
   - Parameters are function scoped
 - Indents indicate function parameters and functions inside of if/loop/defines
+
+#### File System
+Load - Create an image variable from a image file
 ```
-// Load - Create an image variable from a image file
-LOAD AS [variable name]
-  WITH location: [file path]     // file path of image to be loaded
+LOAD [file path] AS [variable name]
+```
+Save - Create and save a gif from list of images
+- Duration: total time of gif in seconds
+- Location: file path of the gif to be saved
+```
+SAVE [list of images]
+  WITH duration: [number]
+  WITH location: [file path]
+```
+#### Control statements
 
-// Save - Create and save a gif from list of images
-SAVE
-  WITH frames: [list of images]  // list of images in sequence
-  WITH duration: 30              // total time of gif in seconds
-  WITH location: [file path]     // file path of the gif to be saved
-
-// Custom functions
-// - Parameters get deleted at the end of the function
+Conditional - Execute the inner statements if the evaluation succeeds
+```
+IF ([value] [>=, <=, >, <, =] [value]):
+  [...]
+```
+Loop - Loop over the inner statements from "from" to "to"
+```
+LOOP [variable name] IN ([from], [to]):
+  [...]
+```
+Loop - Loop over the inner statements for each of the elements in the list
+```
+LOOP [variable name] IN [list of images]:
+  [...]
+```
+#### Images
+Overlay - Create an image with an overlay of an image on top of another image
+ - X: x position of the top-left corner of the above image
+ - Y: y position of the top-left corner of the above image
+ - Rotation: degrees in rotation of image (clock-wise)
+```
+OVERLAY [above image] ON [below image] AS [variable name]
+  WITH x: [x position]
+  WITH y: [y: position]
+  WITH rotation: [degrees]
+```
+Rectangle - Create a rectangle image with size and colour
+```
+RECTANGLE AS [variable name]
+  WITH width: [number]
+  WITH height: [number]
+  WITH r: [number]
+  WITH g: [number]
+  WITH b: [number]
+```
+Color - Colour each pixel of an image with a color but maintain it's transparency
+```
+COLOR [image] AS [variable name]
+  WITH r: [number]
+  WITH g: [number]
+  WITH b: [number]
+```
+Filter - Apply a filter to an image
+```
+FILTER [image] AS [variable name]
+  WITH filter: [filter name]
+```
+#### Custom Functions
+Define - Create a custom function
+ - Parameters get deleted at the end of the function
+```
 DEFINE [function name] ([parameter 1], [parameter 2], [...]):
   [...]
-
-// Calling custom functions
-[function name]
+  RETURN [value]
+```
+Calling custom functions
+ - Return value gets assigned to return variable
+```
+[function name] AS [return variable]
   WITH [parameter 1]: [value]
   WITH [parameter 2]: [value]
   [...]
-
-// Conditional
-IF ([value] [>=, <=, >, <, =] [value]):
-  [...]
-
-// Loop - Loop over the inner statements from "from" to "to"
-LOOP [variable name] IN ([from], [to]):
-  [...]
-
-// Loop - Loop over list
-LOOP [variable name] IN [list of images]:
-
-// Set - Assign value to global variable
-SET [value] AS [variable name]
-
-// Overlay - Create an image with an overlay of an image on top of another image
-OVERLAY [above image] ON [below image] AS [variable name]
-  WITH x: [x position]           // x position of the top-left corner of the above image
-  WITH y: [y: position]          // y position of the top-left corner of the above image
-  WITH rotation: [degrees]       // [Default=0] degrees in rotation of image
-
-// List - Create an empty list and assign to a variable
-LIST AS [variable name]
-
-// Add - Add a copy of the image to list
-ADD [image]
-  WITH list: [list]
-...
 ```
+#### Variables
+Set - Assign value to global variable
+```
+SET [value] AS [variable name]
+```
+Random - Generate a random number between min and max (inclusive)
+```
+RANDOM AS [variable name]
+  WITH min: [number]
+  WITH max: [number]
+```
+List - Create an empty list and assign to a variable
+```
+LIST AS [variable name]
+```
+Add - Add a copy of an item to list
+```
+ADD [list]
+  WITH item: [item]
+```
+
+...
