@@ -210,7 +210,7 @@ SAVE [list of images]
 
 Conditional - Execute the inner statements if the evaluation succeeds
 ```
-IF ([value] [>=, <=, >, <, =] [value]):
+IF ([value] [>=, <=, >, <, =, !=] [value]):
   [...]
 ```
 Loop - Loop over the inner statements from "from" to "to"
@@ -263,14 +263,16 @@ FILTER [image] AS [variable name]
 ```
 #### Custom Functions
 Define - Create a custom function
- - Parameters get deleted at the end of the function
+ - Target and parameters are copies of the input passed in
+   - Target and parameters get deleted at the end of the function
+ - Target, parameters, and return value are optional
 ```
 DEFINE [function name] [target] WITH ([parameter 1], [parameter 2], [...]):
   [...]
-  RETURN [value]
+  RETURN [return value]
 ```
 Calling custom functions
- - Return value gets assigned to return variable
+ - If there is a return value, it gets assigned to the return variable
 ```
 [function name] [target] AS [return variable]
   WITH [parameter 1]: [value]
