@@ -21,7 +21,7 @@ BRACKET_START : '(' ;
 BRACKET_SEP   : ',' ;
 BRACKET_END   : ')' ;
 OPERATOR      : '+' | '-' | '*' | '/' ;
-COMPARE       : '>=' | '<=' | '>' | '<' | '=' ;
+COMPARE       : '>=' | '<=' | '>' | '<' | '=' | '!=' ;
 VARIABLE      : [a-z]+[_\-a-z0-9]* ;
 NUMBER        : '-'?[0-9]+ ;
 TEXT          : '"' ~[\r\n"]* '"' ;

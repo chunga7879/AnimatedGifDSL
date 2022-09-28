@@ -161,7 +161,7 @@ BRACKET_START : '(' ;
 BRACKET_SEP   : ',' ;
 BRACKET_END   : ')' ;
 OPERATOR      : '+' | '-' | '*' | '/' ;
-COMPARE       : '>=' | '<=' | '>' | '<' | '=' ;
+COMPARE       : '>=' | '<=' | '>' | '<' | '=' | '!=' ;
 VARIABLE      : [a-z]+[_\-a-z0-9]* ;
 NUMBER        : '-'?[0-9]+ ;
 TEXT          : '"' ~[\r\n"]* '"' ;
@@ -185,11 +185,13 @@ NL            : [\r\n]+ -> mode(DEFAULT_MODE);
     - Stores r, g, b values
   - (Potentially?) Vectors:
     - Stores x, y values
-- All variables/functions are case insensitive
-- Variables are global scoped and can be accessed anywhere(?)
+- All variables/functions are case insensitive (e.g. `SET 10 AS X` is the same as `set 10 as x`)
+- Variables are global scoped and can be accessed anywhere(?) if it has been created
   - Parameters are function scoped
-- Indents indicate function parameters and functions inside of if/loop/defines
-- Shortcut: If a function returns a value, and you insert a variable into the target. You can omit the `AS [variable]` to assign the return value to the same variable. (e.g. `FUNCTION var1` is equivalent to `FUNCTION var1 AS var1`)
+- Variables are created when `AS [variable]` is used
+- Multiple variables will never be a reference to the same object (i.e. mainly images). Every built-in function will return a copy of any input and `RETURN` will always copy the value before setting to the function's `AS` variable.
+- Indents indicate function parameters and functions inside of if/loop/defines. The only rules are: 1) parameters/if/loop/define ends when it returns to the same indent level or below, 2) indent level shouldn't change if there is no function/if/loop/define before it. Tabs are equivalent to 2 spaces.
+- Shortcut: If a function returns a value, and you insert a variable into the target, you can omit the `AS [variable]` to assign the return value to the same variable. (e.g. `FUNCTION var1` is equivalent to `FUNCTION var1 AS var1`)
 
 #### File System
 Load - Create an image variable from a image file
