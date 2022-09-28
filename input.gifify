@@ -9,7 +9,7 @@ DEFINE RANDOMCOLOUR image WITH (min, max):
   RANDOM AS b
     WITH min: min
     WITH max: max
-  COLOR image AS image
+  COLOR image
     WITH r: r
     WITH g: g
     WITH b: b
@@ -17,10 +17,10 @@ DEFINE RANDOMCOLOUR image WITH (min, max):
 
 LOAD "~/dvd.png" AS dvd
 
-RESIZE dvd AS dvd
+RESIZE dvd
   WITH width: 40
   WITH height: 20
-RANDOMCOLOUR dvd AS dvd
+RANDOMCOLOUR dvd
   WITH min: 0
   WITH max: 200
 
@@ -46,25 +46,25 @@ LOOP i IN (1, 360):
   IF (positionX < 0):
     SET 0 AS x
     SET xDir * -1 AS xDir
-    RANDOMCOLOUR dvd AS dvd
+    RANDOMCOLOUR dvd
       WITH min: 0
       WITH max: 200
   IF (positionX > 1960):
     SET 1960 AS x
     SET xDir * -1 AS xDir
-    RANDOMCOLOUR dvd AS dvd
+    RANDOMCOLOUR dvd
       WITH min: 0
       WITH max: 200
   IF (positionY < 0):
     SET 0 AS y
     SET yDir * -1 AS yDir
-    RANDOMCOLOUR dvd AS dvd
+    RANDOMCOLOUR dvd
       WITH min: 0
       WITH max: 200
   IF (positionY > 1960):
     SET 1960 AS y
     SET yDir * -1 AS yDir
-    RANDOMCOLOUR dvd AS dvd
+    RANDOMCOLOUR dvd
       WITH min: 0
       WITH max: 200
   OVERLAY dvd ON background AS frame
@@ -77,7 +77,7 @@ LOOP i IN (1, 360):
 LIST AS editedFrames
 
 LOOP f IN frames:
-  FILTER f AS f
+  FILTER f
     WITH filter: "invert"
   ADD editedFrames
     WITH item: f
