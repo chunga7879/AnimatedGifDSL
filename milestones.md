@@ -173,19 +173,21 @@ NL            : [\r\n]+ -> mode(DEFAULT_MODE);
   - Numbers:
     - Integers
     - Anywhere with a number value can have an equation
-      - Equations are ```[number] [+|-|*|/] [number]```
+      - Equations are ```[number] [+, -, *, /] [number]```
         - Division rounds down
   - Images:
     - Stores pixels, width, and height
       - Fields are accessed by (?)
     - (Potentially?) Store images overlayed on it
+  - Text:
+    - Stores string characters
   - List:
     - Stores a list of images
   - (Potentially?) Colours:
     - Stores r, g, b values
   - (Potentially?) Vectors:
     - Stores x, y values
-- All variables/functions are case insensitive (e.g. `SET 10 AS X` is the same as `set 10 as x`)
+- All variables/functions are case-insensitive (e.g. `SET 10 AS X` is the same as `set 10 as x`)
 - Variables are global scoped and can be accessed anywhere(?) if it has been created
   - Parameters are function scoped
 - Variables are created when `AS [variable]` is used
@@ -249,12 +251,17 @@ WRITE [text] AS [variable name]
   WITH size: [font size]
   WITH font: [font]
 ```
-Color - Colour each pixel of an image with a color but maintain it's transparency
+Color - Fill each pixel of an image with a colour but maintain its transparency
 ```
 COLOR [image] AS [variable name]
   WITH r: [number]
   WITH g: [number]
   WITH b: [number]
+```
+Opacity - Sets transparency of image (0 = transparent, 100 = opaque)
+```
+OPACITY [image] AS [variable name]
+  WITH amount: [number]
 ```
 Filter - Apply a filter to an image
 ```
@@ -273,6 +280,7 @@ DEFINE [function name] [target] WITH ([parameter 1], [parameter 2], [...]):
 ```
 Calling custom functions
  - If there is a return value, it gets assigned to the return variable
+ - Parameters can be in any order
 ```
 [function name] [target] AS [return variable]
   WITH [parameter 1]: [value]
