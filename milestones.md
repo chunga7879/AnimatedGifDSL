@@ -112,7 +112,7 @@ GIF gif = CREATE GIF: frames, "~/Downloads"
 * Have the features we want to include in our language
 * Responsibilities have been scheduled and divided
 
-# Milestone 3 (WIP)
+# Milestone 3
 ### Parser DSL
 ```
 program          : (statement (NL statement)*)? EOF ;
