@@ -315,5 +315,31 @@ ADD [list1]
 
 ### User-Study
 
-A link to the google doc that contains the user-study can be found [here](https://docs.google.com/document/d/1vJIDnICeQTAP0XjK7LEF1eORv3plqajaRAmD7GMD3wQ/edit#)
-...
+A link to the Google Doc that contains the user-study can be found [here](https://docs.google.com/document/d/1vJIDnICeQTAP0XjK7LEF1eORv3plqajaRAmD7GMD3wQ/edit#)
+
+#### Feedback
+- The parameters to functions can be a bit confusing
+  - Hard to remember parameter names for each function
+- e.g. Functions that have parameters for RGB separately often get mix-matched when user calls the function
+```
+// user calls COLOR with R, G, B order
+COLOR image
+  WITH r: 0
+  WITH g: 0
+  WITH b: 0
+
+// user calls COLOR R, B, G order
+COLOR image
+  WITH r: 0
+  WITH b: 0
+  WITH g: 0
+```
+- Learnability:
+  - The language was easy to understand and pick up
+- Users do need to have a basic understanding of how GIFs are created
+  - It wasn’t obvious what the list of image frames was, and why we were adding to it
+- Did not call OVERLAY with the image on the background after each image manipulation
+  - Perhaps user was assuming that the image once overlaid on the background the first time, will implicitly get overlaid in subsequent image manipulation calls
+- For the built-in FILTER function, user thinks it’s more readable to have one FILTER function and specify what filter we want, instead of creating separate built-in functions for each filter
+  - Perhaps needs documentation on what filters are available
+- COLOR was an intuitive name for the built-in function to color images
