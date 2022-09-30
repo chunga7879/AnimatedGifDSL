@@ -177,18 +177,13 @@ NL            : [\r\n]+ -> mode(DEFAULT_MODE);
         - Division rounds down
   - Images:
     - Stores pixels, width, and height
-      - Fields are accessed by (?)
     - (Potentially?) Store images overlayed on it
   - Text:
     - Stores string characters
   - List:
     - Stores a list of images
-  - (Potentially?) Colours:
-    - Stores r, g, b values
-  - (Potentially?) Vectors:
-    - Stores x, y values
 - All variables/functions are case-insensitive (e.g. `SET 10 AS X` is the same as `set 10 as x`)
-- Variables are global scoped and can be accessed anywhere(?) if it has been created
+- Variables are global scoped and can be accessed anywhere if it has been created
   - Parameters are function scoped
 - Variables are created when `AS [variable]` is used
 - Multiple variables will never be a reference to the same object (i.e. mainly images). Every built-in function will return a copy of any input and `RETURN` will always copy the value before setting to the function's `AS` variable.
@@ -313,5 +308,7 @@ Add - Add a list to another list (items will be copied)
 ADD [list1]
   WITH list: [item2]
 ```
-
-...
+### Progress
+- Initial DSL grammar is done
+- Initial core AST / code runner is done
+- No roadmap changes
