@@ -312,3 +312,8 @@ ADD [list1]
 - Initial DSL grammar is done
 - Initial core AST / code runner is done
 - No roadmap changes
+
+### User-Study
+
+A link to the google doc that contains the user-study can be found [here](https://docs.google.com/document/d/1vJIDnICeQTAP0XjK7LEF1eORv3plqajaRAmD7GMD3wQ/edit#)
+...
