@@ -112,3 +112,234 @@ GIF gif = CREATE GIF: frames, "~/Downloads"
 * Have the features we want to include in our language
 * Responsibilities have been scheduled and divided
 
+# Milestone 3
+### Parser DSL
+```
+program          : (statement (NL statement)*)? EOF ;
+
+statement        : INDENT? (function | with_statement | return_statement | control | COMMENT) ;
+
+control          : control_type COLON ;
+control_type     : define_statement | loop_statement | if_statement ;
+
+define_statement : DEFINE VARIABLE VARIABLE (DEFINE_WITH define_params)? ;
+define_params    : BRACKET_START VARIABLE (BRACKET_SEP VARIABLE)* BRACKET_END ;
+
+if_statement     : IF BRACKET_START comparison BRACKET_END ;
+comparison       : num_or_var COMPARE num_or_var ;
+loop_statement   : LOOP VARIABLE IN (range | VARIABLE) ;
+range            : BRACKET_START num_or_var BRACKET_SEP num_or_var BRACKET_END ;
+
+function         : FUNCTION_NAME value? (ON value)? (AS value)? ;
+with_statement   : WITH VARIABLE COLON value ;
+
+return_statement : RETURN value ;
+
+value            : num_or_var | TEXT ;
+num_or_var       : (NUMBER | VARIABLE) (OPERATOR (NUMBER | VARIABLE))? ;
+```
+### Lexer DSL
+```
+options { caseInsensitive=true; }
+
+INDENT        : [ \t]+ ;
+COMMENT       : '//' ~[\r\n]* -> mode(OPTIONS_MODE);
+DEFINE        : 'DEFINE' -> mode(OPTIONS_MODE);
+IF            : 'IF' -> mode(OPTIONS_MODE);
+LOOP          : 'LOOP' -> mode(OPTIONS_MODE);
+WITH          : 'WITH' -> mode(OPTIONS_MODE);
+RETURN        : 'RETURN' -> mode(OPTIONS_MODE);
+FUNCTION_NAME : [a-z]+[_\-a-z0-9]* -> mode(OPTIONS_MODE);
+
+mode OPTIONS_MODE;
+AS            : 'AS' ;
+IN            : 'IN' ;
+ON            : 'ON' ;
+DEFINE_WITH   : 'WITH' ;
+COLON         : ':' ;
+BRACKET_START : '(' ;
+BRACKET_SEP   : ',' ;
+BRACKET_END   : ')' ;
+OPERATOR      : '+' | '-' | '*' | '/' ;
+COMPARE       : '>=' | '<=' | '>' | '<' | '=' | '!=' ;
+VARIABLE      : [a-z]+[_\-a-z0-9]* ;
+NUMBER        : '-'?[0-9]+ ;
+TEXT          : '"' ~[\r\n"]* '"' ;
+SP            : [ \t] -> channel(HIDDEN);
+NL            : [\r\n]+ -> mode(DEFAULT_MODE);
+```
+### Reference
+- Variables:
+  - Numbers:
+    - Integers
+    - Anywhere with a number value can have an equation
+      - Equations are ```[number] [+, -, *, /] [number]```
+        - Division rounds down
+  - Images:
+    - Stores pixels, width, and height
+    - (Potentially?) Store images overlayed on it
+  - Text:
+    - Stores string characters
+  - List:
+    - Stores a list of images
+- All variables/functions are case-insensitive (e.g. `SET 10 AS X` is the same as `set 10 as x`)
+- Variables are global scoped and can be accessed anywhere if it has been created
+  - Parameters are function scoped
+- Variables are created when `AS [variable]` is used
+- Multiple variables will never be a reference to the same object (i.e. mainly images). Every built-in function will return a copy of any input and `RETURN` will always copy the value before setting to the function's `AS` variable.
+- Indents indicate function parameters and functions inside of if/loop/defines. The only rules are: 1) parameters/if/loop/define ends when it returns to the same indent level or below, 2) indent level shouldn't change if there is no function/if/loop/define before it. Tabs are equivalent to 2 spaces.
+- Shortcut: If a function returns a value, and you insert a variable into the target, you can omit the `AS [variable]` to assign the return value to the same variable. (e.g. `FUNCTION var1` is equivalent to `FUNCTION var1 AS var1`)
+
+#### File System
+Load - Create an image variable from a image file
+```
+LOAD [file path] AS [variable name]
+```
+Save - Create and save a gif from list of images
+- Duration: total time of gif in seconds
+- Location: file path of the gif to be saved
+```
+SAVE [list of images]
+  WITH duration: [number]
+  WITH location: [file path]
+```
+#### Control statements
+
+Conditional - Execute the inner statements if the evaluation succeeds
+```
+IF ([value] [>=, <=, >, <, =, !=] [value]):
+  [...]
+```
+Loop - Loop over the inner statements from "from" to "to"
+```
+LOOP [variable name] IN ([from], [to]):
+  [...]
+```
+Loop - Loop over the inner statements for each of the elements in the list
+```
+LOOP [variable name] IN [list of images]:
+  [...]
+```
+#### Images
+Overlay - Create an image with an overlay of an image on top of another image
+ - X: x position of the top-left corner of the above image
+ - Y: y position of the top-left corner of the above image
+ - Rotation: degrees in rotation of image (clock-wise)
+```
+OVERLAY [above image] ON [below image] AS [variable name]
+  WITH x: [x position]
+  WITH y: [y: position]
+  WITH rotation: [degrees]
+```
+Rectangle - Create a rectangle image with size and colour
+```
+RECTANGLE AS [variable name]
+  WITH width: [number]
+  WITH height: [number]
+  WITH r: [number]
+  WITH g: [number]
+  WITH b: [number]
+```
+Write - Write text as an image
+```
+WRITE [text] AS [variable name]
+  WITH size: [font size]
+  WITH font: [font]
+```
+Color - Fill each pixel of an image with a colour but maintain its transparency
+```
+COLOR [image] AS [variable name]
+  WITH r: [number]
+  WITH g: [number]
+  WITH b: [number]
+```
+Opacity - Sets transparency of image (0 = transparent, 100 = opaque)
+```
+OPACITY [image] AS [variable name]
+  WITH amount: [number]
+```
+Filter - Apply a filter to an image
+```
+FILTER [image] AS [variable name]
+  WITH filter: [filter name]
+```
+#### Custom Functions
+Define - Create a custom function
+ - Target and parameters are copies of the input passed in
+   - Target and parameters get deleted at the end of the function
+ - Target, parameters, and return value are optional
+```
+DEFINE [function name] [target] WITH ([parameter 1], [parameter 2], [...]):
+  [...]
+  RETURN [return value]
+```
+Calling custom functions
+ - If there is a return value, it gets assigned to the return variable
+ - Parameters can be in any order
+```
+[function name] [target] AS [return variable]
+  WITH [parameter 1]: [value]
+  WITH [parameter 2]: [value]
+  [...]
+```
+#### Variables
+Set - Assign value to global variable
+```
+SET [value] AS [variable name]
+```
+Random - Generate a random number between min and max (inclusive)
+```
+RANDOM AS [variable name]
+  WITH min: [number]
+  WITH max: [number]
+```
+List - Create an empty list and assign to a variable
+```
+LIST AS [variable name]
+```
+Add - Add a copy of an item to list
+```
+ADD [list]
+  WITH item: [item]
+```
+Add - Add a list to another list (items will be copied)
+ - The final result will have order: `list1`, `list2`
+```
+ADD [list1]
+  WITH list: [item2]
+```
+### Progress
+- Initial DSL grammar is done
+- Initial core AST / code runner is done
+- No roadmap changes
+
+### User-Study
+
+A link to the Google Doc that contains the user-study can be found [here](https://docs.google.com/document/d/1vJIDnICeQTAP0XjK7LEF1eORv3plqajaRAmD7GMD3wQ/edit#)
+
+#### Feedback
+- The parameters to functions can be a bit confusing
+  - Hard to remember parameter names for each function
+- e.g. Functions that have parameters for RGB separately often get mix-matched when user calls the function
+```
+// user calls COLOR with R, G, B order
+COLOR image
+  WITH r: 0
+  WITH g: 0
+  WITH b: 0
+
+// user calls COLOR R, B, G order
+COLOR image
+  WITH r: 0
+  WITH b: 0
+  WITH g: 0
+```
+- Learnability:
+  - The language was easy to understand and pick up
+- Users do need to have a basic understanding of how GIFs are created
+  - It wasn’t obvious what the list of image frames was, and why we were adding to it
+- Did not call OVERLAY with the image on the background after each image manipulation
+  - Perhaps user was assuming that the image once overlaid on the background the first time, will implicitly get overlaid in subsequent image manipulation calls
+- For the built-in FILTER function, user thinks it’s more readable to have one FILTER function and specify what filter we want, instead of creating separate built-in functions for each filter
+  - Perhaps needs documentation on what filters are available
+- COLOR was an intuitive name for the built-in function to color images
