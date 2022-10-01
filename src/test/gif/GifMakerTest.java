@@ -23,6 +23,20 @@ public class GifMakerTest {
         frames.add(ImmutableImage.filled(WIDTH, HEIGHT, Color.GREEN));
         frames.add(ImmutableImage.filled(WIDTH, HEIGHT, Color.BLUE));
 
-        GifMaker.makeGif(frames, 30L, "src/test/gif/testMakeGif1Fps.gif");
+        // 5 frames for 5 seconds = 1 fps
+        GifMaker.makeGif(frames, 5, "src/test/gif/testMakeGif1Fps.gif");
+    }
+
+    @Test
+    public void testMakeGifHalfFps() throws Exception {
+        List<ImmutableImage> frames = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            frames.add(ImmutableImage.filled(WIDTH, HEIGHT, Color.RED));
+            frames.add(ImmutableImage.filled(WIDTH, HEIGHT, Color.BLUE));
+        }
+
+        // 10 frames for 20 seconds = 0.5 fps
+        GifMaker.makeGif(frames, 20, "src/test/gif/testMakeGifHalfFps.gif");
     }
 }
