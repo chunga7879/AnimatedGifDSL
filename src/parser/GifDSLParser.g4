@@ -1,7 +1,7 @@
 parser grammar GifDSLParser;
 options { tokenVocab=GifDSLLexer; }
 
-program          : (statement (NL statement)*)? EOF ;
+program          : (statement (NL statement)*)? NL? EOF ;
 
 statement        : INDENT? (function | with_statement | return_statement | control | COMMENT) ;
 
@@ -21,5 +21,5 @@ with_statement   : WITH VARIABLE COLON value ;
 
 return_statement : RETURN value ;
 
-value            : num_or_var | TEXT ;
+value            : num_or_var | COLOUR | TEXT ;
 num_or_var       : (NUMBER | VARIABLE) (OPERATOR (NUMBER | VARIABLE))? ;
