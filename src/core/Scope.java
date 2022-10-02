@@ -12,21 +12,13 @@ public class Scope {
     private static Scope global;
 
 
-    private Scope() {
-        this(getGlobalScope());
+    public Scope() {
+        this(null);
     }
+
     private Scope(Scope parent) {
         this.parent = parent;
         this.vars = new HashMap<>();
-    }
-
-    public static Scope getGlobalScope() {
-        if (Scope.global == null) {
-            Scope.global = new Scope(null);
-            // TODO add built in functions here.
-            Scope.global.setVar("PRINT", new Print());
-        }
-        return Scope.global;
     }
 
     private Boolean hasParent() {
