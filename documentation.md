@@ -16,6 +16,10 @@ This is the updated documentation file after Milestone 3.
     - Stores pixels, width, and height
   - Text:
     - Stores string characters
+  - Colour:
+    - Stores r, g, b values
+    - Set by hex values
+      - e.g. '#FFFFFF'
   - List:
     - Stores a list of images
 - Variables are created when `AS [variable]` is used when a function is called
@@ -24,6 +28,14 @@ This is the updated documentation file after Milestone 3.
 - Variables are global scoped and can be accessed anywhere if it has been created
   - Parameters are function scoped
 - There are no reference variables, so multiple variables will never be a reference to the same object (i.e. image). Every built-in function will return a copy of any input and `RETURN` will always copy the value before setting to the function's `AS` variable.
+
+#### Constants
+- Constants are pre-defined variables
+- User-defined variables cannot have the same name as constants
+- All constants
+  - Colours:
+    - Black, Grey, White, Red, Green, Blue, Yellow, Cyan, Magenta, Orange, Purple
+
 ### Functions
 - Functions are statements that performs an action
 - **Function name** is the name of the function that is being called
@@ -113,9 +125,7 @@ Rectangle - Create a rectangle image with size and colour
 CREATE-RECTANGLE AS [variable name]
   WITH width: [number]
   WITH height: [number]
-  WITH r: [number]
-  WITH g: [number]
-  WITH b: [number]
+  WITH colour: [colour]
 ```
 Write - Write text as an image
 ```
@@ -123,12 +133,10 @@ WRITE [text] AS [variable name]
   WITH size: [font size]
   WITH font: [font]
 ```
-Color - Fill each pixel of an image with a colour but maintain its transparency
+Colour Fill - Fill each pixel of an image with a colour but maintain its transparency
 ```
-COLOR [image] AS [variable name]
-  WITH r: [number]
-  WITH g: [number]
-  WITH b: [number]
+COLOUR-FILL [image] AS [variable name]
+  WITH colour: [colour]
 ```
 Opacity - Sets transparency of image (0 = transparent, 100 = opaque)
 ```
@@ -184,4 +192,25 @@ Add - Add a list to another list (items will be copied)
 ```
 ADD [list1]
   WITH list: [item2]
+```
+Create Colour - Create a colour from RGB values
+```
+CREATE-COLOUR AS [variable name]
+  WITH r: [number]
+  WITH g: [number]
+  WITH b: [number]
+```
+
+#### Getters
+Get R - Get R value (number) of colour
+```
+GET-R [colour] AS [variable name]
+```
+Get G - Get G value (number) of colour
+```
+GET-G [colour] AS [variable name]
+```
+Get B - Get B value (number) of colour
+```
+GET-B [colour] AS [variable name]
 ```
