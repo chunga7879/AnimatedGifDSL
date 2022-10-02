@@ -89,7 +89,7 @@ public class ScrimageExample {
 
         int duration = 4;
         GifSequenceWriter gifWriter = new GifSequenceWriter(Math.round(((double) duration * 1000) / frames.size()), false);
-//        gifWriter.output(editedFrames.toArray(ImmutableImage[]::new), "final.gif");
+        gifWriter.output(editedFrames.toArray(ImmutableImage[]::new), "final.gif");
 
         System.out.println("Finished!");
     }
