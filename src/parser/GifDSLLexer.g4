@@ -23,6 +23,7 @@ BRACKET_END   : ')' ;
 OPERATOR      : '+' | '-' | '*' | '/' ;
 COMPARE       : '>=' | '<=' | '>' | '<' | '=' | '!=' ;
 VARIABLE      : [a-z]+[_\-a-z0-9]* ;
+COLOUR        : '#' [0-9a-f]+ ;
 NUMBER        : '-'?[0-9]+ ;
 TEXT          : '"' ~[\r\n"]* '"' ;
 SP            : [ \t] -> channel(HIDDEN);
