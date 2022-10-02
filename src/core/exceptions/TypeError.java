@@ -1,11 +1,13 @@
 package core.exceptions;
 
+import core.values.Value;
+
 public class TypeError extends DSLException {
     private final String have;
     private final String want;
 
-    public TypeError(String have, String want) {
-        this.have = have;
+    public TypeError(Value have, String want) {
+        this.have = have.getTypeName();
         this.want = want;
     }
 
