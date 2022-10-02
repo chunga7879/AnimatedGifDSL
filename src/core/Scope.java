@@ -40,6 +40,10 @@ public class Scope {
     }
 
     public void setVar(String name, Value v) {
-        this.vars.put(name, v);
+        if (this.hasParent() && this.parent.vars.containsKey(name)) {
+            this.parent.setVar(name, v);
+        } else {
+            this.vars.put(name, v);
+        }
     }
 }
