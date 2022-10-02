@@ -15,6 +15,7 @@ public class FunctionCall implements Expression, Statement {
     /**
      * @param name The name of the function to call.
      * @param args The arguments to pass to the function.
+     * @param scope The scope to execute the function in (args will be added).
      */
     public FunctionCall(String name, HashMap<String, Expression> args, Scope scope) {
         this.name = name;
@@ -22,6 +23,10 @@ public class FunctionCall implements Expression, Statement {
         this.scope = scope;
     }
 
+    /**
+     * @param s The scope to evaluate argument expressions in.
+     * @return The return value of the function.
+     */
     @Override
     public Value evaluate(Scope s) {
         Scope funcScope = this.scope.newChildScope();
