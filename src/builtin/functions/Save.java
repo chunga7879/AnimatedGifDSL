@@ -10,7 +10,7 @@ public class Save extends AbstractFunction {
 
     @Override
     public Value call(Scope scope) {
-        ArrayList<ImmutableImage> frames = getImmutableImages(scope.getVar("array").asArray());
+        ArrayList<ImmutableImage> frames = getImmutableImages(scope.getVar("$target").asArray());
         //TODO: Uncomment after NumberValue is added to core
         //Long duration = Long.valueOf(scope.getVar("duration").asNumber.get());
         String location = scope.getVar("location").asString().get();
