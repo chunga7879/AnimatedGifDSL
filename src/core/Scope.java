@@ -14,6 +14,12 @@ public class Scope {
         this.vars = new HashMap<>();
     }
 
+    public static Scope DefaultScope() {
+        Scope s = new Scope();
+        // TODO set default functions
+        return s;
+    }
+
     private Scope(Scope parent) {
         this.parent = parent;
         this.vars = new HashMap<>();
