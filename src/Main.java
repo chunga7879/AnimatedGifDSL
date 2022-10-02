@@ -1,7 +1,9 @@
+import core.values.Function;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
+import parser.GifDSLConverter;
 import parser.GifDSLLexer;
 import parser.GifDSLParser;
 
@@ -20,7 +22,8 @@ public class Main {
         System.out.println("Done tokenizing");
 
         GifDSLParser parser = new GifDSLParser(tokens);
-        GifDSLParser.ProgramContext program = parser.program();
+        GifDSLConverter converter = new GifDSLConverter();
+        Function main = converter.convertProgram(parser.program());
         System.out.println("Done parsing");
     }
 }

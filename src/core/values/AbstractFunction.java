@@ -5,6 +5,7 @@ import core.Scope;
 public abstract class AbstractFunction extends Value {
     protected static final String NAME = "function";
     public static final String PARAM_TARGET = "$target";
+    public static final String PARAM_ON = "$on";
 
     public AbstractFunction() {
         super(AbstractFunction.NAME);

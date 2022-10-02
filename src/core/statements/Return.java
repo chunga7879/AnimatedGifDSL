@@ -4,7 +4,7 @@ import core.Scope;
 import core.expressions.Expression;
 import core.values.Value;
 
-public class Return {
+public class Return implements Statement {
     public Expression e;
 
     public Return(Expression e) {
@@ -14,5 +14,9 @@ public class Return {
     // Return the value that this return statement returns.
     public Value GetReturnValue(Scope s) {
         return this.e.evaluate(s);
+    }
+
+    @Override
+    public void Do(Scope s) {
     }
 }
