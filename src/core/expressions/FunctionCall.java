@@ -22,7 +22,7 @@ public class FunctionCall implements Expression, Statement {
 
     @Override
     public Value evaluate(Scope s) {
-        Scope funcScope = Scope.DefaultScope();
+        Scope funcScope = Scope.getGlobalScope().newChildScope();
         for (Map.Entry<String, Expression> entry : this.args.entrySet()) {
             funcScope.setVar(entry.getKey(), entry.getValue().evaluate(s));
         }

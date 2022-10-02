@@ -1,5 +1,6 @@
 package core;
 
+import builtin.functions.Print;
 import core.exceptions.NameError;
 import core.values.Value;
 
@@ -8,21 +9,24 @@ import java.util.HashMap;
 public class Scope {
     private HashMap<String, Value> vars;
     private final Scope parent;
+    private static Scope global;
 
-    public Scope() {
-        this.parent = null;
-        this.vars = new HashMap<>();
+
+    private Scope() {
+        this(getGlobalScope());
     }
-
-    public static Scope DefaultScope() {
-        Scope s = new Scope();
-        // TODO set default functions
-        return s;
-    }
-
     private Scope(Scope parent) {
         this.parent = parent;
         this.vars = new HashMap<>();
+    }
+
+    public static Scope getGlobalScope() {
+        if (Scope.global == null) {
+            Scope.global = new Scope(null);
+            // TODO add built in functions here.
+            Scope.global.setVar("PRINT", new Print());
+        }
+        return Scope.global;
     }
 
     private Boolean hasParent() {
