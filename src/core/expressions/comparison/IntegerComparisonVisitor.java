@@ -5,7 +5,7 @@ import core.expressions.Expression;
 import core.values.BooleanValue;
 import core.values.IntegerValue;
 
-public abstract class IntegerComparisonVisitor extends ComparisonVisitor {
+abstract class IntegerComparisonVisitor extends ComparisonVisitor {
     protected IntegerComparisonVisitor(String op) {
         super(op);
     }
