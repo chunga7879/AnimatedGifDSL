@@ -9,7 +9,7 @@ public class Variable implements ExpressionNode {
 
     @Override
     public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.accept(ctx, this);
+        return v.visit(ctx, this);
     }
 
     public String getIdentifier() {
