@@ -51,6 +51,10 @@ public abstract class Value implements Expression {
         return typeName;
     }
 
+    public Image asImage() {
+        throw new TypeError(this.typeName, Image.NAME);
+    }
+
     @Override
     public Value evaluate(Scope s) {
         return this;
