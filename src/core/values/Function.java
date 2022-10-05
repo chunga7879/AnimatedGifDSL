@@ -5,12 +5,13 @@ import core.statements.Return;
 import core.statements.Statement;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // A user defined function (or main).
 public class Function extends AbstractFunction {
-    private final ArrayList<Statement> statements;
+    private final List<Statement> statements;
 
-    public Function(ArrayList<Statement> statements) {
+    public Function(List<Statement> statements) {
         this.statements = statements;
     }
 
@@ -22,6 +23,6 @@ public class Function extends AbstractFunction {
                 s.Do(scope);
             }
         }
-        return new Null();
+        return Null.NULL;
     }
 }
