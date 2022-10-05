@@ -20,23 +20,24 @@ public class CoreDemo {
          * myvar = "testvalue";
          * print(myvar)
          */
+
         Scope rootScope = new Scope();
         rootScope.setVar("print", new Print());
 
         ArrayList<Statement> statements = new ArrayList<>();
         HashMap<String, Expression> printArgs = new HashMap<>();
         printArgs.put("msg", new StringValue("hello world!"));
-        statements.add( new FunctionCall("print", printArgs));
+        statements.add(new FunctionCall("print", printArgs, rootScope));
 
         statements.add(new VariableAssignment("myvar", new StringValue("testvalue")));
         HashMap<String, Expression> printArgs2 = new HashMap<>();
         printArgs2.put("msg", new VariableExpression("myvar"));
-        statements.add( new FunctionCall("print", printArgs2));
+        statements.add(new FunctionCall("print", printArgs2, rootScope));
         Function mainFunc = new Function(statements);
         try {
             mainFunc.call(rootScope);
         } catch (DSLException e) {
-            System.out.println("Got dsl exception: "+ e.message());
+            System.out.println("Got dsl exception: " + e.message());
         }
     }
 }

@@ -1,5 +1,6 @@
 package core;
 
+import builtin.functions.Print;
 import core.exceptions.NameError;
 import core.values.Value;
 
@@ -8,10 +9,11 @@ import java.util.HashMap;
 public class Scope {
     private HashMap<String, Value> vars;
     private final Scope parent;
+    private static Scope global;
+
 
     public Scope() {
-        this.parent = null;
-        this.vars = new HashMap<>();
+        this(null);
     }
 
     private Scope(Scope parent) {
@@ -40,6 +42,10 @@ public class Scope {
     }
 
     public void setVar(String name, Value v) {
-        this.vars.put(name, v);
+        if (this.hasParent() && this.parent.vars.containsKey(name)) {
+            this.parent.setVar(name, v);
+        } else {
+            this.vars.put(name, v);
+        }
     }
 }

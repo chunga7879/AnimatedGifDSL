@@ -5,22 +5,21 @@ import core.expressions.Expression;
 import core.expressions.arithmetic.ArithmeticVisitor;
 import core.expressions.comparison.ComparisonVisitor;
 
-public class StringValue extends Value {
-    public static final String NAME = "string";
+public class IntegerValue extends Value {
+    public static final String NAME = "Integer";
+    private final int n;
 
-    private final String s;
-
-    public StringValue(String s) {
-        super(StringValue.NAME);
-        this.s = s;
+    public IntegerValue(int n) {
+        super(IntegerValue.NAME);
+        this.n = n;
     }
 
-    public String get() {
-        return this.s;
+    public int get() {
+        return this.n;
     }
 
     @Override
-    public StringValue asString() {
+    public IntegerValue asInteger() {
         return this;
     }
 
