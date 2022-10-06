@@ -355,6 +355,8 @@ COLOR image
 - `IF`, `LOOP`, user-defined functions, variable declaration and assignment are implemented (WIP).
 
 ### User study (WIP):
+Plans for user study #1 (done on MVP or finished implementation) can be found [here](https://docs.google.com/document/d/1HMK92j9mUhBFW2DignROPrhLQZzBKzrWGZMWgreDc28/edit#heading=h.m0fumzvjd1ow). (*DISCLAIMER: user task has not been performed yet*)
+
 Plans for user study #2 (done on MVP or finished implementation) can be found [here](https://docs.google.com/document/d/13dpW9UDKtEYe3Ni2mFj5QlVg7VM9vQWI4IcQqZAkxTw/edit#heading=h.1cfvfprzdix3). (*DISCLAIMER: user task has not been performed yet*)
 
 ### Planned timeline for remaining days:
