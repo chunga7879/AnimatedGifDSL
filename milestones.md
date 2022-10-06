@@ -350,6 +350,7 @@ COLOR image
 - Tokenization & parser rules have been defined.
 - ParseTree to AST conversion (WIP).
 - AST base code has been defined for language features (under-review).
+- Visitor interface has been defined (under-review).
 - Built-in functions (WIP).
 - `IF`, `LOOP`, user-defined functions, variable declaration and assignment are implemented (under-review).
 
@@ -390,5 +391,23 @@ Plans for user study #2 (done on MVP or finished implementation) can be found [h
 | `RECTANGLE` | Chunga |
 | `WRITE` | Chunga|
 | `ROTATE` | Chunga | 
+
+*Video*
+
+| Task | Who |
+|------|-----|
+|Video script| Katherine |
+|Video editing| Chunga & Devon |
+|Video voice-over | TBD |
+
+*Other* 
+
+| Task                               | Who      |
+|------------------------------------|----------|
+| Final testing of completed product | Everyone |
+| Unit testing of functionality      | Everyone |
+| Static checking                    | Shiven   |
+| Runtime exceptions                 | Everyone |
+
 
 
