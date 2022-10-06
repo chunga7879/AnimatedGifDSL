@@ -352,7 +352,7 @@ COLOR image
 - AST base code has been defined for language features (under-review).
 - Visitor interface has been defined (under-review).
 - Built-in functions (WIP).
-- `IF`, `LOOP`, user-defined functions, variable declaration and assignment are implemented (under-review).
+- `IF`, `LOOP`, user-defined functions, variable declaration and assignment are implemented (WIP).
 
 ### User study (WIP):
 Plans for user study #2 (done on MVP or finished implementation) can be found [here](https://docs.google.com/document/d/13dpW9UDKtEYe3Ni2mFj5QlVg7VM9vQWI4IcQqZAkxTw/edit#heading=h.1cfvfprzdix3). (*DISCLAIMER: user task has not been performed yet*)
