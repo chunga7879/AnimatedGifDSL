@@ -360,7 +360,7 @@ Plans for user study #2 (done on MVP or finished implementation) can be found [h
 ### Planned timeline for remaining days:
 
 #### General:
-| What                             | Who                     |
+| What                             | When                    |
 |----------------------------------|-------------------------|
 | MVP                              | 10/10/2022              |
 | User study #2                    | 10/10/2022 - 10/14/2022 |
