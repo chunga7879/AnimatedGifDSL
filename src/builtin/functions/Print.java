@@ -10,6 +10,6 @@ public class Print extends AbstractFunction {
     @Override
     public Value call(Scope scope) {
         System.out.println("builtin print: " + scope.getVar("msg").asString().get());
-        return new Null();
+        return Null.NULL;
     }
 }
