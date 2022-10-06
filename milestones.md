@@ -343,3 +343,52 @@ COLOR image
 - For the built-in FILTER function, user thinks it’s more readable to have one FILTER function and specify what filter we want, instead of creating separate built-in functions for each filter
   - Perhaps needs documentation on what filters are available
 - COLOR was an intuitive name for the built-in function to color images
+
+# Milestone 4
+
+### Current progress:
+- Tokenization & parser rules have been defined.
+- ParseTree to AST conversion (WIP).
+- AST base code has been defined for language features (under-review).
+- Built-in functions (WIP).
+- `IF`, `LOOP`, user-defined functions, variable declaration and assignment are implemented (under-review).
+
+### User study (WIP):
+Plans for user study #2 (done on MVP or finished implementation) can be found [here](https://docs.google.com/document/d/13dpW9UDKtEYe3Ni2mFj5QlVg7VM9vQWI4IcQqZAkxTw/edit#heading=h.1cfvfprzdix3). (*DISCLAIMER: user task has not been performed yet*)
+
+### Planned timeline for remaining days:
+
+#### General:
+| What                             | Who                     |
+|----------------------------------|-------------------------|
+| MVP                              | 10/10/2022              |
+| User study #2                    | 10/10/2022 - 10/14/2022 |
+| User study #3                    | 10/10/2022 - 10/14/2022 | 
+| Final product                    | 10/10/2022 - 10/14/2022 | 
+| Final testing                    | 10/10/2022 - 10/14/2022 |
+| Video                            | 10/15/2022 / 10/16/2022 | 
+
+#### Specific breakdown of remaining tasks:
+
+*Built-in functions:*
+
+| Task | Who |
+|------|-----|
+ |`LOAD`| Katherine |
+|`OVERLAY`| Chunga |
+| `COLOUR-FILL` | Katherine |
+| `OPACITY`| Katherine |
+| `FILTER` | Katherine |
+| `GET-RGB` | Katherine |
+| `CREATE-COLOUR` | Katherine |
+| `CREATE-LIST` | Shiven |
+| `RANDOM` | Shiven | 
+|`CROP` | Chunga |
+| `GET-WIDTH` | Chunga | 
+| `GET-HEIGHT` | Chunga |
+| `TRANSLATE` | Chunga | 
+| `RECTANGLE` | Chunga |
+| `WRITE` | Chunga|
+| `ROTATE` | Chunga | 
+
+
