@@ -2,12 +2,11 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
-import core.values.AbstractFunction;
-import core.values.Null;
-import core.values.StringValue;
-import core.values.Value;
+import core.exceptions.FileNotFound;
+import core.values.*;
+import files.filesystem.FileSystem;
 
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
 
 public class Load extends AbstractFunction {
 
@@ -16,14 +15,11 @@ public class Load extends AbstractFunction {
         // Documentation for LOAD doesn't have filepath being passed with the WITH keyword so
         // assumed that it's $target
         StringValue filePath = scope.getVar("$target").asString();
-
-        return new Null();
+        try {
+            ImmutableImage image = FileSystem.openImage(filePath.get());
+            return new Image(image);
+        } catch (FileNotFoundException e) {
+            throw new FileNotFound(filePath + "could not be found.");
+        }
     }
-
-//    StringValue filePath = scope.getVar("$target").asArray());
-//    //TODO: Uncomment after NumberValue is added to core
-//    //Long duration = Long.valueOf(scope.getVar("duration").asNumber.get());
-//    String location = scope.getVar("location").asString().get();
-//    //GifMaker.makeGif(frames, duration, location);
-//
 }
