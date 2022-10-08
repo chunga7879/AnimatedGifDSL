@@ -10,7 +10,7 @@ public class Colour extends Value {
     public Colour(int r, int g, int b) {
         super(NAME);
 
-        if (r < 0 || g < 0 || b < 0) {
+        if (r < 0 || g < 0 || b < 0 || r > 255 || g > 255 || b > 255) {
             throw new IllegalArgumentException("r,g,b values out of range");
         }
     }
