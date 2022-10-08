@@ -15,8 +15,9 @@ define_params    : DEFINE_WITH BRACKET_START VARIABLE (BRACKET_SEP VARIABLE)* BR
 
 if_statement     : IF BRACKET_START comparison BRACKET_END ;
 comparison       : arithmetic COMPARE arithmetic ;
-loop_statement   : LOOP VARIABLE IN (range | VARIABLE) ;
-range            : BRACKET_START arithmetic BRACKET_SEP arithmetic BRACKET_END ;
+loop_statement   : LOOP loop_variable IN (range | VARIABLE) ;
+loop_variable    : VARIABLE ;
+range            : BRACKET_START NUMBER BRACKET_SEP NUMBER BRACKET_END ;
 
 function         : FUNCTION_NAME function_target? function_on? function_as? ;
 function_target  : expression ;
