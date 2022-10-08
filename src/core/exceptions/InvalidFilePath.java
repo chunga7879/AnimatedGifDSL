@@ -1,9 +1,9 @@
 package core.exceptions;
 
-public class FileNotFound extends DSLException {
+public class InvalidFilePath extends DSLException {
     private final String msg;
 
-    public FileNotFound(String msg) {
+    public InvalidFilePath(String msg) {
         this.msg=msg;
     }
     @Override

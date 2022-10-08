@@ -2,7 +2,7 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
-import core.exceptions.FileNotFound;
+import core.exceptions.InvalidFilePath;
 import core.values.*;
 import files.filesystem.FileSystem;
 
@@ -19,7 +19,7 @@ public class Load extends AbstractFunction {
             ImmutableImage image = FileSystem.openImage(filePath.get());
             return new Image(image);
         } catch (FileNotFoundException e) {
-            throw new FileNotFound(filePath + "could not be found.");
+            throw new InvalidFilePath(filePath + "could not be found.");
         }
     }
 }
