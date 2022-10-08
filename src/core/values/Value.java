@@ -52,7 +52,7 @@ public abstract class Value implements Expression {
     }
 
     public Image asImage() {
-        throw new TypeError(this.typeName, Image.NAME);
+        throw new TypeError(new StringValue(this.typeName), Image.NAME);
     }
 
     @Override

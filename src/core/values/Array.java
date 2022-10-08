@@ -26,12 +26,7 @@ public class Array extends Value implements Iterable<Value> {
         return this;
     }
 
-    @Override
-    public Array asArray() {
-        return this;
-    }
-
     public Iterator<Value> iterator() {
-        return a.iterator();
+        return arr.iterator();
     }
 }
