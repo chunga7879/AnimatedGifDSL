@@ -14,6 +14,6 @@ public class Add extends AbstractFunction {
 
         a.add(i);
 
-        return new Null();
+        return Null.NULL;
     }
 }

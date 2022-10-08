@@ -3,7 +3,7 @@ package core.expressions.arithmetic;
 public class AdditionVisitor extends IntegerArithmeticVisitor {
     private final static String OP = "+";
 
-    public AdditionVisitor(String op) {
+    protected AdditionVisitor() {
         super(AdditionVisitor.OP);
     }
 

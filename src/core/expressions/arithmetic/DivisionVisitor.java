@@ -3,7 +3,7 @@ package core.expressions.arithmetic;
 public class DivisionVisitor extends IntegerArithmeticVisitor {
     private final static String OP = "/";
 
-    public DivisionVisitor(String op) {
+    protected DivisionVisitor() {
         super(DivisionVisitor.OP);
     }
 

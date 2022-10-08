@@ -39,6 +39,10 @@ public abstract class Value implements Expression {
         throw new TypeError(this, BooleanValue.NAME);
     }
 
+    public Image asImage() {
+        throw new TypeError(this, Image.NAME);
+    }
+
     public BooleanValue acceptCV(ComparisonVisitor cv, Expression b, Scope s) {
         throw new NotComparable(this);
     }

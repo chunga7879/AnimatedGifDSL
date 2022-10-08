@@ -5,7 +5,7 @@ import core.expressions.Expression;
 import core.values.IntegerValue;
 import core.values.Value;
 
-public abstract class IntegerArithmeticVisitor extends ArithmeticVisitor {
+abstract class IntegerArithmeticVisitor extends ArithmeticVisitor {
     protected IntegerArithmeticVisitor(String op) {
         super(op);
     }
