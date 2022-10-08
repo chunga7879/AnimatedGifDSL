@@ -34,17 +34,19 @@ public class GifCompilerTest {
     @Test
     public void testCompileIf() {
         String input = """
-            IF (a > b):
+            IF (a + i > b):
               IF (2 < c):
                 IF (d >= 4):
               PRINT "hi1"
-              IF (10 = 100):
+              IF (10 = 100 + b):
                 PRINT "hi2"
                 IF (e <= -10):
                   PRINT "hi3"
-              IF (0 != 2):
+              IF (0 + 10 != 2):
                 PRINT "hi4"
-            PRINT "hi5"
+              IF (x + y < 2 + 4):
+                PRINT "hi5"
+            PRINT "hi6"
             """;
         compile(input);
     }
