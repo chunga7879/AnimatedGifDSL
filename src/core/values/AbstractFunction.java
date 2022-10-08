@@ -6,7 +6,7 @@ import core.exceptions.TypeError;
 public abstract class AbstractFunction extends Value {
     protected static final String NAME = "function";
     public static final String PARAM_TARGET = "$target";
-    public static final String PARAM_ON = "on";
+    public static final String PARAM_ON = "$on";
 
     public AbstractFunction() {
         super(AbstractFunction.NAME);

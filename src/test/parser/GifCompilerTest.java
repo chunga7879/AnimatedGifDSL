@@ -67,6 +67,7 @@ public class GifCompilerTest {
             DO
             DO x
             DO x as x
+            DO a ON b as x
             DO x as x
               WITH a: 10
               WITH B: "hi"
