@@ -1,6 +1,6 @@
-package test.colour;
+package colour;
 
-import builtin.functions.CreateColour;
+import builtin.functions.colour.CreateColour;
 import core.Scope;
 import core.values.Colour;
 import core.values.IntegerValue;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class CreateColourTest {
 
     @Test
-    public void testCreateColourSuccessfully() {
+    public void createColourSuccessfully() {
         Scope scope = new Scope();
         scope.setVar("r", new IntegerValue(100));
         scope.setVar("g", new IntegerValue(39));
@@ -21,7 +21,7 @@ public class CreateColourTest {
     }
 
     @Test
-    public void testCreateColourUnsuccessfully() {
+    public void createColourUnsuccessfully() {
         Scope scope = new Scope();
         scope.setVar("r", new IntegerValue(100));
         scope.setVar("g", new IntegerValue(300));

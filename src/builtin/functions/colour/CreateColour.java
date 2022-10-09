@@ -1,4 +1,4 @@
-package builtin.functions;
+package builtin.functions.colour;
 
 import core.Scope;
 import core.values.*;
