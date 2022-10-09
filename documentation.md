@@ -113,12 +113,10 @@ SAVE [list of images]
 Overlay - Create an image with an overlay of an image on top of another image
 - X: x position of the top-left corner of the above image
 - Y: y position of the top-left corner of the above image
-- Rotation: degrees in rotation of image (clock-wise)
 ```
 OVERLAY [above image] ON [below image] AS [variable name]
   WITH x: [x position]
   WITH y: [y: position]
-  WITH rotation: [degrees]
 ```
 Rectangle - Create a rectangle image with size and colour
 ```
