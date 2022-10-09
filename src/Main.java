@@ -3,6 +3,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
 
+import parser.GifDSLLexer;
+import parser.GifDSLParser;
+
 import java.io.IOException;
 
 public class Main {
