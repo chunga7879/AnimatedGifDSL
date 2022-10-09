@@ -17,4 +17,9 @@ public class VariableAssignment implements Statement {
     public void Do(Scope s) {
         s.setVar(dest, expr.evaluate(s));
     }
+
+    @Override
+    public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
+        return null;
+    }
 }

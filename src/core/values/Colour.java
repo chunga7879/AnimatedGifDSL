@@ -1,5 +1,7 @@
 package core.values;
 
+import core.expressions.ExpressionVisitor;
+
 public class Colour extends Value {
     public static final String NAME = "Colour";
 
@@ -46,5 +48,10 @@ public class Colour extends Value {
 
     public byte getB() {
         return b;
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return null;
     }
 }

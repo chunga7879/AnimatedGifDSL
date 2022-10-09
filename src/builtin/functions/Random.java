@@ -1,6 +1,7 @@
 package builtin.functions;
 
 import core.Scope;
+import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.IntegerValue;
 import core.values.Value;
@@ -16,5 +17,10 @@ public class Random extends AbstractFunction {
         int max = scope.getVar("max").asInteger().get();
         int num = RandomNumber.getRandomNumber(min, max);
         return new IntegerValue(num);
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return null;
     }
 }

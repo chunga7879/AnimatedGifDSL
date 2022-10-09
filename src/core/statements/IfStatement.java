@@ -25,4 +25,9 @@ public class IfStatement implements Statement {
             stms.Do(s);
         }
     }
+
+    @Override
+    public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
+        return null;
+    }
 }

@@ -29,4 +29,9 @@ public class LoopStatement implements Statement {
             }
         }
     }
+
+    @Override
+    public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
+        return null;
+    }
 }

@@ -3,6 +3,7 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
 import core.exceptions.InvalidFilePath;
+import core.expressions.ExpressionVisitor;
 import core.values.*;
 import files.filesystem.FileSystem;
 
@@ -21,5 +22,10 @@ public class Load extends AbstractFunction {
         } catch (FileNotFoundException e) {
             throw new InvalidFilePath(filePath + "could not be found.");
         }
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return null;
     }
 }

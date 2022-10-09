@@ -14,4 +14,9 @@ public class VariableExpression implements Expression {
     public Value evaluate(Scope s) {
         return s.getVar(this.name);
     }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return null;
+    }
 }

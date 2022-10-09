@@ -20,4 +20,9 @@ public class ComparisonExpression implements Expression {
     public BooleanValue evaluate(Scope s) {
         return this.a.evaluate(s).acceptCV(this.cv, this.b, s);
     }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return null;
+    }
 }

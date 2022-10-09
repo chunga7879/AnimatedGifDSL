@@ -1,6 +1,7 @@
 package core.values;
 
 import core.Scope;
+import core.expressions.ExpressionVisitor;
 import core.statements.Return;
 import core.statements.Statement;
 
@@ -24,5 +25,10 @@ public class Function extends AbstractFunction {
             }
         }
         return Null.NULL;
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return null;
     }
 }

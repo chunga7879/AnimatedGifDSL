@@ -21,4 +21,9 @@ public class Return implements Statement {
     public void Do(Scope s) {
         throw new InternalException("Return.Do() should never be called");
     }
+
+    @Override
+    public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
+        return null;
+    }
 }
