@@ -16,7 +16,7 @@ public class Save extends AbstractFunction {
         String location = scope.getVar("location").asString().get();
         //GifMaker.makeGif(frames, duration, location);
 
-        return new Null();
+        return Null.NULL;
     }
 
     private ArrayList<ImmutableImage> getImmutableImages(Array array) {
