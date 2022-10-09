@@ -14,15 +14,9 @@ public class Colour extends Value {
             throw new IllegalArgumentException("r,g,b values out of range");
         }
 
-//        int i = 234;
-//        byte b = (byte) i;
-//        System.out.println(b); // -22
-//        int i2 = b & 0xFF;
-//        System.out.println(i2); // 234
-
-        this.r = (byte) r;
-        this.g = (byte) g;
-        this.b = (byte) b;
+        this.r = r;
+        this.g = g;
+        this.b = b;
     }
 
     public Colour(String hex) {
@@ -30,15 +24,13 @@ public class Colour extends Value {
 
         if (hex.startsWith("#")) {
             hex = hex.substring(1);
+        } else {
+            throw new IllegalArgumentException("Colours in hex format should start with #");
         }
 
         if (hex.length() != 6) {
             throw new IllegalArgumentException("Invalid hex colour");
         }
-//
-//        this.r = (byte) Integer.parseInt(hex.substring(0, 2), 16);
-//        this.g = (byte) Integer.parseInt(hex.substring(2, 4), 16);
-//        this.b = (byte) Integer.parseInt(hex.substring(4, 6), 16);
 
         this.r = Integer.parseInt(hex.substring(0, 2), 16);
         this.g = Integer.parseInt(hex.substring(2, 4), 16);
