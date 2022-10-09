@@ -25,7 +25,7 @@ public class LoopStatement implements Statement {
             Scope loopScope = s.newChildScope();
             loopScope.setVar(this.loopVar, v);
             for (Statement stms : this.statements) {
-                stms.Do(s);
+                stms.Do(loopScope);
             }
         }
     }

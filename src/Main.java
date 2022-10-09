@@ -9,7 +9,9 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
         GifDSLCompiler compiler = new GifDSLCompiler();
-        compiler.addPredefinedValues();
+        // TODO: add built-in functions / constants here
+//        compiler.addPredefinedValues("print", new Print());
+        // TODO: take input from specified file
         Pair<Function, Scope> main = compiler.compile(CharStreams.fromFileName("input.gifify"));
         main.a.call(main.b);
     }

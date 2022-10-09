@@ -2,6 +2,7 @@ package parser;
 
 import core.Scope;
 import core.values.Function;
+import core.values.Value;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ConsoleErrorListener;
@@ -9,8 +10,15 @@ import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.misc.Pair;
 
 public final class GifDSLCompiler {
-    private boolean enableStaticCheck = true;
-    private boolean verbose = true;
+    private boolean enableStaticCheck;
+    private boolean verbose;
+    private Scope scope;
+
+    public GifDSLCompiler() {
+        this.enableStaticCheck = true;
+        this.verbose = true;
+        this.scope = new Scope();
+    }
 
     /**
      * Set whether to run the static checker
@@ -23,7 +31,8 @@ public final class GifDSLCompiler {
     /**
      * Add predefined values (constants & functions)
      */
-    public void addPredefinedValues() {
+    public void addPredefinedValues(String name, Value value) {
+        this.scope.setVar(name.toLowerCase(), value);
     }
 
     /**
@@ -48,8 +57,7 @@ public final class GifDSLCompiler {
         print("Finished parsing");
 
         print("Started AST conversion");
-        Scope rootScope = new Scope();
-        GifDSLConverter converter = new GifDSLConverter(rootScope);
+        GifDSLConverter converter = new GifDSLConverter(scope);
         Function main = converter.convertProgram(parser.program());
         print("Finished AST conversion");
 
@@ -60,7 +68,7 @@ public final class GifDSLCompiler {
         }
 
         print("Finished compilation");
-        return new Pair<>(main, rootScope);
+        return new Pair<>(main, scope);
     }
 
     private void print(String msg) {
