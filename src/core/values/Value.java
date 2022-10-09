@@ -38,6 +38,10 @@ public abstract class Value implements Expression {
         throw new TypeError(this, BooleanValue.NAME);
     }
 
+    public Image asImage() {
+        throw new TypeError(this, Image.NAME);
+    }
+
     public BooleanValue acceptCV(ComparisonVisitor cv, Expression b, Scope s) {
         throw new InvalidOperation(this);
     }
@@ -48,10 +52,6 @@ public abstract class Value implements Expression {
 
     public String getTypeName() {
         return typeName;
-    }
-
-    public Image asImage() {
-        throw new TypeError(new StringValue(this.typeName), Image.NAME);
     }
 
     @Override
