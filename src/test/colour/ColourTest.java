@@ -41,4 +41,14 @@ public class ColourTest {
             Assertions.assertTrue(true);
         }
     }
+
+    @Test
+    public void createHexColourUnsuccessfullyTooShort() {
+        try {
+            Colour colour = new Colour("#12345");
+            Assertions.assertFalse(true);
+        } catch (IllegalArgumentException exception) {
+            Assertions.assertTrue(true);
+        }
+    }
 }
