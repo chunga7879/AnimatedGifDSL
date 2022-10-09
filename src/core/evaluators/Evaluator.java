@@ -100,6 +100,11 @@ public class Evaluator implements NodeVisitor<Scope, Function>, ExpressionVisito
     }
 
     @Override
+    public Statement visit(Scope ctx, FunctionDefinition fd) {
+        return null;
+    }
+
+    @Override
     public Statement visit(Scope ctx, IfStatement is) {
         return null;
     }

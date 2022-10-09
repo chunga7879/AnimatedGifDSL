@@ -100,6 +100,11 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
     }
 
     @Override
+    public Value visit(Scope ctx, FunctionDefinition fd) {
+        return null;
+    }
+
+    @Override
     public Value visit(Scope ctx, IfStatement is) {
         return null;
     }
