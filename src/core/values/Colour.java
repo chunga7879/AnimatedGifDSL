@@ -1,5 +1,8 @@
 package core.values;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Colour extends Value {
     public static final String NAME = "Colour";
 
@@ -28,7 +31,12 @@ public class Colour extends Value {
             throw new IllegalArgumentException("Colours in hex format should start with #");
         }
 
-        if (hex.length() != 6) {
+        // Check that there are no values ^[A-F0-9]
+        Pattern pattern = Pattern.compile("[^A-F0-9]");
+        Matcher matcher = pattern.matcher(hex);
+        boolean containsInvalidCharacter = matcher.find();
+
+        if (hex.length() != 6 || containsInvalidCharacter) {
             throw new IllegalArgumentException("Invalid hex colour");
         }
 
