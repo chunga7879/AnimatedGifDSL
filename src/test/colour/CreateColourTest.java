@@ -4,6 +4,7 @@ import builtin.functions.colour.CreateColour;
 import core.Scope;
 import core.values.Colour;
 import core.values.IntegerValue;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,10 @@ public class CreateColourTest {
         scope.setVar("g", new IntegerValue(39));
         scope.setVar("b", new IntegerValue(40));
         CreateColour createColour = new CreateColour();
-        createColour.call(scope);
+        Colour colour = (Colour) createColour.call(scope);
+        Assertions.assertTrue(colour.getR() == 100);
+        Assertions.assertTrue(colour.getG() == 39);
+        Assertions.assertTrue(colour.getB() == 40);
     }
 
     @Test
