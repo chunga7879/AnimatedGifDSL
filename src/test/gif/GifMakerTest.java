@@ -1,6 +1,7 @@
 package gif;
 
 import com.sksamuel.scrimage.ImmutableImage;
+import files.gif.GifMaker;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;

@@ -18,10 +18,10 @@ public class StatementEvaluator implements StatementVisitor<Scope, Void> {
         return null;
     }
 
-    @Override
-    public Void visit(Scope ctx, FunctionCall fc) {
-        return null;
-    }
+//    @Override
+//    public Void visit(Scope ctx, FunctionCall fc) {
+//        return null;
+//    }
 
     @Override
     public Void visit(Scope ctx, Loop loop) {

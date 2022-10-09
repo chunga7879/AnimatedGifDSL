@@ -2,16 +2,16 @@ package core.exceptions;
 
 import core.values.Value;
 
-public class InvalidArithmeticOperator extends DSLException {
+public class InvalidOperation extends DSLException {
     private final String type;
     private final String op;
 
-    public InvalidArithmeticOperator(Value v) {
+    public InvalidOperation(Value v) {
         this.type = v.getTypeName();
         this.op = "";
     }
 
-    public InvalidArithmeticOperator(Value v, String op) {
+    public InvalidOperation(Value v, String op) {
         this.type = v.getTypeName();
         this.op = op;
     }
@@ -19,8 +19,8 @@ public class InvalidArithmeticOperator extends DSLException {
     @Override
     protected String getDetails() {
         if (!this.op.isEmpty()) {
-            return this.type + " does not support operator " + this.op;
+            return this.type + " is not supported with " + this.op;
         }
-        return this.type + " does not support arithmetic operators.";
+        return this.type + " is not supported with the operator.";
     }
 }

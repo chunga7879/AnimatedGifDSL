@@ -1,7 +1,7 @@
 package core.expressions.comparison;
 
 import core.Scope;
-import core.exceptions.NotComparable;
+import core.exceptions.InvalidOperation;
 import core.expressions.Expression;
 import core.values.BooleanValue;
 import core.values.IntegerValue;
@@ -16,10 +16,10 @@ public abstract class ComparisonVisitor {
     }
 
     public BooleanValue visit(IntegerValue a, Expression b, Scope s) {
-        throw new NotComparable(a, this.op);
+        throw new InvalidOperation(a, this.op);
     }
 
     public BooleanValue visit(StringValue a, Expression b, Scope s) {
-        throw new NotComparable(a, this.op);
+        throw new InvalidOperation(a, this.op);
     }
 }

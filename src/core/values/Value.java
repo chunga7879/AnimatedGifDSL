@@ -1,8 +1,7 @@
 package core.values;
 
 import core.Scope;
-import core.exceptions.InvalidArithmeticOperator;
-import core.exceptions.NotComparable;
+import core.exceptions.InvalidOperation;
 import core.exceptions.TypeError;
 import core.expressions.arithmetic.ArithmeticVisitor;
 import core.expressions.comparison.ComparisonVisitor;
@@ -39,20 +38,20 @@ public abstract class Value implements Expression {
         throw new TypeError(this, BooleanValue.NAME);
     }
 
+    public Image asImage() {
+        throw new TypeError(this, Image.NAME);
+    }
+
     public BooleanValue acceptCV(ComparisonVisitor cv, Expression b, Scope s) {
-        throw new NotComparable(this);
+        throw new InvalidOperation(this);
     }
 
     public Value acceptAV(ArithmeticVisitor av, Expression b, Scope s) {
-        throw new InvalidArithmeticOperator(this);
+        throw new InvalidOperation(this);
     }
 
     public String getTypeName() {
         return typeName;
-    }
-
-    public Image asImage() {
-        throw new TypeError(new StringValue(this.typeName), Image.NAME);
     }
 
     @Override

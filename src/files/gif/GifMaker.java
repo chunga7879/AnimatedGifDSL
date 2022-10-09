@@ -1,4 +1,4 @@
-package gif;
+package files.gif;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.nio.StreamingGifWriter;
