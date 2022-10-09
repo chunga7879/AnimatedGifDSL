@@ -23,6 +23,6 @@ public class ComparisonExpression implements Expression {
 
     @Override
     public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return null;
+        return v.visit(ctx, this);
     }
 }

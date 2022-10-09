@@ -24,6 +24,6 @@ public class Return implements Statement {
 
     @Override
     public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
-        return null;
+        return v.visit(ctx, this);
     }
 }

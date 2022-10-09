@@ -34,6 +34,6 @@ public class Save extends AbstractFunction {
 
     @Override
     public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return null;
+        return v.visit(ctx, this);
     }
 }
