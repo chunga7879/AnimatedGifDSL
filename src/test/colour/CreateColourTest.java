@@ -4,10 +4,8 @@ import builtin.functions.colour.CreateColour;
 import core.Scope;
 import core.values.Colour;
 import core.values.IntegerValue;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 
 public class CreateColourTest {
 
