@@ -1,4 +1,4 @@
-package gif;
+package test.gif;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import files.gif.GifMaker;
