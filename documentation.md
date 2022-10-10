@@ -110,6 +110,28 @@ SAVE [list of images]
   WITH location: [file path]
 ```
 #### Images
+
+Crop - crop image with width and height
+```
+CROP [target image]
+  WITH width: [number]
+  WITH height: [number]
+```
+
+Resize - resize image with width and height
+```
+RESIZE [target image]
+  WITH width: [number]
+  WITH height: [number]
+```
+
+
+Rotate - rotate image with angle
+```
+ROTATE [target image]
+  WITH angle: [number]
+```
+
 Overlay - Create an image with an overlay of an image on top of another image
 - X: x position of the top-left corner of the above image
 - Y: y position of the top-left corner of the above image
@@ -118,6 +140,21 @@ OVERLAY [above image] ON [below image] AS [variable name]
   WITH x: [x position]
   WITH y: [y: position]
 ```
+GetHeight - get height of image
+```
+GETHEIGHT [target image] AS [variable name]
+```
+GetWidth - get width of image
+```
+GETWIDTH [target image] AS [variable name]
+```
+Translate - translate image with x, y
+```
+TRANSLATE [target image]
+  WITH x: [x position]
+  WITH y: [y: position]
+```
+
 Rectangle - Create a rectangle image with size and colour
 ```
 CREATE-RECTANGLE AS [variable name]
@@ -130,6 +167,9 @@ Write - Write text as an image
 WRITE [text] AS [variable name]
   WITH size: [font size]
   WITH font: [font]
+  WITH x: [number]
+  WITH y: [number]
+
 ```
 Colour Fill - Fill each pixel of an image with a colour but maintain its transparency
 ```
