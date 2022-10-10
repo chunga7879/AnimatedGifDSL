@@ -145,7 +145,7 @@ SET-OPACITY [image] AS [variable name]
 ```
 Filter - Apply a filtering to an image 
 
-*Supported Filters:* `"invert"`, `"retro"`, `"greyscale"`, `"blur"`, `"sharpen"`, `"sepia"`
+*Supported Filters:* `"invert"`, `"greyscale"`, `"blur"`, `"sharpen"`, `"sepia"`
 ```
 FILTER [image] AS [variable name]
   WITH filtering: [filtering name]

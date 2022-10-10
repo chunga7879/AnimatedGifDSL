@@ -35,8 +35,8 @@ public class Filter extends AbstractFunction {
             case "invert":
                 filteredImage = FilterApplicator.invert(image);
                 break;
-            case "retro":
-                filteredImage = FilterApplicator.retro(image);
+            case "chrome":
+                filteredImage = FilterApplicator.chrome(image);
                 break;
             default:
                 throw new IllegalArgumentException("Filter not supported.");

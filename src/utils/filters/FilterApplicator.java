@@ -25,8 +25,8 @@ public class FilterApplicator {
         return filter(image, new GrayscaleFilter());
     }
 
-    public static ImmutableImage retro(ImmutableImage image) {
-        return filter(image, new OldPhotoFilter());
+    public static ImmutableImage chrome(ImmutableImage image) {
+        return filter(image, new ChromeFilter());
     }
 
     public static ImmutableImage sepia(ImmutableImage image) {

@@ -19,7 +19,7 @@ public class FilterTest {
     @BeforeEach
     public void beforeEach() {
         try {
-            sealImage = ImmutableImage.loader().fromFile("src/test/filter/testInputs/seal.png");
+            sealImage = ImmutableImage.loader().fromFile("src/test/filtering/testInputs/italy.jpeg");
             Image seal = new Image(sealImage);
             scope = new Scope();
             scope.setVar("$target", seal);
@@ -34,9 +34,23 @@ public class FilterTest {
             scope.setVar("filtering", new StringValue("sepia"));
 
             Filter filter = new Filter();
+            Image italy = (Image) filter.call(scope);
+
+            italy.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/sepiaItaly.png"));
+        } catch (IOException exception) {
+            Assertions.assertTrue(false);
+        }
+    }
+
+    @Test
+    public void filterChrome() {
+        try {
+            scope.setVar("filtering", new StringValue("chrome"));
+
+            Filter filter = new Filter();
             Image seal = (Image) filter.call(scope);
 
-            seal.get().output(PngWriter.NoCompression, new File("src/test/filter/testResults/sepiaSeal.png"));
+            seal.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/chromeItaly.png"));
         } catch (IOException exception) {
             Assertions.assertTrue(false);
         }
@@ -50,7 +64,7 @@ public class FilterTest {
             Filter filter = new Filter();
             Image seal = (Image) filter.call(scope);
 
-            seal.get().output(PngWriter.NoCompression, new File("src/test/filter/testResults/blurSeal.png"));
+            seal.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/blurItaly.png"));
         } catch (IOException exception) {
             Assertions.assertTrue(false);
         }
@@ -64,7 +78,7 @@ public class FilterTest {
             Filter filter = new Filter();
             Image seal = (Image) filter.call(scope);
 
-            seal.get().output(PngWriter.NoCompression, new File("src/test/filter/testResults/greyScaleSeal.png"));
+            seal.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/greyScaleItaly.png"));
         } catch (IOException exception) {
             Assertions.assertTrue(false);
         }
@@ -78,21 +92,7 @@ public class FilterTest {
             Filter filter = new Filter();
             Image seal = (Image) filter.call(scope);
 
-            seal.get().output(PngWriter.NoCompression, new File("src/test/filter/testResults/sharpenSeal.png"));
-        } catch (IOException exception) {
-            Assertions.assertTrue(false);
-        }
-    }
-
-    @Test
-    public void filterRetro() {
-        try {
-            scope.setVar("filtering", new StringValue("retro"));
-
-            Filter filter = new Filter();
-            Image seal = (Image) filter.call(scope);
-
-            seal.get().output(PngWriter.NoCompression, new File("src/test/filter/testResults/retroSeal.png"));
+            seal.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/sharpenItaly.png"));
         } catch (IOException exception) {
             Assertions.assertTrue(false);
         }
@@ -106,7 +106,7 @@ public class FilterTest {
             Filter filter = new Filter();
             Image seal = (Image) filter.call(scope);
 
-            seal.get().output(PngWriter.NoCompression, new File("src/test/filter/testResults/invertSeal.png"));
+            seal.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/invertItaly.png"));
         } catch (IOException exception) {
             Assertions.assertTrue(false);
         }
