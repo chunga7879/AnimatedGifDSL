@@ -2,6 +2,7 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.expressions.ExpressionVisitor;
 import core.values.*;
 
 import java.util.ArrayList;
@@ -29,5 +30,10 @@ public class Save extends AbstractFunction {
         }
 
         return immutableImgs;
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }

@@ -19,4 +19,9 @@ public class ArithmeticExpression implements Expression {
     public Value evaluate(Scope s) {
         return this.a.evaluate(s).acceptAV(this.av, this.b, s);
     }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
+    }
 }

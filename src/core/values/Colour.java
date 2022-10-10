@@ -3,6 +3,8 @@ package core.values;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import core.expressions.ExpressionVisitor;
+
 public class Colour extends Value {
     public static final String NAME = "Colour";
 
@@ -60,5 +62,10 @@ public class Colour extends Value {
 
     public int getB() {
         return b;
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }
