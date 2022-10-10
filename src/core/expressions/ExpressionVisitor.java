@@ -39,4 +39,6 @@ public interface ExpressionVisitor<C, T> {
     T visit(C ctx, Random r);
 
     T visit(C ctx, Save s);
+
+    T visit(C ctx, Filter f);
 }
