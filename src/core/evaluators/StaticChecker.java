@@ -143,6 +143,11 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
     }
 
     @Override
+    public Value visit(Scope ctx, Filter f) {
+        return null;
+    }
+
+    @Override
     public Value visit(Scope ctx, FunctionDefinition fd) {
         String functionName = fd.getName();
 

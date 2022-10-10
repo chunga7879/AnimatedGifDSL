@@ -143,7 +143,9 @@ Opacity - Sets transparency of image (0 = transparent, 100 = opaque)
 SET-OPACITY [image] AS [variable name]
   WITH amount: [number]
 ```
-Filter - Apply a filter to an image
+Filter - Apply a filter to an image 
+
+*Supported Filters:* `"invert"`, `"retro"`, `"greyscale"`, `"blur"`, `"sharpen"`, `"sepia"`
 ```
 FILTER [image] AS [variable name]
   WITH filter: [filter name]
