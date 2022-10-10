@@ -164,10 +164,13 @@ CREATE-RECTANGLE AS [variable name]
 ```
 Write - Write text as an image
 ```
+// style can be plain, italic, bold (if other thing is added, it will use plain as style)
 WRITE [text] AS [variable name]
-  WITH size: [font size]
-  WITH font: [font]
-
+  WITH size: [font size(number)]
+  WITH font: [font(string)]
+  WITH style: [style(string)]
+  WITH width: [number]
+  WITH height: [number]
 ```
 Colour Fill - Fill each pixel of an image with a colour but maintain its transparency
 ```
