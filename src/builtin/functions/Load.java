@@ -2,6 +2,7 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.exceptions.InvalidFilePath;
 import core.expressions.ExpressionVisitor;
 import core.values.*;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Load extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Load";
 
     @Override
     public Value call(Scope scope) {
@@ -31,7 +33,7 @@ public class Load extends AbstractFunction {
         Map<String, String> params = new HashMap<>() {{
             put("$target", StringValue.NAME);
         }};
-        checker(scope, params);
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override

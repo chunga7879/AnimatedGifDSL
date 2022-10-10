@@ -1,6 +1,7 @@
 package builtin.functions.colour;
 
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.Colour;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GetR extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Get-R";
 
     @Override
     public Value call(Scope scope) {
@@ -23,7 +25,7 @@ public class GetR extends AbstractFunction {
         Map<String, String> params = new HashMap<>() {{
             put("$target", Colour.NAME);
         }};
-        checker(scope, params);
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package builtin.functions;
 
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.IntegerValue;
@@ -14,6 +15,8 @@ import java.util.Map;
  * Generate a random number between min and max (inclusive)
  */
 public class Random extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Random";
+
     @Override
     public Value call(Scope scope) {
         int min = scope.getVar("min").asInteger().get();
@@ -28,7 +31,7 @@ public class Random extends AbstractFunction {
             put("min", IntegerValue.NAME);
             put("max", IntegerValue.NAME);
         }};
-        checker(scope, params);
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override

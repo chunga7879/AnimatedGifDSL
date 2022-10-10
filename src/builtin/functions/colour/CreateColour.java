@@ -1,7 +1,7 @@
 package builtin.functions.colour;
 
 import core.Scope;
-import core.expressions.Expression;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.Colour;
@@ -10,9 +10,9 @@ import core.values.Value;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class CreateColour extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Create-Colour";
 
     @Override
     public Value call(Scope scope) {
@@ -30,7 +30,7 @@ public class CreateColour extends AbstractFunction {
            put("g", IntegerValue.NAME);
            put("b", IntegerValue.NAME);
         }};
-        checker(scope, params);
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override

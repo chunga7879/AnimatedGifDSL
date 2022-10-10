@@ -29,21 +29,4 @@ public abstract class AbstractFunction extends Value {
     }
 
     public abstract void checkArgs(Scope scope);
-
-    protected void checker(Scope scope, Map<String, String> params) {
-        if (scope.getSize() != params.size()) {
-            throw new FunctionException("Invalid number of arguments");
-        }
-        for (Map.Entry<String, String> param : params.entrySet()) {
-            String paramName = param.getKey();
-            if (!scope.hasVar(paramName)) {
-                throw new FunctionException("argument " + paramName + " not provided");
-            }
-            String expectedType = param.getValue();
-            String actualType = scope.getVar(paramName).getTypeName();
-            if (!Objects.equals(expectedType, actualType)) {
-                throw new FunctionException("argument " + paramName + " is of type " + actualType + " but expected " + expectedType);
-            }
-        }
-    }
 }

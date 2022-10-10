@@ -2,6 +2,7 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
 import core.values.*;
 
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Save extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Save";
 
     @Override
     public Value call(Scope scope) {
@@ -28,7 +30,7 @@ public class Save extends AbstractFunction {
             put("duration", IntegerValue.NAME);
             put("location", StringValue.NAME);
         }};
-        checker(scope, params);
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     private ArrayList<ImmutableImage> getImmutableImages(Array array) {
