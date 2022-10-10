@@ -78,7 +78,7 @@ LIST AS editedFrames
 
 LOOP f IN frames:
   FILTER f
-    WITH filter: "invert"
+    WITH filtering: "invert"
   ADD editedFrames
     WITH item: f
 

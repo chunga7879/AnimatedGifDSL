@@ -11,7 +11,7 @@ public class Filter extends AbstractFunction {
     @Override
     public Value call(Scope scope) {
         ImmutableImage image = scope.getVar("$target").asImage().get();
-        String filter = scope.getVar("filter").asString().get();
+        String filter = scope.getVar("filtering").asString().get();
 
         ImmutableImage filteredImage = performFilter(filter, image);
         return new Image(filteredImage);
