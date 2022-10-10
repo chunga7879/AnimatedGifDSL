@@ -43,16 +43,4 @@ public interface ExpressionVisitor<C, T> {
     T visit(C ctx, Random r);
 
     T visit(C ctx, Save s);
-
-    T visit(C ctx, GetB b);
-
-    T visit(C ctx, GetG g);
-
-    T visit(C ctx, GetR r);
-
-    T visit(C ctx, CreateColour cc);
-
-    T visit(C ctx, SetOpacity so);
-
-    T visit(C ctx, ColourFill cf);
 }

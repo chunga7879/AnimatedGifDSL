@@ -147,36 +147,6 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
     }
 
     @Override
-    public Value visit(Scope ctx, GetB b) {
-        return null;
-    }
-
-    @Override
-    public Value visit(Scope ctx, GetG g) {
-        return null;
-    }
-
-    @Override
-    public Value visit(Scope ctx, GetR r) {
-        return null;
-    }
-
-    @Override
-    public Value visit(Scope ctx, CreateColour cc) {
-        return null;
-    }
-
-    @Override
-    public Value visit(Scope ctx, SetOpacity so) {
-        return null;
-    }
-
-    @Override
-    public Value visit(Scope ctx, ColourFill cf) {
-        return null;
-    }
-
-    @Override
     public Value visit(Scope ctx, FunctionDefinition fd) {
         String functionName = fd.getName();
 

@@ -46,7 +46,7 @@ public class SetOpacityTest {
 
             transparentCat.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/transparentCat.png"));
         } catch (IOException exception) {
-            Assertions.assertTrue(false);
+            Assertions.fail(exception.getMessage());
         }
     }
 
@@ -62,9 +62,9 @@ public class SetOpacityTest {
             SetOpacity opacityFunction = new SetOpacity();
             Image transparentCat = (Image) opacityFunction.call(scope);
 
-            Assertions.assertTrue(false);
+            Assertions.fail("Illegal argument exception should have been thrown.");
         } catch (IOException exception) {
-            Assertions.assertTrue(false);
+            Assertions.fail(exception.getMessage());
         } catch (IllegalArgumentException illegalArgumentException) {
             Assertions.assertTrue(true);
         }

@@ -31,6 +31,6 @@ public class SetOpacity extends AbstractFunction {
 
     @Override
     public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.visit(ctx, this);
+        return null;
     }
 }

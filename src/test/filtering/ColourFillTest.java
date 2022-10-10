@@ -39,12 +39,12 @@ public class ColourFillTest {
 
             blackCat.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/blackCat.png"));
         } catch (IOException exception) {
-            Assertions.assertTrue(false);
+            Assertions.fail(exception.getMessage());
         }
     }
 
     @Test
-    public void setOpacityTest0() {
+    public void colourCatPurple() {
         try {
             scope.setVar("colour", new Colour("#A020F0"));
 
@@ -53,7 +53,7 @@ public class ColourFillTest {
 
             purpleCat.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/purpleCat.png"));
         } catch (IOException exception) {
-            Assertions.assertTrue(false);
+            Assertions.fail(exception.getMessage());
         }
     }
 }
