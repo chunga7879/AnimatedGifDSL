@@ -143,12 +143,12 @@ Opacity - Sets transparency of image (0 = transparent, 100 = opaque)
 SET-OPACITY [image] AS [variable name]
   WITH amount: [number]
 ```
-Filter - Apply a filtering to an image 
+Filter - Apply a filter to an image 
 
 *Supported Filters:* `"invert"`, `"greyscale"`, `"blur"`, `"sharpen"`, `"sepia"`, `"chrome"`
 ```
 FILTER [image] AS [variable name]
-  WITH filtering: [filtering name]
+  WITH filter: [filter name]
 ```
 #### Custom Functions
 Define - Create a custom function
