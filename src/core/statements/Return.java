@@ -12,8 +12,12 @@ public class Return implements Statement {
         this.e = e;
     }
 
+    public Expression getE() {
+        return e;
+    }
+
     // Return the value that this return statement returns.
-    public Value GetReturnValue(Scope s) {
+    public Value getReturnValue(Scope s) {
         return this.e.evaluate(s);
     }
 

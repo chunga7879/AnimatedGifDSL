@@ -3,12 +3,26 @@ package core.evaluators;
 import builtin.functions.*;
 import core.NodeVisitor;
 import core.Scope;
+import core.exceptions.FunctionException;
 import core.expressions.*;
 import core.statements.*;
 import core.values.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisitor<Scope, Value>,
     StatementVisitor<Scope, Value> {
+    private Map<String, Boolean> functionTable = new HashMap<>() {{
+       put("ADD", true);
+       put("CREATE-LIST", true);
+       put("LOAD", true);
+       put("PRINT", true);
+       put("RANDOM", true);
+       put("SAVE", true);
+    }};
+
     @Override
     public Value visit(Scope ctx, ArithmeticExpression ae) {
         return null;
@@ -21,7 +35,11 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, FunctionCall fc) {
-        return null;
+        String name = fc.getName();
+        if (!functionTable.containsKey(name)) {
+            throw new FunctionException(name + " is not defined");
+        }
+        return Null.NULL;
     }
 
     @Override
@@ -46,7 +64,10 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, Function f) {
-        return null;
+        for (Statement s: f.getStatements()) {
+            s.accept(ctx, this);
+        }
+        return Null.NULL;
     }
 
     @Override
@@ -71,56 +92,117 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, Add a) {
-        return null;
+        Map<String, String> args = new HashMap<>() {{
+            put("array", Array.NAME);
+        }};
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, CreateList cl) {
-        return null;
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, Load l) {
-        return null;
+        Map<String, String> args = new HashMap<>() {{
+            put("$target", StringValue.NAME);
+        }};
+        checkArguments(ctx, args);
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, Print p) {
-        return null;
+        Map<String, String> args = new HashMap<>() {{
+            // TODO: check values
+            put("msg", IntegerValue.NAME);
+        }};
+        checkArguments(ctx, args);
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, Random r) {
-        return null;
+        Map<String, String> args = new HashMap<>() {{
+            put("min", IntegerValue.NAME);
+            put("max", IntegerValue.NAME);
+        }};
+        checkArguments(ctx, args);
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, Save s) {
-        return null;
+        Map<String, String> args = new HashMap<>() {{
+            put("duration", IntegerValue.NAME);
+            put("location", StringValue.NAME);
+        }};
+        checkArguments(ctx, args);
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, FunctionDefinition fd) {
-        return null;
+        String functionName = fd.getName();
+
+        if (functionTable.containsKey(functionName)) {
+            throw new FunctionException(functionName + " already exists");
+        } else {
+            functionTable.put(functionName, true);
+        }
+
+        for (Statement s: fd.getStatements()) {
+            s.accept(ctx, this);
+        }
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, IfStatement is) {
-        return null;
+        for (Statement s: is.getStatements()) {
+            s.accept(ctx, this);
+        }
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, LoopStatement ls) {
-        return null;
+        for (Statement s: ls.getStatements()) {
+            s.accept(ctx, this);
+        }
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, Return r) {
-        return null;
+        r.accept(ctx, this);
+        return Null.NULL;
     }
 
     @Override
     public Value visit(Scope ctx, VariableAssignment va) {
-        return null;
+        va.accept(ctx, this);
+//        String dest = va.getDest();
+//        if (ctx.hasVar(dest)) {
+//            String destType = ctx.getVar(dest).getTypeName();
+//            if (destType != va.)
+//        }
+        return Null.NULL;
+    }
+
+    private void checkArguments(Scope ctx, Map<String, String> args) {
+        for (Map.Entry<String, String> arg: args.entrySet()) {
+            String argName = arg.getKey();
+            if (!ctx.hasVar(argName)) {
+                throw new FunctionException("argument " + argName + " not provided");
+            }
+
+            String expectedType = arg.getValue();
+            String actualType = ctx.getVar(argName).getTypeName();
+            if (!Objects.equals(expectedType, actualType)) {
+                throw new FunctionException("argument " + argName + " is of type " + actualType + " but expected " + expectedType);
+            }
+        }
     }
 }

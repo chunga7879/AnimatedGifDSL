@@ -14,6 +14,14 @@ public class FunctionDefinition implements Statement{
         this.name = name;
     }
 
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     public void Do(Scope s) {
         s.setVar(this.name, new Function(this.statements));

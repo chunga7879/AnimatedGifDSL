@@ -13,6 +13,14 @@ public class VariableAssignment implements Statement {
         this.expr = expr;
     }
 
+    public String getDest() {
+        return dest;
+    }
+
+    public Expression getExpr() {
+        return expr;
+    }
+
     @Override
     public void Do(Scope s) {
         s.setVar(dest, expr.evaluate(s));

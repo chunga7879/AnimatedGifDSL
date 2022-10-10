@@ -15,6 +15,14 @@ public class IfStatement implements Statement {
         this.statements = statements;
     }
 
+    public Expression getCond() {
+        return cond;
+    }
+
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
     @Override
     public void Do(Scope s) {
         if (!this.cond.evaluate(s).asBoolean().get()) {

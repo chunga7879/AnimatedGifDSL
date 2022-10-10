@@ -48,4 +48,8 @@ public class Scope {
             this.vars.put(name, v);
         }
     }
+
+    public boolean hasVar(String name) {
+        return vars.containsKey(name);
+    }
 }

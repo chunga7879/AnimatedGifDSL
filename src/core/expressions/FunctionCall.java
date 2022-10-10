@@ -24,6 +24,14 @@ public class FunctionCall implements Expression, Statement {
         this.scope = scope;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public HashMap<String, Expression> getArgs() {
+        return args;
+    }
+
     /**
      * @param s The scope to evaluate argument expressions in.
      * @return The return value of the function.
