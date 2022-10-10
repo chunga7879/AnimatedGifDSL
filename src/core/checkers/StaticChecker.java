@@ -25,6 +25,7 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
         functions.setVar(GetR.ACTUAL_NAME, new GetR());
         functions.setVar(Add.ACTUAL_NAME, new Add());
         functions.setVar(CreateList.ACTUAL_NAME, new CreateList());
+        functions.setVar(Filter.ACTUAL_NAME, new Filter());
         functions.setVar(Load.ACTUAL_NAME, new Load());
         functions.setVar(Print.ACTUAL_NAME, new Print());
         functions.setVar(Random.ACTUAL_NAME, new Random());
