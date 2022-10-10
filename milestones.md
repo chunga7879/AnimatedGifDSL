@@ -16,7 +16,7 @@ This DSL will allow users to modify images in various ways, including the abilit
   * Users can create their own functions with arguments.
   * Functions comprise of other functions and/or built-in manipulation functions.
   * The DSL will have some built in functions:
-    * filtering
+    * filter
     * crop
     * resize
     * rotate
@@ -258,7 +258,7 @@ Opacity - Sets transparency of image (0 = transparent, 100 = opaque)
 OPACITY [image] AS [variable name]
   WITH amount: [number]
 ```
-Filter - Apply a filtering to an image
+Filter - Apply a filter to an image
 ```
 FILTER [image] AS [variable name]
   WITH filtering: [filtering name]
@@ -340,7 +340,7 @@ COLOR image
   - It wasn’t obvious what the list of image frames was, and why we were adding to it
 - Did not call OVERLAY with the image on the background after each image manipulation
   - Perhaps user was assuming that the image once overlaid on the background the first time, will implicitly get overlaid in subsequent image manipulation calls
-- For the built-in FILTER function, user thinks it’s more readable to have one FILTER function and specify what filtering we want, instead of creating separate built-in functions for each filtering
+- For the built-in FILTER function, user thinks it’s more readable to have one FILTER function and specify what filter we want, instead of creating separate built-in functions for each filter
   - Perhaps needs documentation on what filters are available
 - COLOR was an intuitive name for the built-in function to color images
 
