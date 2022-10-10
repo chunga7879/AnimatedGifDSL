@@ -17,7 +17,7 @@ public class Save extends AbstractFunction {
     @Override
     public Value call(Scope scope) {
         ArrayList<ImmutableImage> frames = getImmutableImages(scope.getVar("$target").asArray());
-        long duration = (long) scope.getVar("duration").asInteger().get();
+        long duration = scope.getVar("duration").asInteger().get();
         String location = scope.getVar("location").asString().get();
 
         try {
