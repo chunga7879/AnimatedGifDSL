@@ -19,7 +19,7 @@ public class Filter extends AbstractFunction {
 
     private ImmutableImage performFilter(String filter, ImmutableImage image) {
         ImmutableImage filteredImage;
-        switch (filter) {
+        switch (filter.toLowerCase()) {
             case "sepia":
                 filteredImage = FilterApplicator.sepia(image);
                 break;
