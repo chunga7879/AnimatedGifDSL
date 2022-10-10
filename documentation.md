@@ -165,6 +165,7 @@ CREATE-RECTANGLE AS [variable name]
 Write - Write text as an image
 ```
 // style can be plain, italic, bold (if other thing is added, it will use plain as style)
+// write put text at the center of image with width, height
 WRITE [text] AS [variable name]
   WITH size: [font size(number)]
   WITH font: [font(string)]
