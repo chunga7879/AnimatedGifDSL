@@ -1,12 +1,5 @@
 package core.evaluators;
 
-import builtin.functions.*;
-import core.NodeVisitor;
-import core.Scope;
-import core.expressions.*;
-import core.statements.*;
-import core.values.*;
-
 //public class Evaluator implements NodeVisitor<Scope, Function>, ExpressionVisitor<Scope, Expression>,
 //    StatementVisitor<Scope, Statement> {
 //    @Override

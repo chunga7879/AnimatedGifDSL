@@ -9,7 +9,7 @@ public class BooleanValue extends Value {
 
     public BooleanValue(boolean b) {
         super(BooleanValue.NAME);
-        this.b=b;
+        this.b = b;
     }
 
     public boolean get() {

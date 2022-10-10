@@ -3,7 +3,6 @@ package core.expressions;
 import core.Scope;
 import core.expressions.comparison.ComparisonVisitor;
 import core.values.BooleanValue;
-import core.values.Value;
 
 public class ComparisonExpression implements Expression {
     private final Expression a;

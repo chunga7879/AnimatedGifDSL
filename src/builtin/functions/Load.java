@@ -4,7 +4,10 @@ import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
 import core.exceptions.InvalidFilePath;
 import core.expressions.ExpressionVisitor;
-import core.values.*;
+import core.values.AbstractFunction;
+import core.values.Image;
+import core.values.StringValue;
+import core.values.Value;
 import files.filesystem.FileSystem;
 
 import java.io.FileNotFoundException;

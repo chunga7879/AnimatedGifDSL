@@ -15,12 +15,12 @@ import java.util.Objects;
 public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisitor<Scope, Value>,
     StatementVisitor<Scope, Value> {
     private Map<String, Boolean> functionTable = new HashMap<>() {{
-       put("ADD", true);
-       put("CREATE-LIST", true);
-       put("LOAD", true);
-       put("PRINT", true);
-       put("RANDOM", true);
-       put("SAVE", true);
+        put("ADD", true);
+        put("CREATE-LIST", true);
+        put("LOAD", true);
+        put("PRINT", true);
+        put("RANDOM", true);
+        put("SAVE", true);
     }};
 
     @Override
@@ -64,7 +64,7 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, Function f) {
-        for (Statement s: f.getStatements()) {
+        for (Statement s : f.getStatements()) {
             s.accept(ctx, this);
         }
         return Null.NULL;
@@ -152,7 +152,7 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
             functionTable.put(functionName, true);
         }
 
-        for (Statement s: fd.getStatements()) {
+        for (Statement s : fd.getStatements()) {
             s.accept(ctx, this);
         }
         return Null.NULL;
@@ -160,7 +160,7 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, IfStatement is) {
-        for (Statement s: is.getStatements()) {
+        for (Statement s : is.getStatements()) {
             s.accept(ctx, this);
         }
         return Null.NULL;
@@ -168,7 +168,7 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, LoopStatement ls) {
-        for (Statement s: ls.getStatements()) {
+        for (Statement s : ls.getStatements()) {
             s.accept(ctx, this);
         }
         return Null.NULL;
@@ -192,7 +192,7 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
     }
 
     private void checkArguments(Scope ctx, Map<String, String> args) {
-        for (Map.Entry<String, String> arg: args.entrySet()) {
+        for (Map.Entry<String, String> arg : args.entrySet()) {
             String argName = arg.getKey();
             if (!ctx.hasVar(argName)) {
                 throw new FunctionException("argument " + argName + " not provided");

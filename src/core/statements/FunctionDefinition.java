@@ -5,7 +5,7 @@ import core.values.Function;
 
 import java.util.List;
 
-public class FunctionDefinition implements Statement{
+public class FunctionDefinition implements Statement {
     private final List<Statement> statements;
     private final String name;
 

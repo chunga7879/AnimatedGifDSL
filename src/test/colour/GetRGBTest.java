@@ -1,6 +1,5 @@
 package colour;
 
-import builtin.functions.colour.CreateColour;
 import builtin.functions.colour.GetB;
 import builtin.functions.colour.GetG;
 import builtin.functions.colour.GetR;

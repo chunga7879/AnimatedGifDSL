@@ -2,7 +2,6 @@ package core.statements;
 
 import core.Scope;
 import core.expressions.Expression;
-import core.values.Null;
 
 import java.util.List;
 
