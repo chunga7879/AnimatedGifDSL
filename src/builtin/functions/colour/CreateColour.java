@@ -2,7 +2,10 @@ package builtin.functions.colour;
 
 import core.Scope;
 import core.expressions.ExpressionVisitor;
-import core.values.*;
+import core.values.AbstractFunction;
+import core.values.Colour;
+import core.values.IntegerValue;
+import core.values.Value;
 
 public class CreateColour extends AbstractFunction {
 

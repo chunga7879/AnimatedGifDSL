@@ -1,9 +1,9 @@
 package core.values;
 
+import core.expressions.ExpressionVisitor;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import core.expressions.ExpressionVisitor;
 
 public class Colour extends Value {
     public static final String NAME = "Colour";

@@ -14,8 +14,8 @@ public class FunctionCall implements Expression, Statement {
     private final Scope scope;
 
     /**
-     * @param name The name of the function to call.
-     * @param args The arguments to pass to the function.
+     * @param name  The name of the function to call.
+     * @param args  The arguments to pass to the function.
      * @param scope The scope to execute the function in (args will be added).
      */
     public FunctionCall(String name, HashMap<String, Expression> args, Scope scope) {

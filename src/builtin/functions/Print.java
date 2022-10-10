@@ -3,7 +3,6 @@ package builtin.functions;
 import core.Scope;
 import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
-import core.values.Function;
 import core.values.Null;
 import core.values.Value;
 

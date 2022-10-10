@@ -9,6 +9,6 @@ public class NameError extends DSLException {
 
     @Override
     protected String getDetails() {
-        return "name '"+this.name+"' is not defined";
+        return "name '" + this.name + "' is not defined";
     }
 }

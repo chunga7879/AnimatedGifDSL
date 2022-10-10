@@ -3,9 +3,9 @@ package core.values;
 import core.Scope;
 import core.exceptions.InvalidOperation;
 import core.exceptions.TypeError;
+import core.expressions.Expression;
 import core.expressions.arithmetic.ArithmeticVisitor;
 import core.expressions.comparison.ComparisonVisitor;
-import core.expressions.Expression;
 
 public abstract class Value implements Expression {
     private final String typeName;

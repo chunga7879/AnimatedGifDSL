@@ -1,6 +1,5 @@
 package core;
 
-import builtin.functions.Print;
 import core.exceptions.NameError;
 import core.values.Value;
 
