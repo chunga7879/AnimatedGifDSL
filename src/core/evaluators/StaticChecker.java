@@ -1,6 +1,10 @@
 package core.evaluators;
 
 import builtin.functions.*;
+import builtin.functions.colour.CreateColour;
+import builtin.functions.colour.GetB;
+import builtin.functions.colour.GetG;
+import builtin.functions.colour.GetR;
 import core.NodeVisitor;
 import core.Scope;
 import core.exceptions.FunctionException;
@@ -140,6 +144,36 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
         }};
         checkArguments(ctx, args);
         return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, GetB b) {
+        return null;
+    }
+
+    @Override
+    public Value visit(Scope ctx, GetG g) {
+        return null;
+    }
+
+    @Override
+    public Value visit(Scope ctx, GetR r) {
+        return null;
+    }
+
+    @Override
+    public Value visit(Scope ctx, CreateColour cc) {
+        return null;
+    }
+
+    @Override
+    public Value visit(Scope ctx, SetOpacity so) {
+        return null;
+    }
+
+    @Override
+    public Value visit(Scope ctx, ColourFill cf) {
+        return null;
     }
 
     @Override

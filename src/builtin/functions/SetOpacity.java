@@ -3,6 +3,7 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.color.RGBColor;
 import core.Scope;
+import core.expressions.ExpressionVisitor;
 import core.values.*;
 
 public class SetOpacity extends AbstractFunction {
@@ -23,5 +24,10 @@ public class SetOpacity extends AbstractFunction {
         });
 
         return new Image(transparentImage);
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }
