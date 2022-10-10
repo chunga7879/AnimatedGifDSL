@@ -4,6 +4,7 @@ import core.Scope;
 import core.expressions.Expression;
 import core.values.BooleanValue;
 import core.values.StringValue;
+import core.values.Value;
 
 public class EQVisitor extends IntegerComparisonVisitor {
     private static final String OP = "==";
@@ -13,8 +14,8 @@ public class EQVisitor extends IntegerComparisonVisitor {
     }
 
     @Override
-    public BooleanValue visit(StringValue a, Expression b, Scope s) {
-        return new BooleanValue(a.get().equals(b.evaluate(s).asString().get()));
+    public BooleanValue visit(StringValue a, Value b, Scope s) {
+        return new BooleanValue(a.get().equals(b.asString().get()));
     }
 
     @Override

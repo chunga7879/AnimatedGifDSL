@@ -1,7 +1,5 @@
 package core.values;
 
-import core.expressions.ExpressionVisitor;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -30,10 +28,5 @@ public class Array extends Value implements Iterable<Value> {
 
     public Iterator<Value> iterator() {
         return arr.iterator();
-    }
-
-    @Override
-    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.visit(ctx, this);
     }
 }

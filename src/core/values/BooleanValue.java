@@ -1,7 +1,5 @@
 package core.values;
 
-import core.expressions.ExpressionVisitor;
-
 public class BooleanValue extends Value {
     public final static String NAME = "Boolean";
 
@@ -19,10 +17,5 @@ public class BooleanValue extends Value {
     @Override
     public BooleanValue asBoolean() {
         return this;
-    }
-
-    @Override
-    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.visit(ctx, this);
     }
 }
