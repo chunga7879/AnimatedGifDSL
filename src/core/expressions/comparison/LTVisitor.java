@@ -1,7 +1,7 @@
 package core.expressions.comparison;
 
 public class LTVisitor extends IntegerComparisonVisitor {
-    private static final String OP  = "<";
+    private static final String OP = "<";
 
     public LTVisitor() {
         super(LTVisitor.OP);

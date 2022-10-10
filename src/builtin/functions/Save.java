@@ -2,7 +2,11 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
-import core.values.*;
+import core.expressions.ExpressionVisitor;
+import core.values.AbstractFunction;
+import core.values.Array;
+import core.values.Null;
+import core.values.Value;
 
 import java.util.ArrayList;
 
@@ -23,11 +27,16 @@ public class Save extends AbstractFunction {
         ArrayList<ImmutableImage> immutableImgs = new ArrayList<>();
         ArrayList<Value> imgs = array.get();
 
-        for (Value value: imgs) {
+        for (Value value : imgs) {
             ImmutableImage immutableImg = value.asImage().get();
             immutableImgs.add(immutableImg);
         }
 
         return immutableImgs;
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }

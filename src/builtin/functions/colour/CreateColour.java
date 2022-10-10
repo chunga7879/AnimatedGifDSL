@@ -1,7 +1,11 @@
 package builtin.functions.colour;
 
 import core.Scope;
-import core.values.*;
+import core.expressions.ExpressionVisitor;
+import core.values.AbstractFunction;
+import core.values.Colour;
+import core.values.IntegerValue;
+import core.values.Value;
 
 public class CreateColour extends AbstractFunction {
 
@@ -12,5 +16,10 @@ public class CreateColour extends AbstractFunction {
         IntegerValue g = scope.getVar("g").asInteger();
 
         return new Colour(r.get(), g.get(), b.get());
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return null;
     }
 }

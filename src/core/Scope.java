@@ -1,6 +1,5 @@
 package core;
 
-import builtin.functions.Print;
 import core.exceptions.NameError;
 import core.values.Value;
 
@@ -47,5 +46,9 @@ public class Scope {
         } else {
             this.vars.put(name, v);
         }
+    }
+
+    public boolean hasVar(String name) {
+        return vars.containsKey(name);
     }
 }

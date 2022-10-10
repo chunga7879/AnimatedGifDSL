@@ -18,6 +18,18 @@ public class LoopStatement implements Statement {
         this.loopVar = loopVar;
     }
 
+    public Expression getArray() {
+        return array;
+    }
+
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    public String getLoopVar() {
+        return loopVar;
+    }
+
     @Override
     public void Do(Scope s) {
         Array a = this.array.evaluate(s).asArray();
@@ -28,5 +40,10 @@ public class LoopStatement implements Statement {
                 stms.Do(s);
             }
         }
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }

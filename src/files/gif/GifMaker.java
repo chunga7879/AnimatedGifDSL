@@ -15,7 +15,7 @@ public class GifMaker {
         StreamingGifWriter writer = new StreamingGifWriter(Duration.ofSeconds(duration / frames.size()), false);
         GifStream gif = writer.prepareStream(location, BufferedImage.TYPE_INT_ARGB);
 
-        for (ImmutableImage frame: frames) {
+        for (ImmutableImage frame : frames) {
             gif.writeFrame(frame);
         }
 
