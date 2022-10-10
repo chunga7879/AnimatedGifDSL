@@ -18,7 +18,7 @@ public class FileSystem {
     }
 
     // for test
-    public static void saveImage(ImmutableImage image, String filePath) throws FileNotFoundException {
+    public static void saveImage(ImmutableImage image, String filePath) throws Error {
         try {
             image.output(PngWriter.NoCompression, new File(filePath));
         } catch (IOException io) {
