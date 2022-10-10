@@ -39,4 +39,22 @@ public interface ExpressionVisitor<C, T> {
     T visit(C ctx, Random r);
 
     T visit(C ctx, Save s);
+
+    T visit(C ctx, Crop cr);
+
+    T visit(C ctx, CreateRectangle cr);
+
+    T visit(C ctx, GetHeight gh);
+
+    T visit(C ctx, GetWidth gw);
+
+    T visit(C ctx, Overlay ol);
+
+    T visit(C ctx, Resize rs);
+
+    T visit(C ctx, Rotate rt);
+
+    T visit(C ctx, Translate tl);
+
+    T visit(C ctx, Write wt);
 }

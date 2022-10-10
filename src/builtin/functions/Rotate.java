@@ -4,6 +4,7 @@ import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.angles.Degrees;
 import com.sksamuel.scrimage.angles.Radians;
 import core.Scope;
+import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.Value;
@@ -21,6 +22,11 @@ public class Rotate extends AbstractFunction {
         int angle = scope.getVar("angle").asInteger().get();
 
         return new Image(rotate(immutableImg, angle));
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 
     public ImmutableImage rotate(ImmutableImage image, int degree) {

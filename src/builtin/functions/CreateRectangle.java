@@ -3,6 +3,7 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.color.Colors;
 import core.Scope;
+import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.Colour;
 import core.values.Image;
@@ -23,5 +24,10 @@ public class CreateRectangle extends AbstractFunction {
         ImmutableImage rectangle = ImmutableImage.filled(width, height, new Color(colour.getR(), colour.getG(), colour.getB()));
 
         return new Image(rectangle);
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }

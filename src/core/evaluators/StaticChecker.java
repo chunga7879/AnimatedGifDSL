@@ -143,6 +143,51 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
     }
 
     @Override
+    public Value visit(Scope ctx, Crop cr) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, CreateRectangle cr) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, GetHeight gh) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, GetWidth gw) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Overlay ol) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Resize rs) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Rotate rt) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Translate tl) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Write wt) {
+        return Null.NULL;
+    }
+
+    @Override
     public Value visit(Scope ctx, FunctionDefinition fd) {
         String functionName = fd.getName();
 
