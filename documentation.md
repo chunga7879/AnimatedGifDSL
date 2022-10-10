@@ -167,8 +167,6 @@ Write - Write text as an image
 WRITE [text] AS [variable name]
   WITH size: [font size]
   WITH font: [font]
-  WITH x: [number]
-  WITH y: [number]
 
 ```
 Colour Fill - Fill each pixel of an image with a colour but maintain its transparency
