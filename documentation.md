@@ -113,14 +113,14 @@ SAVE [list of images]
 
 Crop - crop image with width and height
 ```
-CROP [target image]
+CROP [target image] AS [variable name]
   WITH width: [number]
   WITH height: [number]
 ```
 
 Resize - resize image with width and height
 ```
-RESIZE [target image]
+RESIZE [target image] AS [variable name]
   WITH width: [number]
   WITH height: [number]
 ```
@@ -128,7 +128,7 @@ RESIZE [target image]
 
 Rotate - rotate image with angle
 ```
-ROTATE [target image]
+ROTATE [target image] AS [variable name]
   WITH angle: [number]
 ```
 
@@ -142,15 +142,15 @@ OVERLAY [above image] ON [below image] AS [variable name]
 ```
 GetHeight - get height of image
 ```
-GETHEIGHT [target image] AS [variable name]
+GET-HEIGHT [target image] AS [variable name]
 ```
 GetWidth - get width of image
 ```
-GETWIDTH [target image] AS [variable name]
+GET-WIDTH [target image] AS [variable name]
 ```
 Translate - translate image with x, y
 ```
-TRANSLATE [target image]
+TRANSLATE [target image] AS [variable name]
   WITH x: [x position]
   WITH y: [y: position]
 ```
