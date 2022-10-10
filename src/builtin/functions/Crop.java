@@ -2,12 +2,15 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
-import core.values.AbstractFunction;
-import core.values.Image;
-import core.values.Value;
+import core.values.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Crop extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Crop";
 
     @Override
     public Value call(Scope scope) {
@@ -17,6 +20,16 @@ public class Crop extends AbstractFunction {
         int height = scope.getVar("height").asInteger().get();
 
         return new Image(immutableImg.resizeTo(width, height));
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("$target", Image.NAME);
+            put("width", IntegerValue.NAME);
+            put("height", IntegerValue.NAME);
+        }};
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override

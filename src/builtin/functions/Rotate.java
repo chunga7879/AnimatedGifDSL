@@ -4,24 +4,38 @@ import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.angles.Degrees;
 import com.sksamuel.scrimage.angles.Radians;
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.Image;
+import core.values.IntegerValue;
 import core.values.Value;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.sksamuel.scrimage.ImmutableImage.wrapAwt;
 
 public class Rotate extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Rotate";
     @Override
     public Value call(Scope scope) {
         ImmutableImage immutableImg = scope.getVar("$target").asImage().get();
         int angle = scope.getVar("angle").asInteger().get();
 
         return new Image(rotate(immutableImg, angle));
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("$target", Image.NAME);
+            put("angle", IntegerValue.NAME);
+        }};
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override

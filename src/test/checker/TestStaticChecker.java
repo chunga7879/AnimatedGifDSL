@@ -1,4 +1,4 @@
-package test.checker;
+package checker;
 
 import core.Scope;
 import core.checkers.StaticChecker;

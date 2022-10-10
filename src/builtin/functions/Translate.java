@@ -3,12 +3,18 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.color.Colors;
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.Image;
+import core.values.IntegerValue;
 import core.values.Value;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Translate extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Translate";
 
     @Override
     public Value call(Scope scope) {
@@ -17,6 +23,16 @@ public class Translate extends AbstractFunction {
         int y = scope.getVar("y").asInteger().get();
 
         return new Image(translate(immutableImg, x, y));
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("$target", Image.NAME);
+            put("x", IntegerValue.NAME);
+            put("y", IntegerValue.NAME);
+        }};
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override
