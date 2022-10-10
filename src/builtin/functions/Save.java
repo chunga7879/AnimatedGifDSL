@@ -6,14 +6,9 @@ import core.exceptions.InternalException;
 import core.exceptions.InvalidFilePath;
 import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
-import core.values.AbstractFunction;
-import core.values.Array;
-import core.values.Null;
-import core.values.Value;
 import files.gif.GifMaker;
 import core.values.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
