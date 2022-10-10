@@ -199,6 +199,7 @@ public class GifDSLConverter {
             // for each loop
             array = convertVariable(loopCtx.VARIABLE());
         } else {
+            // for range loop
             array = convertRange(loopCtx.range());
         }
         List<Statement> innerStatements = convertStatements(innerStatementCtxs);
