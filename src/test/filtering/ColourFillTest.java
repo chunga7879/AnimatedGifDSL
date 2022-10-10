@@ -25,7 +25,7 @@ public class ColourFillTest {
             scope = new Scope();
             scope.setVar("$target", cat);
         } catch (IOException ioException) {
-            Assertions.assertTrue(false);
+            Assertions.fail(ioException.getMessage());
         }
     }
 

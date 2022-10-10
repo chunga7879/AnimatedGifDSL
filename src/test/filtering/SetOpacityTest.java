@@ -28,7 +28,7 @@ public class SetOpacityTest {
 
             transparentCat.get().output(PngWriter.NoCompression, new File("src/test/filtering/testResults/transparentCat80.png"));
         } catch (IOException exception) {
-            Assertions.assertTrue(false);
+            Assertions.fail(exception.getMessage());
         }
     }
 
@@ -66,7 +66,7 @@ public class SetOpacityTest {
         } catch (IOException exception) {
             Assertions.fail(exception.getMessage());
         } catch (IllegalArgumentException illegalArgumentException) {
-            Assertions.assertTrue(true);
+            // Should catch IllegalArgumentException
         }
     }
 }
