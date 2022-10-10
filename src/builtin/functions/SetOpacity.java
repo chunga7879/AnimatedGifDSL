@@ -20,7 +20,10 @@ public class SetOpacity extends AbstractFunction {
         int scaledOpacity = (int) (opacityAmount.get() * 2.55);
 
         ImmutableImage transparentImage = image.map((p) -> {
-            return new RGBColor(p.red(), p.green(), p.blue(), scaledOpacity).awt();
+                if (p.alpha() != 0) {
+                    return new RGBColor(p.red(), p.green(), p.blue(), scaledOpacity).awt();
+                }
+                return p.toColor().awt();
         });
 
         return new Image(transparentImage);
