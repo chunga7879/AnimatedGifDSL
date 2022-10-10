@@ -2,6 +2,7 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.exceptions.InternalException;
 import core.exceptions.InvalidFilePath;
 import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
@@ -10,6 +11,8 @@ import core.values.Null;
 import core.values.Value;
 import files.gif.GifMaker;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Save extends AbstractFunction {
@@ -22,8 +25,10 @@ public class Save extends AbstractFunction {
 
         try {
             GifMaker.makeGif(frames, duration, location);
-        } catch (Exception e) {
+        } catch (IOException ioe) {
             throw new InvalidFilePath(location + " is invalid");
+        } catch (Exception e) {
+            throw new InternalException("something went wrong: " + e.getMessage());
         }
 
         return Null.NULL;
