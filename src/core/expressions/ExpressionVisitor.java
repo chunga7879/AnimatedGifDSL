@@ -1,7 +1,6 @@
 package core.expressions;
 
 import builtin.functions.*;
-import builtin.functions.colour.CreateColour;
 import core.values.*;
 
 public interface ExpressionVisitor<C, T> {
