@@ -53,7 +53,7 @@ public class SetOpacityTest {
     @Test
     public void setOpacityInvalidValue() {
         try {
-            ImmutableImage catMouth = ImmutableImage.loader().fromFile("src/test/filtering/images/cat.png");
+            ImmutableImage catMouth = ImmutableImage.loader().fromFile("src/test/filtering/testInputs/cat.png");
             Image catImage = new Image(catMouth);
             Scope scope = new Scope();
             scope.setVar("$target", catImage);
