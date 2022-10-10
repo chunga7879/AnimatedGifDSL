@@ -1,7 +1,7 @@
 package core.expressions.comparison;
 
 public class GTEVisitor extends IntegerComparisonVisitor {
-    private static final String OP  = ">=";
+    private static final String OP = ">=";
 
     public GTEVisitor() {
         super(GTEVisitor.OP);

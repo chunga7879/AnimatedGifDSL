@@ -1,10 +1,9 @@
 package core.exceptions;
 
-/* An exception that is not the user's fault */
-public class InternalException extends DSLException {
+public class FunctionException extends DSLException {
     private final String msg;
 
-    public InternalException(String msg) {
+    public FunctionException(String msg) {
         this.msg = msg;
     }
 

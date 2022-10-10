@@ -80,7 +80,7 @@ public class ScrimageExample {
 
         List<ImmutableImage> editedFrames = new ArrayList<>();
 
-        for (ImmutableImage f: frames) {
+        for (ImmutableImage f : frames) {
             f = InvertColor(f);
             editedFrames.add(f);
         }

@@ -1,6 +1,7 @@
 package builtin.functions;
 
 import core.Scope;
+import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.Array;
 import core.values.Null;
@@ -15,5 +16,10 @@ public class Add extends AbstractFunction {
         a.add(i);
 
         return Null.NULL;
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }

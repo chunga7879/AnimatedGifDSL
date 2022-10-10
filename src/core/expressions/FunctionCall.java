@@ -2,6 +2,7 @@ package core.expressions;
 
 import core.Scope;
 import core.statements.Statement;
+import core.statements.StatementVisitor;
 import core.values.Value;
 
 import java.util.HashMap;
@@ -13,14 +14,22 @@ public class FunctionCall implements Expression, Statement {
     private final Scope scope;
 
     /**
-     * @param name The name of the function to call.
-     * @param args The arguments to pass to the function.
+     * @param name  The name of the function to call.
+     * @param args  The arguments to pass to the function.
      * @param scope The scope to execute the function in (args will be added).
      */
     public FunctionCall(String name, HashMap<String, Expression> args, Scope scope) {
         this.name = name;
         this.args = args;
         this.scope = scope;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public HashMap<String, Expression> getArgs() {
+        return args;
     }
 
     /**
@@ -37,7 +46,17 @@ public class FunctionCall implements Expression, Statement {
     }
 
     @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return null;
+    }
+
+    @Override
     public void Do(Scope s) {
         this.evaluate(s);
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }
