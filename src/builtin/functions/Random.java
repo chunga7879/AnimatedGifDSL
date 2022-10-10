@@ -7,6 +7,9 @@ import core.values.IntegerValue;
 import core.values.Value;
 import utils.RandomNumber;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Generate a random number between min and max (inclusive)
  */
@@ -17,6 +20,15 @@ public class Random extends AbstractFunction {
         int max = scope.getVar("max").asInteger().get();
         int num = RandomNumber.getRandomNumber(min, max);
         return new IntegerValue(num);
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("min", IntegerValue.NAME);
+            put("max", IntegerValue.NAME);
+        }};
+        checker(scope, params);
     }
 
     @Override

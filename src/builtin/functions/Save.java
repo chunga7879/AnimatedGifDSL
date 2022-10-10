@@ -3,12 +3,11 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
 import core.expressions.ExpressionVisitor;
-import core.values.AbstractFunction;
-import core.values.Array;
-import core.values.Null;
-import core.values.Value;
+import core.values.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Save extends AbstractFunction {
 
@@ -21,6 +20,15 @@ public class Save extends AbstractFunction {
         //GifMaker.makeGif(frames, duration, location);
 
         return Null.NULL;
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("duration", IntegerValue.NAME);
+            put("location", StringValue.NAME);
+        }};
+        checker(scope, params);
     }
 
     private ArrayList<ImmutableImage> getImmutableImages(Array array) {

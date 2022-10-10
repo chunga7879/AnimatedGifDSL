@@ -2,10 +2,10 @@ package builtin.functions;
 
 import core.Scope;
 import core.expressions.ExpressionVisitor;
-import core.values.AbstractFunction;
-import core.values.Array;
-import core.values.Null;
-import core.values.Value;
+import core.values.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Add extends AbstractFunction {
     @Override
@@ -16,6 +16,16 @@ public class Add extends AbstractFunction {
         a.add(i);
 
         return Null.NULL;
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("item", IntegerValue.NAME);
+            // TODO
+            //put("array", IntegerValue.NAME);
+        }};
+        checker(scope, params);
     }
 
     @Override

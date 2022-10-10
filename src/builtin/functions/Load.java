@@ -4,13 +4,12 @@ import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
 import core.exceptions.InvalidFilePath;
 import core.expressions.ExpressionVisitor;
-import core.values.AbstractFunction;
-import core.values.Image;
-import core.values.StringValue;
-import core.values.Value;
+import core.values.*;
 import files.filesystem.FileSystem;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Load extends AbstractFunction {
 
@@ -25,6 +24,14 @@ public class Load extends AbstractFunction {
         } catch (FileNotFoundException e) {
             throw new InvalidFilePath(filePath + "could not be found.");
         }
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("$target", StringValue.NAME);
+        }};
+        checker(scope, params);
     }
 
     @Override
