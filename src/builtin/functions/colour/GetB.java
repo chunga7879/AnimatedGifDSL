@@ -1,22 +1,21 @@
-package builtin.functions;
+package builtin.functions.colour;
 
 import core.Scope;
 import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
-import core.values.Array;
+import core.values.Colour;
+import core.values.IntegerValue;
 import core.values.Value;
 
-/**
- * Creates an empty list
- */
-public class CreateList extends AbstractFunction {
+public class GetB extends AbstractFunction {
     @Override
     public Value call(Scope scope) {
-        return new Array();
+        Colour colour = scope.getVar("$target").asColour();
+        return new IntegerValue(colour.getB());
     }
 
     @Override
     public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.visit(ctx, this);
+        return null;
     }
 }

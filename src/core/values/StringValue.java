@@ -2,6 +2,7 @@ package core.values;
 
 import core.Scope;
 import core.expressions.Expression;
+import core.expressions.ExpressionVisitor;
 import core.expressions.arithmetic.ArithmeticVisitor;
 import core.expressions.comparison.ComparisonVisitor;
 
@@ -32,5 +33,10 @@ public class StringValue extends Value {
     @Override
     public Value acceptAV(ArithmeticVisitor av, Expression b, Scope s) {
         return av.visit(this, b, s);
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }

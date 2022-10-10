@@ -1,10 +1,10 @@
 package core.values;
 
 import core.Scope;
+import core.expressions.ExpressionVisitor;
 import core.statements.Return;
 import core.statements.Statement;
 
-import java.util.ArrayList;
 import java.util.List;
 
 // A user defined function (or main).
@@ -15,14 +15,23 @@ public class Function extends AbstractFunction {
         this.statements = statements;
     }
 
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
     public Value call(Scope scope) {
         for (Statement s : statements) {
             if (s instanceof Return) {
-                return ((Return) s).GetReturnValue(scope);
+                return ((Return) s).getReturnValue(scope);
             } else {
                 s.Do(scope);
             }
         }
         return Null.NULL;
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }

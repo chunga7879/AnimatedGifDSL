@@ -6,7 +6,6 @@ import core.expressions.Expression;
 import core.values.BooleanValue;
 import core.values.IntegerValue;
 import core.values.StringValue;
-import core.values.Value;
 
 public abstract class ComparisonVisitor {
     private final String op;

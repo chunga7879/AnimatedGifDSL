@@ -1,6 +1,7 @@
 package core.values;
 
 import com.sksamuel.scrimage.ImmutableImage;
+import core.expressions.ExpressionVisitor;
 
 public class Image extends Value {
     private ImmutableImage img;
@@ -18,5 +19,10 @@ public class Image extends Value {
     @Override
     public Image asImage() {
         return this;
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }

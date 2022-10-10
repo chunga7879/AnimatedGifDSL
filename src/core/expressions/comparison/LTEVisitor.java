@@ -1,7 +1,7 @@
 package core.expressions.comparison;
 
 public class LTEVisitor extends IntegerComparisonVisitor {
-    private static final String OP  = "<=";
+    private static final String OP = "<=";
 
     public LTEVisitor() {
         super(LTEVisitor.OP);

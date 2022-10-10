@@ -12,13 +12,22 @@ public class Return implements Statement {
         this.e = e;
     }
 
+    public Expression getE() {
+        return e;
+    }
+
     // Return the value that this return statement returns.
-    public Value GetReturnValue(Scope s) {
+    public Value getReturnValue(Scope s) {
         return this.e.evaluate(s);
     }
 
     @Override
     public void Do(Scope s) {
         throw new InternalException("Return.Do() should never be called");
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }
