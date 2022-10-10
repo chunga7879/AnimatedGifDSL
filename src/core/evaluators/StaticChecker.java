@@ -61,26 +61,11 @@ public class StaticChecker implements NodeVisitor<Scope, Void>, ExpressionVisito
         return null;
     }
 
-//    @Override
-//    public Void visit(Scope ctx, Array a) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Void visit(Scope ctx, BooleanValue bv) {
-//        return null;
-//    }
-
     @Override
     public Void visit(Scope ctx, AbstractFunction af) {
         af.checkArgs(ctx);
         return null;
     }
-
-//    @Override
-//    public Void visit(Scope ctx, Colour c) {
-//        return null;
-//    }
 
     @Override
     public Void visit(Scope ctx, Function f) {
@@ -89,89 +74,6 @@ public class StaticChecker implements NodeVisitor<Scope, Void>, ExpressionVisito
         }
         return null;
     }
-
-//    @Override
-//    public Void visit(Scope ctx, Image i) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Void visit(Scope ctx, IntegerValue iv) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Void visit(Scope ctx, Null n) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Void visit(Scope ctx, StringValue sv) {
-//        return null;
-//    }
-
-//    @Override
-//    public Void visit(Scope ctx, Add a) {
-//        Map<String, String> args = new HashMap<>() {{
-//            put("array", Array.NAME);
-//        }};
-//        checkArguments(ctx, args);
-//        return null;
-//    }
-
-//    @Override
-//    public Void visit(Scope ctx, CreateList cl) {
-//        return null;
-//    }
-
-//    @Override
-//    public Void visit(Scope ctx, Load l) {
-//        Map<String, String> args = new HashMap<>() {{
-//            put("$target", StringValue.NAME);
-//        }};
-//        checkArguments(ctx, args);
-//        return null;
-//    }
-
-//    @Override
-//    public Void visit(Scope ctx, Print p) {
-//        Map<String, String> args = new HashMap<>() {{
-//            put("msg", IntegerValue.NAME);
-//        }};
-//        checkArguments(ctx, args);
-//        return null;
-//    }
-
-//    @Override
-//    public Void visit(Scope ctx, Random r) {
-//        Map<String, String> args = new HashMap<>() {{
-//            put("min", IntegerValue.NAME);
-//            put("max", IntegerValue.NAME);
-//        }};
-//        checkArguments(ctx, args);
-//        return null;
-//    }
-
-//    @Override
-//    public Void visit(Scope ctx, Save s) {
-//        Map<String, String> args = new HashMap<>() {{
-//            put("duration", IntegerValue.NAME);
-//            put("location", StringValue.NAME);
-//        }};
-//        checkArguments(ctx, args);
-//        return null;
-//    }
-
-//    @Override
-//    public Void visit(Scope ctx, CreateColour cc) {
-//        Map<String, String> args = new HashMap<>() {{
-//            put("r", IntegerValue.NAME);
-//            put("g", IntegerValue.NAME);
-//            put("b", IntegerValue.NAME);
-//        }};
-//        checkArguments(ctx, args);
-//        return null;
-//    }
 
     @Override
     public Void visit(Scope ctx, FunctionDefinition fd) {
@@ -217,20 +119,5 @@ public class StaticChecker implements NodeVisitor<Scope, Void>, ExpressionVisito
     public Void visit(Scope ctx, VariableAssignment va) {
         va.accept(ctx, this);
         return null;
-    }
-
-    private void checkArguments(Scope ctx, Map<String, String> args) {
-        for (Map.Entry<String, String> arg : args.entrySet()) {
-            String argName = arg.getKey();
-            if (!ctx.hasVar(argName)) {
-                throw new FunctionException("argument " + argName + " not provided");
-            }
-
-            String expectedType = arg.getValue();
-            String actualType = ctx.getVar(argName).getTypeName();
-            if (!Objects.equals(expectedType, actualType)) {
-                throw new FunctionException("argument " + argName + " is of type " + actualType + " but expected " + expectedType);
-            }
-        }
     }
 }
