@@ -34,8 +34,9 @@ public class TestStaticChecker {
     @Test
     public void testFunctionCallUserDefinedFunction() {
         List<Statement> statements = new ArrayList<>();
+        HashMap<String, String> params = new HashMap<>();
         try {
-            staticChecker.visit(scope, new FunctionDefinition("foo", statements));
+            staticChecker.visit(scope, new FunctionDefinition("foo", statements, params));
             staticChecker.visit(scope, new FunctionCall("foo", new HashMap<>(), scope));
         } catch (DSLException e) {
             System.out.println(e.message());
@@ -56,8 +57,9 @@ public class TestStaticChecker {
     @Test
     public void testFunctionDefinition() {
         List<Statement> statements = new ArrayList<>();
+        HashMap<String, String> params = new HashMap<>();
         try {
-            staticChecker.visit(scope, new FunctionDefinition("foo", statements));
+            staticChecker.visit(scope, new FunctionDefinition("foo", statements, params));
         } catch (DSLException e) {
             fail(CATCH_BLOCK_FAIL);
         }
@@ -66,9 +68,10 @@ public class TestStaticChecker {
     @Test
     public void testFunctionDefinitionRedeclareUserDefinedFunction() {
         List<Statement> statements = new ArrayList<>();
+        HashMap<String, String> params = new HashMap<>();
         try {
-            staticChecker.visit(scope, new FunctionDefinition("foo", statements));
-            staticChecker.visit(scope, new FunctionDefinition("foo", statements));
+            staticChecker.visit(scope, new FunctionDefinition("foo", statements, params));
+            staticChecker.visit(scope, new FunctionDefinition("foo", statements, params));
             fail(TRY_BLOCK_FAIL);
         } catch (DSLException e) {
             // expected
@@ -78,8 +81,9 @@ public class TestStaticChecker {
     @Test
     public void testFunctionDefinitionRedeclareBuiltInFunction() {
         List<Statement> statements = new ArrayList<>();
+        HashMap<String, String> params = new HashMap<>();
         try {
-            staticChecker.visit(scope, new FunctionDefinition("Add", statements));
+            staticChecker.visit(scope, new FunctionDefinition("Add", statements, params));
             fail(TRY_BLOCK_FAIL);
         } catch (DSLException e) {
             // expected

@@ -34,7 +34,8 @@ public class CoreDemo {
         HashMap<String, Expression> printArgs2 = new HashMap<>();
         printArgs2.put("msg", new VariableExpression("myvar"));
         statements.add(new ExpressionWrapper(new FunctionCall("print", printArgs2, rootScope)));
-        Function mainFunc = new Function(statements);
+        HashMap<String, String> params = new HashMap<>();
+        Function mainFunc = new Function(statements, params);
 
         Evaluator evaluator = new Evaluator();
         try {

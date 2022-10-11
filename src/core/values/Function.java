@@ -1,23 +1,30 @@
 package core.values;
 
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.exceptions.InternalException;
 import core.expressions.ExpressionVisitor;
-import core.statements.Return;
 import core.statements.Statement;
 
+import java.util.HashMap;
 import java.util.List;
 
 // A user defined function (or main).
 public class Function extends AbstractFunction {
     private final List<Statement> statements;
+    private final HashMap<String, String> params;
 
-    public Function(List<Statement> statements) {
+    public Function(List<Statement> statements, HashMap<String, String> params) {
         this.statements = statements;
+        this.params = params;
     }
 
     public List<Statement> getStatements() {
         return statements;
+    }
+
+    public HashMap<String, String> getParams() {
+        return params;
     }
 
     public Value call(Scope scope) {
@@ -26,8 +33,7 @@ public class Function extends AbstractFunction {
 
     @Override
     public void checkArgs(Scope scope) {
-        // TODO
-        // Probably need to store params as field??
+        ArgumentChecker.check(scope, params, "user defined function");
     }
 
     @Override

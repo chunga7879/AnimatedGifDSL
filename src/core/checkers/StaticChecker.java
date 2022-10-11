@@ -8,6 +8,8 @@ import builtin.functions.colour.GetR;
 import core.NodeVisitor;
 import core.Scope;
 import core.exceptions.FunctionException;
+import core.exceptions.TypeError;
+import core.exceptions.VariableException;
 import core.expressions.*;
 import core.statements.*;
 import core.values.*;
@@ -24,16 +26,22 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, ArithmeticExpression ae) {
-//        if (ae.getClass().getName() != IntegerValue.NAME || ae.getClass().getName() != IntegerValue.NAME) {
-//            // throw error;
-//        }
-        return null;
+        String expressionA = ae.a().getClass().getName();
+        String expressionB = ae.b().getClass().getName();
+        if (!expressionA.equals(IntegerValue.class.getName()) || !expressionB.equals(IntegerValue.class.getName())) {
+            throw new TypeError("Invalid arithmetic expression");
+        }
+        return new IntegerValue(0);
     }
 
     @Override
     public Value visit(Scope ctx, ComparisonExpression ce) {
-        //return ce
-        return null;
+        String expressionA = ce.a().getClass().getName();
+        String expressionB = ce.b().getClass().getName();
+        if (!expressionA.equals(IntegerValue.class.getName()) || !expressionB.equals(IntegerValue.class.getName())) {
+            throw new TypeError("Invalid arithmetic expression");
+        }
+        return new BooleanValue(true);
     }
 
     @Override
@@ -52,8 +60,11 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, VariableExpression ve) {
-        //return ctx.getVar(ve)
-        return null;
+        String name = ve.identifier();
+        if (!ctx.hasVar(name)) {
+            throw new VariableException("variable " + name + " is undefined");
+        }
+        return ctx.getVar(name);
     }
 
     @Override
@@ -82,7 +93,7 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
         if (functions.hasVar(name)) {
             throw new FunctionException("declared function " + name + " already exists");
         } else {
-            functions.setVar(fd.name(), new Function(fd.statements()));
+            functions.setVar(fd.name(), new Function(fd.statements(), fd.params()));
         }
 
         for (Statement s : fd.statements()) {
@@ -116,12 +127,13 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, VariableAssignment va) {
-        ctx.setVar(va.dest(), va.expr().accept(ctx, this));
+        ctx.setVar(va.dest(), (Value) va.expr());
         return null;
     }
 
     @Override
     public Value visit(Scope ctx, ExpressionWrapper ew) {
+        ew.e().accept(ctx, this);
         return null;
     }
 
