@@ -31,10 +31,15 @@ CREATE-RECTANGLE AS background
   WITH height: 400
   WITH colour: WHITE
 
+GET-WIDTH dvd as dvd-width
+GET-HEIGHT dvd as dvd-height
+GET-WIDTH background as background-width
+GET-HEIGHT background as background-height
+
 CREATE-LIST AS frames
 
-SET 200 AS positionX
-SET 200 AS positionY
+SET background-width / 2 AS positionX
+SET background-height / 2 AS positionY
 RANDOM AS directionX
   WITH min: 1
   WITH max: 10
@@ -49,8 +54,8 @@ LOOP i IN (1, 360):
     RANDOM-COLOUR dvd AS dvd
       WITH min: 0
       WITH max: 200
-  IF (positionX > 1960):
-    SET 1960 AS positionX
+  IF (positionX > background-width - dvd-width):
+    SET background-width - dvd-width AS positionX
     SET directionX * -1 AS directionX
     RANDOM-COLOUR dvd AS dvd
       WITH min: 0
@@ -61,8 +66,8 @@ LOOP i IN (1, 360):
     RANDOM-COLOUR dvd AS dvd
       WITH min: 0
       WITH max: 200
-  IF (positionY > 1960):
-    SET 1960 AS positionY
+  IF (positionY > background-height - dvd-height):
+    SET background-height - dvd-height AS positionY
     SET directionY * -1 AS directionY
     RANDOM-COLOUR dvd AS dvd
       WITH min: 0

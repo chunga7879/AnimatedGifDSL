@@ -66,7 +66,7 @@ public class Main {
             System.out.println("[Gif DSL Runner] Finished runner");
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            throw e;
+//            throw e;
         }
     }
 }

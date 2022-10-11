@@ -48,10 +48,6 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
             funcScope.setVar(entry.getKey(), entry.getValue().accept(ctx, this));
         }
-        System.out.println("Visit Function: " + name);
-        if (name.equals("filter")) {
-            System.out.println("hi");
-        }
         return ctx.getVar(name).asFunction().accept(funcScope, this);
     }
 
