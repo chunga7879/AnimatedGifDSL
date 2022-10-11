@@ -2,17 +2,18 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.exceptions.InvalidFilePath;
 import core.expressions.ExpressionVisitor;
-import core.values.AbstractFunction;
-import core.values.Image;
-import core.values.StringValue;
-import core.values.Value;
+import core.values.*;
 import files.filesystem.FileSystem;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Load extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Load";
 
     @Override
     public Value call(Scope scope) {
@@ -25,6 +26,14 @@ public class Load extends AbstractFunction {
         } catch (FileNotFoundException e) {
             throw new InvalidFilePath(filePath + "could not be found.");
         }
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("$target", StringValue.NAME);
+        }};
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override

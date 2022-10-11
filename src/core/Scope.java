@@ -24,7 +24,6 @@ public class Scope {
         return this.parent != null;
     }
 
-
     public Scope newChildScope() {
         return new Scope(this);
     }
@@ -50,5 +49,9 @@ public class Scope {
 
     public boolean hasVar(String name) {
         return vars.containsKey(name);
+    }
+
+    public int getSize() {
+        return vars.size();
     }
 }

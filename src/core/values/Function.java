@@ -25,6 +25,12 @@ public class Function extends AbstractFunction {
     }
 
     @Override
+    public void checkArgs(Scope scope) {
+        // TODO
+        // Probably need to store params as field??
+    }
+
+    @Override
     public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
         return v.visit(ctx, this);
     }

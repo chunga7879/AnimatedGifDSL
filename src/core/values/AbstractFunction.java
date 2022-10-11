@@ -3,6 +3,10 @@ package core.values;
 import core.Scope;
 import core.exceptions.TypeError;
 import core.expressions.ExpressionVisitor;
+import core.expressions.Expression;
+
+import java.util.Map;
+import java.util.Objects;
 
 public abstract class AbstractFunction extends Value {
     protected static final String NAME = "function";
@@ -26,4 +30,6 @@ public abstract class AbstractFunction extends Value {
     public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
         return v.visit(ctx, this);
     }
+
+    public abstract void checkArgs(Scope scope);
 }

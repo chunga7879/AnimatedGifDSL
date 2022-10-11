@@ -1,17 +1,31 @@
 package builtin.functions.colour;
 
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.Colour;
 import core.values.IntegerValue;
 import core.values.Value;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GetG extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Get-G";
+
     @Override
     public Value call(Scope scope) {
         Colour colour = scope.getVar("$target").asColour();
         return new IntegerValue(colour.getG());
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("$target", Colour.NAME);
+        }};
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override

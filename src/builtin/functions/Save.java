@@ -4,18 +4,18 @@ import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
 import core.exceptions.InternalException;
 import core.exceptions.InvalidFilePath;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
-import core.values.AbstractFunction;
-import core.values.Array;
-import core.values.Null;
-import core.values.Value;
 import files.gif.GifMaker;
+import core.values.*;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Save extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Save";
 
     @Override
     public Value call(Scope scope) {
@@ -32,6 +32,15 @@ public class Save extends AbstractFunction {
         }
 
         return Null.NULL;
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("duration", IntegerValue.NAME);
+            put("location", StringValue.NAME);
+        }};
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     private ArrayList<ImmutableImage> getImmutableImages(Array array) {

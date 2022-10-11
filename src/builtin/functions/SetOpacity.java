@@ -3,10 +3,15 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.color.RGBColor;
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
 import core.values.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SetOpacity extends AbstractFunction {
+    public final static String ACTUAL_NAME = "Set-Opacity";
     @Override
     public Value call(Scope scope) {
         ImmutableImage image = scope.getVar("$target").asImage().get();
@@ -27,6 +32,15 @@ public class SetOpacity extends AbstractFunction {
         });
 
         return new Image(transparentImage);
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("$target", Image.NAME);
+            put("amount", IntegerValue.NAME);
+        }};
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     @Override

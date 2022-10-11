@@ -2,11 +2,16 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.checkers.ArgumentChecker;
 import core.expressions.ExpressionVisitor;
 import core.values.*;
 import utils.filters.FilterApplicator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Filter extends AbstractFunction {
+    public static String ACTUAL_NAME = "Filter";
 
     @Override
     public Value call(Scope scope) {
@@ -15,6 +20,15 @@ public class Filter extends AbstractFunction {
 
         ImmutableImage filteredImage = performFilter(filter, image);
         return new Image(filteredImage);
+    }
+
+    @Override
+    public void checkArgs(Scope scope) {
+        Map<String, String> params = new HashMap<>() {{
+            put("$target", Image.NAME);
+            put("filter", StringValue.NAME);
+        }};
+        ArgumentChecker.check(scope, params, ACTUAL_NAME);
     }
 
     private ImmutableImage performFilter(String filter, ImmutableImage image) {
