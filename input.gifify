@@ -86,6 +86,6 @@ LOOP f IN frames:
   ADD editedFrames AS editedFrames
     WITH item: f
 
-SAVE frames
+SAVE editedFrames
   WITH duration: 4
   WITH location: "final.gif"
