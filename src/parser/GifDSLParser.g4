@@ -8,18 +8,25 @@ statement        : INDENT? (function | with_statement | return_statement | contr
 control          : control_type COLON ;
 control_type     : define_statement | loop_statement | if_statement ;
 
-define_statement : DEFINE VARIABLE VARIABLE? (DEFINE_WITH define_params)? ;
-define_params    : BRACKET_START VARIABLE (BRACKET_SEP VARIABLE)* BRACKET_END ;
+define_statement : DEFINE define_function define_target? define_params? ;
+define_function  : VARIABLE ;
+define_target    : VARIABLE ;
+define_params    : DEFINE_WITH BRACKET_START VARIABLE (BRACKET_SEP VARIABLE)* BRACKET_END ;
 
 if_statement     : IF BRACKET_START comparison BRACKET_END ;
-comparison       : num_or_var COMPARE num_or_var ;
-loop_statement   : LOOP VARIABLE IN (range | VARIABLE) ;
-range            : BRACKET_START num_or_var BRACKET_SEP num_or_var BRACKET_END ;
+comparison       : arithmetic COMPARE arithmetic ;
+loop_statement   : LOOP loop_variable IN (range | VARIABLE) ;
+loop_variable    : VARIABLE ;
+range            : BRACKET_START NUMBER BRACKET_SEP NUMBER BRACKET_END ;
 
-function         : FUNCTION_NAME value? (ON value)? (AS value)? ;
-with_statement   : WITH VARIABLE COLON value ;
+function         : FUNCTION_NAME function_target? function_on? function_as? ;
+function_target  : expression ;
+function_on      : ON VARIABLE ;
+function_as      : AS VARIABLE ;
+with_statement   : WITH VARIABLE COLON expression ;
 
-return_statement : RETURN value ;
+return_statement : RETURN expression ;
 
-value            : num_or_var | COLOUR | TEXT ;
-num_or_var       : (NUMBER | VARIABLE) (OPERATOR (NUMBER | VARIABLE))? ;
+expression       : arithmetic | COLOUR | TEXT ;
+arithmetic       : num_or_var (OPERATOR num_or_var)? ;
+num_or_var       : NUMBER | VARIABLE ;

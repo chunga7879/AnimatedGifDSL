@@ -6,6 +6,8 @@ import core.expressions.ExpressionVisitor;
 
 public abstract class AbstractFunction extends Value {
     protected static final String NAME = "function";
+    public static final String PARAM_TARGET = "$target";
+    public static final String PARAM_ON = "$on";
 
     public AbstractFunction() {
         super(AbstractFunction.NAME);
@@ -13,10 +15,6 @@ public abstract class AbstractFunction extends Value {
 
     public Value call(Scope scope) {
         throw new TypeError("this function requires a target");
-    }
-
-    public Value call(Scope scope, Value target) {
-        throw new TypeError("this function does not take a target");
     }
 
     @Override
