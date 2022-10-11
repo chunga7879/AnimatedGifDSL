@@ -19,11 +19,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestStaticChecker {
-    protected final String TRY_BLOCK_FAIL = "exception expected";
-    protected final String CATCH_BLOCK_FAIL = "exception not expected";
+    private static final String TRY_BLOCK_FAIL = "exception expected";
+    private static final String CATCH_BLOCK_FAIL = "exception not expected";
 
-    protected StaticChecker staticChecker;
-    protected Scope scope;
+    private StaticChecker staticChecker;
+    private Scope scope;
 
     @BeforeEach
     public void runBefore() {

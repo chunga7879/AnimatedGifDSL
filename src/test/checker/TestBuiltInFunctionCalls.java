@@ -1,19 +1,36 @@
 package checker;
 
+import builtin.functions.*;
 import builtin.functions.colour.CreateColour;
+import builtin.functions.colour.GetB;
+import builtin.functions.colour.GetG;
+import builtin.functions.colour.GetR;
 import com.sksamuel.scrimage.ImmutableImage;
+import core.Scope;
+import core.checkers.StaticChecker;
 import core.exceptions.DSLException;
 import core.expressions.Expression;
 import core.expressions.FunctionCall;
 import core.values.*;
-import core.values.Image;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class TestBuiltInFunctionCalls extends TestStaticChecker {
+public class TestBuiltInFunctionCalls {
+    private static final String CATCH_BLOCK_FAIL = "exception not expected";
+
+    private StaticChecker staticChecker;
+    private Scope scope;
+
+    @BeforeEach
+    public void runBefore() {
+        scope = new Scope();
+        staticChecker = new StaticChecker();
+    }
+
     public void testFunctionCallHelper(String functionName, HashMap<String, Expression> args) {
         try {
             staticChecker.visit(scope, new FunctionCall(functionName, args, scope));
@@ -37,7 +54,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
         HashMap<String, Expression> args = new HashMap<>() {{
             put("$target", new Colour(1, 2, 3));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(GetB.ACTUAL_NAME, args);
     }
 
     @Test
@@ -45,7 +62,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
         HashMap<String, Expression> args = new HashMap<>() {{
             put("$target", new Colour(1, 2, 3));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(GetG.ACTUAL_NAME, args);
     }
 
     @Test
@@ -53,15 +70,16 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
         HashMap<String, Expression> args = new HashMap<>() {{
             put("$target", new Colour(1, 2, 3));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(GetR.ACTUAL_NAME, args);
     }
 
     @Test
     public void testFunctionCallAdd() {
         HashMap<String, Expression> args = new HashMap<>() {{
             put("array", new Array());
+            put("item", new IntegerValue(1));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Add.ACTUAL_NAME, args);
     }
 
     @Test
@@ -71,13 +89,13 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("$target", new Image(img));
             put("colour", new Colour(1, 2, 3));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(ColourFill.ACTUAL_NAME, args);
     }
 
     @Test
     public void testFunctionCallCreateList() {
         HashMap<String, Expression> args = new HashMap<>();
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(CreateList.ACTUAL_NAME, args);
     }
 
     @Test
@@ -87,7 +105,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("height", new IntegerValue(2));
             put("colour", new Colour(1, 2, 3));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(CreateRectangle.ACTUAL_NAME, args);
     }
 
     @Test
@@ -98,7 +116,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("width", new IntegerValue(1));
             put("height", new IntegerValue(2));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Crop.ACTUAL_NAME, args);
     }
 
     @Test
@@ -108,7 +126,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("$target", new Image(img));
             put("filter", new StringValue("string"));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Filter.ACTUAL_NAME, args);
     }
 
     @Test
@@ -117,7 +135,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
         HashMap<String, Expression> args = new HashMap<>() {{
             put("$target", new Image(img));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(GetHeight.ACTUAL_NAME, args);
     }
 
     @Test
@@ -126,7 +144,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
         HashMap<String, Expression> args = new HashMap<>() {{
             put("$target", new Image(img));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(GetWidth.ACTUAL_NAME, args);
     }
 
     @Test
@@ -134,7 +152,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
         HashMap<String, Expression> args = new HashMap<>() {{
             put("$target", new StringValue("string"));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Load.ACTUAL_NAME, args);
     }
 
     @Test
@@ -146,7 +164,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("x", new IntegerValue(1));
             put("y", new IntegerValue(1));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Overlay.ACTUAL_NAME, args);
     }
 
     @Test
@@ -154,7 +172,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
         HashMap<String, Expression> args = new HashMap<>() {{
             put("msg", new StringValue("message"));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Print.ACTUAL_NAME, args);
     }
 
     @Test
@@ -163,7 +181,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("min", new IntegerValue(1));
             put("max", new IntegerValue(2));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Random.ACTUAL_NAME, args);
     }
 
     @Test
@@ -174,7 +192,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("width", new IntegerValue(1));
             put("height", new IntegerValue(2));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Resize.ACTUAL_NAME, args);
     }
 
     @Test
@@ -184,7 +202,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("$target", new Image(img));
             put("angle", new IntegerValue(1));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Rotate.ACTUAL_NAME, args);
     }
 
     @Test
@@ -193,7 +211,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("duration", new IntegerValue(1));
             put("location", new StringValue("string"));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Save.ACTUAL_NAME, args);
     }
 
     @Test
@@ -203,7 +221,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("$target", new Image(img));
             put("amount", new IntegerValue(1));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(SetOpacity.ACTUAL_NAME, args);
     }
 
     @Test
@@ -214,7 +232,7 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("x", new IntegerValue(1));
             put("y", new IntegerValue(2));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Translate.ACTUAL_NAME, args);
     }
 
     @Test
@@ -227,6 +245,6 @@ public class TestBuiltInFunctionCalls extends TestStaticChecker {
             put("size", new IntegerValue(1));
             put("style", new StringValue("italic"));
         }};
-        testFunctionCallHelper(CreateColour.ACTUAL_NAME, args);
+        testFunctionCallHelper(Write.ACTUAL_NAME, args);
     }
 }
