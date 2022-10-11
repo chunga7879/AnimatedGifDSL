@@ -14,12 +14,12 @@ public abstract class ArithmeticVisitor {
         this.op = op;
     }
 
-    public Value visit(IntegerValue a, Expression b, Scope s) {
+    public Value visit(IntegerValue a, Value b, Scope s) {
         throw new InvalidOperation(a, this.op);
     }
 
 
-    public Value visit(StringValue a, Expression b, Scope s) {
+    public Value visit(StringValue a, Value b, Scope s) {
         throw new InvalidOperation(a, this.op);
     }
 }

@@ -2,6 +2,7 @@ package core.values;
 
 import core.Scope;
 import core.exceptions.TypeError;
+import core.expressions.ExpressionVisitor;
 
 public abstract class AbstractFunction extends Value {
     protected static final String NAME = "function";
@@ -21,5 +22,10 @@ public abstract class AbstractFunction extends Value {
     @Override
     public AbstractFunction asFunction() {
         return this;
+    }
+
+    @Override
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
 }

@@ -6,9 +6,9 @@ import core.values.Value;
 import java.util.HashMap;
 
 public class Scope {
-    private HashMap<String, Value> vars;
-    private final Scope parent;
     private static Scope global;
+    private final Scope parent;
+    private HashMap<String, Value> vars;
 
 
     public Scope() {
