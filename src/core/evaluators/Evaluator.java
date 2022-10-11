@@ -11,7 +11,7 @@ import java.util.Map;
 public class Evaluator implements StatementVisitor<Scope, Void>, ExpressionVisitor<Scope, Value> {
     @Override
     public Void visit(Scope ctx, FunctionDefinition fd) {
-        ctx.setVar(fd.name(), new Function(fd.statements()));
+        ctx.setVar(fd.name(), new Function(fd.statements(), fd.params()));
         return null;
     }
 
