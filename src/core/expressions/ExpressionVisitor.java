@@ -2,6 +2,9 @@ package core.expressions;
 
 import builtin.functions.*;
 import core.values.*;
+import core.values.AbstractFunction;
+import core.values.Function;
+import core.values.Value;
 
 public interface ExpressionVisitor<C, T> {
     T visit(C ctx, ArithmeticExpression ae);

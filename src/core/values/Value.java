@@ -4,6 +4,7 @@ import core.Scope;
 import core.exceptions.InvalidOperation;
 import core.exceptions.TypeError;
 import core.expressions.Expression;
+import core.expressions.ExpressionVisitor;
 import core.expressions.arithmetic.ArithmeticVisitor;
 import core.expressions.comparison.ComparisonVisitor;
 
@@ -42,11 +43,11 @@ public abstract class Value implements Expression {
         throw new TypeError(this, Image.NAME);
     }
 
-    public BooleanValue acceptCV(ComparisonVisitor cv, Expression b, Scope s) {
+    public BooleanValue accept(ComparisonVisitor cv, Value b, Scope s) {
         throw new InvalidOperation(this);
     }
 
-    public Value acceptAV(ArithmeticVisitor av, Expression b, Scope s) {
+    public Value accept(ArithmeticVisitor av, Value b, Scope s) {
         throw new InvalidOperation(this);
     }
 
@@ -55,7 +56,8 @@ public abstract class Value implements Expression {
     }
 
     @Override
-    public Value evaluate(Scope s) {
-        return this;
+    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
+        return v.visit(ctx, this);
     }
+
 }

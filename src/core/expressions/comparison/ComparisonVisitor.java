@@ -6,6 +6,7 @@ import core.expressions.Expression;
 import core.values.BooleanValue;
 import core.values.IntegerValue;
 import core.values.StringValue;
+import core.values.Value;
 
 public abstract class ComparisonVisitor {
     private final String op;
@@ -14,11 +15,11 @@ public abstract class ComparisonVisitor {
         this.op = op;
     }
 
-    public BooleanValue visit(IntegerValue a, Expression b, Scope s) {
+    public BooleanValue visit(IntegerValue a, Value b, Scope s) {
         throw new InvalidOperation(a, this.op);
     }
 
-    public BooleanValue visit(StringValue a, Expression b, Scope s) {
+    public BooleanValue visit(StringValue a, Value b, Scope s) {
         throw new InvalidOperation(a, this.op);
     }
 }

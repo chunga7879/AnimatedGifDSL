@@ -1,14 +1,14 @@
 package utils.filters;
 
 import com.sksamuel.scrimage.ImmutableImage;
-import core.exceptions.InternalException;
 import com.sksamuel.scrimage.filter.*;
+import core.exceptions.InternalException;
 
 import java.io.IOException;
 
 public class FilterApplicator {
 
-    private static ImmutableImage filter(ImmutableImage image, com.sksamuel.scrimage.filter.Filter filter) {
+    private static ImmutableImage filter(ImmutableImage image, Filter filter) {
         try {
             ImmutableImage filtered = image.filter(filter);
             return filtered;

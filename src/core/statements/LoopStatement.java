@@ -1,47 +1,10 @@
 package core.statements;
 
-import core.Scope;
 import core.expressions.Expression;
-import core.values.Array;
-import core.values.Value;
 
 import java.util.List;
 
-public class LoopStatement implements Statement {
-    private final Expression array;
-    private final List<Statement> statements;
-    private final String loopVar;
-
-    public LoopStatement(Expression array, List<Statement> statements, String loopVar) {
-        this.array = array;
-        this.statements = statements;
-        this.loopVar = loopVar;
-    }
-
-    public Expression getArray() {
-        return array;
-    }
-
-    public List<Statement> getStatements() {
-        return statements;
-    }
-
-    public String getLoopVar() {
-        return loopVar;
-    }
-
-    @Override
-    public void Do(Scope s) {
-        Array a = this.array.evaluate(s).asArray();
-        for (Value v : a) {
-            Scope loopScope = s.newChildScope();
-            loopScope.setVar(this.loopVar, v);
-            for (Statement stms : this.statements) {
-                stms.Do(s);
-            }
-        }
-    }
-
+public record LoopStatement(Expression array, String loopVar, List<Statement> statements) implements Statement {
     @Override
     public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
         return v.visit(ctx, this);

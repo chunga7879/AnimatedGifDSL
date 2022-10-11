@@ -1,6 +1,7 @@
 package core.values;
 
 import core.Scope;
+import core.exceptions.InternalException;
 import core.expressions.ExpressionVisitor;
 import core.statements.Return;
 import core.statements.Statement;
@@ -20,14 +21,7 @@ public class Function extends AbstractFunction {
     }
 
     public Value call(Scope scope) {
-        for (Statement s : statements) {
-            if (s instanceof Return) {
-                return ((Return) s).getReturnValue(scope);
-            } else {
-                s.Do(scope);
-            }
-        }
-        return Null.NULL;
+        throw new InternalException("remove me");
     }
 
     @Override

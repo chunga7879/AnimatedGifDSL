@@ -19,9 +19,6 @@ public class CreateRectangle extends AbstractFunction {
         int width = scope.getVar("width").asInteger().get();
         int height = scope.getVar("height").asInteger().get();
         Colour colour = scope.getVar("colour").asColour();
-        System.out.println(colour.getR());
-        System.out.println(colour.getG());
-        System.out.println(colour.getB());
 
         ImmutableImage rectangle = ImmutableImage.filled(width, height, new Color(colour.getR(), colour.getG(), colour.getB()));
 

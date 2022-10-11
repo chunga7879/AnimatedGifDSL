@@ -1,119 +1,107 @@
 package core.evaluators;
 
-//public class Evaluator implements NodeVisitor<Scope, Function>, ExpressionVisitor<Scope, Expression>,
-//    StatementVisitor<Scope, Statement> {
-//    @Override
-//    public Expression visit(Scope ctx, ArithmeticExpression ae) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, ComparisonExpression ce) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, FunctionCall fc) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, VariableExpression ve) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, Array a) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, BooleanValue bv) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, Colour c) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Function visit(Scope ctx, Function f) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, Image i) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, IntegerValue iv) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, Null n) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, StringValue sv) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, Add a) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, CreateList cl) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, Load l) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, Print p) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, Random r) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Expression visit(Scope ctx, Save s) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Statement visit(Scope ctx, FunctionDefinition fd) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Statement visit(Scope ctx, IfStatement is) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Statement visit(Scope ctx, LoopStatement ls) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Statement visit(Scope ctx, Return r) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Statement visit(Scope ctx, VariableAssignment va) {
-//        return null;
-//    }
-//}
+import core.Scope;
+import core.exceptions.InternalException;
+import core.expressions.*;
+import core.statements.*;
+import core.values.*;
+
+import java.util.Map;
+
+public class Evaluator implements StatementVisitor<Scope, Void>, ExpressionVisitor<Scope, Value> {
+    @Override
+    public Void visit(Scope ctx, FunctionDefinition fd) {
+        ctx.setVar(fd.name(), new Function(fd.statements()));
+        return null;
+    }
+
+    @Override
+    public Void visit(Scope ctx, IfStatement ifs) {
+        if (!ifs.cond().accept(ctx, this).asBoolean().get())
+            return null;
+
+        // TODO do we want to support early returns?
+        for (Statement s : ifs.statements()) {
+            s.accept(ctx, this);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Void visit(Scope ctx, LoopStatement ls) {
+        Array a = ls.array().accept(ctx, this).asArray();
+        Scope loopScope = ctx.newChildScope();
+        for (Value v : a) {
+            loopScope.setVar(ls.loopVar(), v);
+            for (Statement stms : ls.statements()) {
+                stms.accept(loopScope, this);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Void visit(Scope ctx, Return r) {
+        throw new InternalException("visitReturn should never be called");
+    }
+
+    @Override
+    public Void visit(Scope ctx, VariableAssignment va) {
+        ctx.setVar(va.dest(), va.expr().accept(ctx, this));
+        return null;
+    }
+
+    @Override
+    public Value visit(Scope ctx, ArithmeticExpression ae) {
+        return ae.a().accept(ctx, this).accept(ae.av(), ae.b().accept(ctx, this), ctx);
+    }
+
+    @Override
+    public Value visit(Scope ctx, ComparisonExpression ce) {
+        return ce.a().accept(ctx, this).accept(ce.cv(), ce.b().accept(ctx, this), ctx);
+    }
+
+    @Override
+    public Value visit(Scope ctx, FunctionCall fc) {
+        Scope funcScope = ctx.newChildScope();
+        for (Map.Entry<String, Expression> entry : fc.args().entrySet()) {
+            funcScope.setVar(entry.getKey(), entry.getValue().accept(ctx, this));
+        }
+        return ctx.getVar(fc.identifier()).asFunction().accept(funcScope, this);
+    }
+
+    @Override
+    public Void visit(Scope ctx, ExpressionWrapper ew) {
+        ew.e().accept(ctx, this);
+        return null;
+    }
+
+    @Override
+    public Value visit(Scope ctx, VariableExpression ve) {
+        return ctx.getVar(ve.identifier());
+    }
+
+    @Override
+    public Value visit(Scope ctx, Value v) {
+        return v;
+    }
+
+    @Override
+    public Value visit(Scope ctx, AbstractFunction f) {
+        return f.call(ctx);
+    }
+
+    @Override
+    public Value visit(Scope ctx, Function f) {
+        for (Statement s : f.getStatements()) {
+            if (s instanceof Return) {
+                return ((Return) s).e().accept(ctx, this);
+            } else {
+                s.accept(ctx, this);
+            }
+        }
+
+        return Null.NULL;
+    }
+}

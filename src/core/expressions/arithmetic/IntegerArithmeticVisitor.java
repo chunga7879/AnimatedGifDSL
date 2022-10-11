@@ -13,7 +13,7 @@ abstract class IntegerArithmeticVisitor extends ArithmeticVisitor {
     protected abstract int apply(int a, int b);
 
     @Override
-    public Value visit(IntegerValue a, Expression b, Scope s) {
-        return new IntegerValue(this.apply(a.get(), b.evaluate(s).asInteger().get()));
+    public Value visit(IntegerValue a, Value b, Scope s) {
+        return new IntegerValue(this.apply(a.get(), b.asInteger().get()));
     }
 }
