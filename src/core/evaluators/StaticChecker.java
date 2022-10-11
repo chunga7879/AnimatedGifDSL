@@ -1,6 +1,10 @@
 package core.evaluators;
 
 import builtin.functions.*;
+import builtin.functions.colour.CreateColour;
+import builtin.functions.colour.GetB;
+import builtin.functions.colour.GetG;
+import builtin.functions.colour.GetR;
 import core.NodeVisitor;
 import core.Scope;
 import core.exceptions.FunctionException;
@@ -139,6 +143,51 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
             put("location", StringValue.NAME);
         }};
         checkArguments(ctx, args);
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Crop cr) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, CreateRectangle cr) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, GetHeight gh) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, GetWidth gw) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Overlay ol) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Resize rs) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Rotate rt) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Translate tl) {
+        return Null.NULL;
+    }
+
+    @Override
+    public Value visit(Scope ctx, Write wt) {
         return Null.NULL;
     }
 
