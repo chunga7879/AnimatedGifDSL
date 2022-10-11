@@ -4,11 +4,9 @@ import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.color.Colors;
 import core.Scope;
 import core.checkers.ArgumentChecker;
-import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
-import core.values.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,8 +15,8 @@ public class Translate extends AbstractFunction {
     public final static String ACTUAL_NAME = "Translate";
 
     @Override
-    public Value call(Scope scope) {
-        ImmutableImage immutableImg = scope.getVar("$target").asImage().get();
+    public Image call(Scope scope) {
+        ImmutableImage immutableImg = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
         int x = scope.getVar("x").asInteger().get();
         int y = scope.getVar("y").asInteger().get();
 
@@ -26,18 +24,14 @@ public class Translate extends AbstractFunction {
     }
 
     @Override
-    public void checkArgs(Scope scope) {
+    public Image checkArgs(Scope scope) {
         Map<String, String> params = new HashMap<>() {{
-            put("$target", Image.NAME);
+            put(AbstractFunction.PARAM_TARGET, Image.NAME);
             put("x", IntegerValue.NAME);
             put("y", IntegerValue.NAME);
         }};
         ArgumentChecker.check(scope, params, ACTUAL_NAME);
-    }
-
-    @Override
-    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.visit(ctx, this);
+        return new Image(null);
     }
 
     public  ImmutableImage translate(ImmutableImage image, int x, int y) {

@@ -32,8 +32,9 @@ public class Function extends AbstractFunction {
     }
 
     @Override
-    public void checkArgs(Scope scope) {
+    public Value checkArgs(Scope scope) {
         ArgumentChecker.check(scope, params, "user defined function");
+        return new Unknown();
     }
 
     @Override

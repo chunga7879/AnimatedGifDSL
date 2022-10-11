@@ -48,7 +48,7 @@ public class GifDSLConverter {
      * @return
      */
     public Function convertProgram(ProgramContext programCtx) {
-        return new Function(convertStatements(programCtx.statement()));
+        return new Function(convertStatements(programCtx.statement()), new HashMap<>());
     }
 
     /**
@@ -123,7 +123,7 @@ public class GifDSLConverter {
             args.put(parameterName, inputValue);
         }
         if (returnVariable == null) {
-            return new FunctionCall(functionName, args, rootScope);
+            return new ExpressionWrapper(new FunctionCall(functionName, args, rootScope));
         } else {
             return new VariableAssignment(returnVariable, new FunctionCall(functionName, args, rootScope));
         }
@@ -153,23 +153,22 @@ public class GifDSLConverter {
      * @param innerStatementCtxs
      * @return
      */
-    private VariableAssignment convertDefine(Define_statementContext defineCtx, List<StatementContext> innerStatementCtxs) {
+    private FunctionDefinition convertDefine(Define_statementContext defineCtx, List<StatementContext> innerStatementCtxs) {
         String functionName = getVariableName(defineCtx.define_function().VARIABLE());
-        List<Statement> statements = convertStatements(innerStatementCtxs);
-        String target = null;
-        HashSet<String> parameters = new HashSet<>();
+        HashMap<String, String> parameters = new HashMap<>();
+        List<Statement> statements = new ArrayList<>();
         if (defineCtx.define_target() != null) {
-            target = getVariableName(defineCtx.define_target().VARIABLE());
+            parameters.put("$target", Unknown.NAME);
+            statements.add(new VariableAssignment(getVariableName(defineCtx.define_target().VARIABLE()), new VariableExpression("$target")));
         }
         if (defineCtx.define_params() != null) {
             List<TerminalNode> parameterNodes = defineCtx.define_params().VARIABLE();
             for (TerminalNode parameterNode : parameterNodes) {
-                parameters.add(getVariableName(parameterNode));
+                parameters.put(getVariableName(parameterNode), Unknown.NAME);
             }
         }
-        // Add target and parameters to function
-        Function function = new Function(statements);
-        return new VariableAssignment(functionName, function);
+        statements.addAll(convertStatements(innerStatementCtxs));
+        return new FunctionDefinition(functionName, statements, parameters);
     }
 
     /**
@@ -203,17 +202,17 @@ public class GifDSLConverter {
             array = convertRange(loopCtx.range());
         }
         List<Statement> innerStatements = convertStatements(innerStatementCtxs);
-        return new LoopStatement(array, innerStatements, loopCtx.loop_variable().VARIABLE().getText());
+        return new LoopStatement(array, loopCtx.loop_variable().VARIABLE().getText(), innerStatements);
     }
 
     private Array convertRange(RangeContext rangeCtx) {
         int min = getIntegerValue(rangeCtx.NUMBER(0));
         int max = getIntegerValue(rangeCtx.NUMBER(1));
-        Array array = new Array();
+        List<Value> array = new ArrayList<>();
         for (int i = min; i <= max; i++) {
             array.add(new IntegerValue(i));
         }
-        return array;
+        return new Array(array);
     }
 
     /**
@@ -234,7 +233,7 @@ public class GifDSLConverter {
         if (expressionContext.arithmetic() != null) {
             return convertArithmetic(expressionContext.arithmetic());
         } else if (expressionContext.TEXT() != null) {
-            return new StringValue(expressionContext.TEXT().getText());
+            return convertString(expressionContext.TEXT());
         } else if (expressionContext.COLOUR() != null) {
             return new Colour(expressionContext.COLOUR().getText());
         }
@@ -293,6 +292,17 @@ public class GifDSLConverter {
      */
     private IntegerValue convertInteger(TerminalNode integerNode) {
         return new IntegerValue(getIntegerValue(integerNode));
+    }
+
+    /**
+     * Convert a string value from a TerminalNode
+     * @param stringNode
+     * @return
+     */
+    private StringValue convertString(TerminalNode stringNode) {
+        String string = stringNode.getText();
+        // to remove the quotation marks
+        return new StringValue(string.substring(1, string.length() - 1));
     }
 
     /**

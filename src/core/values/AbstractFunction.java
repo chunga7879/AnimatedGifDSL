@@ -3,13 +3,9 @@ package core.values;
 import core.Scope;
 import core.exceptions.TypeError;
 import core.expressions.ExpressionVisitor;
-import core.expressions.Expression;
-
-import java.util.Map;
-import java.util.Objects;
 
 public abstract class AbstractFunction extends Value {
-    protected static final String NAME = "function";
+    public static final String NAME = "function";
     public static final String PARAM_TARGET = "$target";
     public static final String PARAM_ON = "$on";
 
@@ -31,5 +27,5 @@ public abstract class AbstractFunction extends Value {
         return v.visit(ctx, this);
     }
 
-    public abstract void checkArgs(Scope scope);
+    public abstract Value checkArgs(Scope scope);
 }

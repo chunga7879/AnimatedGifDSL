@@ -2,10 +2,8 @@ package builtin.functions;
 
 import core.Scope;
 import core.checkers.ArgumentChecker;
-import core.expressions.ExpressionVisitor;
 import core.values.AbstractFunction;
 import core.values.IntegerValue;
-import core.values.Value;
 import utils.RandomNumber;
 
 import java.util.HashMap;
@@ -18,7 +16,7 @@ public class Random extends AbstractFunction {
     public final static String ACTUAL_NAME = "Random";
 
     @Override
-    public Value call(Scope scope) {
+    public IntegerValue call(Scope scope) {
         int min = scope.getVar("min").asInteger().get();
         int max = scope.getVar("max").asInteger().get();
         int num = RandomNumber.getRandomNumber(min, max);
@@ -26,16 +24,12 @@ public class Random extends AbstractFunction {
     }
 
     @Override
-    public void checkArgs(Scope scope) {
+    public IntegerValue checkArgs(Scope scope) {
         Map<String, String> params = new HashMap<>() {{
             put("min", IntegerValue.NAME);
             put("max", IntegerValue.NAME);
         }};
         ArgumentChecker.check(scope, params, ACTUAL_NAME);
-    }
-
-    @Override
-    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.visit(ctx, this);
+        return new IntegerValue(0);
     }
 }

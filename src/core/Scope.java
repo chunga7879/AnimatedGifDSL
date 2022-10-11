@@ -1,9 +1,11 @@
 package core;
 
 import core.exceptions.NameError;
+import core.values.AbstractFunction;
 import core.values.Value;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Scope {
     private static Scope global;
@@ -40,18 +42,49 @@ public class Scope {
     }
 
     public void setVar(String name, Value v) {
-        if (this.hasParent() && this.parent.vars.containsKey(name)) {
-            this.parent.setVar(name, v);
-        } else {
+        // TODO: might want to split storing for values and functions
+        if (hasVar(name)) {
+            Value prevVal = getVar(name);
+            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new RuntimeException("Cannot redefine function: " + name);
+        }
+        // Update the lowest level scope with the name
+        // We don't have enough static checks to make sure that values aren't defined multiple times
+        if (!hasParent() || !this.parent.hasVar(name)) {
             this.vars.put(name, v);
+        } else {
+            this.parent.setVar(name, v);
         }
     }
 
+    /**
+     * Check if variable exists
+     * @param name
+     * @return
+     */
     public boolean hasVar(String name) {
+        if (hasVarLocal(name)) return true;
+        if (this.hasParent()) return this.parent.hasVar(name);
+        return false;
+    }
+
+    /**
+     * Check if variable exists in local scope
+     * @param name
+     * @return
+     */
+    public boolean hasVarLocal(String name) {
         return vars.containsKey(name);
     }
 
-    public int getSize() {
+    /**
+     * Get size of local scope
+     * @return
+     */
+    public int getLocalSize() {
         return vars.size();
+    }
+
+    public String getLocalKeyString() {
+        return "(" + String.join(", ", this.vars.keySet()) + ")";
     }
 }

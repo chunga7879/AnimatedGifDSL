@@ -148,7 +148,7 @@ Filter - Apply a filter to an image
 *Supported Filters:* `"invert"`, `"greyscale"`, `"blur"`, `"sharpen"`, `"sepia"`, `"chrome"`
 ```
 FILTER [image] AS [variable name]
-  WITH filter: [filter name]
+  WITH filtering: [filter name]
 ```
 #### Custom Functions
 Define - Create a custom function

@@ -1,10 +1,5 @@
 package core.checkers;
 
-import builtin.functions.*;
-import builtin.functions.colour.CreateColour;
-import builtin.functions.colour.GetB;
-import builtin.functions.colour.GetG;
-import builtin.functions.colour.GetR;
 import core.NodeVisitor;
 import core.Scope;
 import core.exceptions.FunctionException;
@@ -15,20 +10,17 @@ import core.statements.*;
 import core.values.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisitor<Scope, Value>,
     StatementVisitor<Scope, Value> {
-    Scope functions = new Scope();
-
-    public StaticChecker() {
-        addBuiltInFunctions();
-    }
 
     @Override
     public Value visit(Scope ctx, ArithmeticExpression ae) {
-        String expressionA = ae.a().getClass().getName();
-        String expressionB = ae.b().getClass().getName();
-        if (!expressionA.equals(IntegerValue.class.getName()) || !expressionB.equals(IntegerValue.class.getName())) {
+        String expressionA = ae.a().accept(ctx, this).getTypeName();
+        String expressionB = ae.b().accept(ctx, this).getTypeName();
+        if (!(expressionA.equals(IntegerValue.NAME) || expressionA.equals(Unknown.NAME)) ||
+            !(expressionB.equals(IntegerValue.NAME) || expressionB.equals(Unknown.NAME))) {
             throw new TypeError("Invalid arithmetic expression");
         }
         return new IntegerValue(0);
@@ -36,33 +28,38 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, ComparisonExpression ce) {
-        String expressionA = ce.a().getClass().getName();
-        String expressionB = ce.b().getClass().getName();
-        if (!expressionA.equals(IntegerValue.class.getName()) || !expressionB.equals(IntegerValue.class.getName())) {
-            throw new TypeError("Invalid arithmetic expression");
+        String expressionA = ce.a().accept(ctx, this).getTypeName();
+        String expressionB = ce.b().accept(ctx, this).getTypeName();
+        if (!(expressionA.equals(IntegerValue.NAME) || expressionA.equals(Unknown.NAME)) ||
+            !(expressionB.equals(IntegerValue.NAME) || expressionB.equals(Unknown.NAME))) {
+            throw new TypeError("Invalid comparison expression");
         }
         return new BooleanValue(true);
     }
 
     @Override
     public Value visit(Scope ctx, FunctionCall fc) {
-        Scope funcScope = ctx.newChildScope();
+        Scope funcScope = fc.scope().newChildScope();
         String name = fc.identifier();
-        if (!functions.hasVar(name)) {
-            throw new FunctionException("called function " + name + " is not defined");
+        if (!ctx.hasVar(name)) {
+            throw new FunctionException("Called function \"" + name + "\" is not defined");
         }
         for (Map.Entry<String, Expression> entry : fc.args().entrySet()) {
+
             funcScope.setVar(entry.getKey(), entry.getValue().accept(ctx, this));
         }
-        functions.getVar(name).asFunction().accept(funcScope, this);
-        return null;
+        System.out.println("Visit Function: " + name);
+        if (name.equals("filter")) {
+            System.out.println("hi");
+        }
+        return ctx.getVar(name).asFunction().accept(funcScope, this);
     }
 
     @Override
     public Value visit(Scope ctx, VariableExpression ve) {
         String name = ve.identifier();
         if (!ctx.hasVar(name)) {
-            throw new VariableException("variable " + name + " is undefined");
+            throw new VariableException("Variable " + name + " is undefined");
         }
         return ctx.getVar(name);
     }
@@ -74,8 +71,7 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, AbstractFunction af) {
-        af.checkArgs(ctx);
-        return null;
+        return af.checkArgs(ctx);
     }
 
     @Override
@@ -83,21 +79,24 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
         for (Statement s : f.getStatements()) {
             s.accept(ctx, this);
         }
-        return null;
+        return new Unknown();
     }
 
     @Override
     public Value visit(Scope ctx, FunctionDefinition fd) {
         String name = fd.name();
 
-        if (functions.hasVar(name)) {
+        if (ctx.hasVar(name)) {
             throw new FunctionException("declared function " + name + " already exists");
-        } else {
-            functions.setVar(fd.name(), new Function(fd.statements(), fd.params()));
         }
+        ctx.setVar(fd.name(), new Function(fd.statements(), fd.params()));
 
+        Scope childScope = ctx.newChildScope();
+        for (Map.Entry<String, String> entry : fd.params().entrySet()) {
+            childScope.setVar(entry.getKey(), new Unknown());
+        }
         for (Statement s : fd.statements()) {
-            s.accept(ctx, this);
+            s.accept(childScope, this);
         }
         return null;
     }
@@ -112,22 +111,29 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, LoopStatement ls) {
-        ls.array().accept(ctx, this);
+        Value value = ls.array().accept(ctx, this);
+        if (!Objects.equals(value.getTypeName(), Array.NAME)) throw new FunctionException("Cannot loop over non-array value"); // TODO - new exception
+        Array array = value.asArray();
+        Scope loopScope = ctx.newChildScope();
+        loopScope.setVar(ls.loopVar(), array.get().size() > 0 ? array.get().get(0) : new Unknown());
         for (Statement s : ls.statements()) {
-            s.accept(ctx, this);
+            s.accept(loopScope, this);
         }
         return null;
     }
 
     @Override
     public Value visit(Scope ctx, Return r) {
-        r.accept(ctx, this);
-        return null;
+        return r.e().accept(ctx, this);
     }
 
     @Override
     public Value visit(Scope ctx, VariableAssignment va) {
-        ctx.setVar(va.dest(), (Value) va.expr());
+        if (ctx.hasVar(va.dest())) {
+            Value prevVal = ctx.getVar(va.dest());
+            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new FunctionException("Cannot redefine function: " + va.dest());
+        }
+        ctx.setVar(va.dest(), va.expr().accept(ctx, this));
         return null;
     }
 
@@ -135,30 +141,5 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
     public Value visit(Scope ctx, ExpressionWrapper ew) {
         ew.e().accept(ctx, this);
         return null;
-    }
-
-    private void addBuiltInFunctions() {
-        functions.setVar(CreateColour.ACTUAL_NAME, new CreateColour());
-        functions.setVar(GetB.ACTUAL_NAME, new GetB());
-        functions.setVar(GetG.ACTUAL_NAME, new GetG());
-        functions.setVar(GetR.ACTUAL_NAME, new GetR());
-        functions.setVar(Add.ACTUAL_NAME, new Add());
-        functions.setVar(ColourFill.ACTUAL_NAME, new ColourFill());
-        functions.setVar(CreateList.ACTUAL_NAME, new CreateList());
-        functions.setVar(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
-        functions.setVar(Crop.ACTUAL_NAME, new Crop());
-        functions.setVar(Filter.ACTUAL_NAME, new Filter());
-        functions.setVar(GetHeight.ACTUAL_NAME, new GetHeight());
-        functions.setVar(GetWidth.ACTUAL_NAME, new GetWidth());
-        functions.setVar(Load.ACTUAL_NAME, new Load());
-        functions.setVar(Overlay.ACTUAL_NAME, new Overlay());
-        functions.setVar(Print.ACTUAL_NAME, new Print());
-        functions.setVar(Random.ACTUAL_NAME, new Random());
-        functions.setVar(Resize.ACTUAL_NAME, new Resize());
-        functions.setVar(Rotate.ACTUAL_NAME, new Rotate());
-        functions.setVar(Save.ACTUAL_NAME, new Save());
-        functions.setVar(SetOpacity.ACTUAL_NAME, new SetOpacity());
-        functions.setVar(Translate.ACTUAL_NAME, new Translate());
-        functions.setVar(Write.ACTUAL_NAME, new Write());
     }
 }

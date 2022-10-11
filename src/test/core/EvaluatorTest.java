@@ -58,8 +58,9 @@ public class EvaluatorTest {
             }
 
             @Override
-            public void checkArgs(Scope scope) {
+            public Value checkArgs(Scope scope) {
                 // do nothing
+                return null;
             }
         }
 

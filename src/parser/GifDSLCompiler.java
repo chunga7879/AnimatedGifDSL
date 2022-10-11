@@ -1,6 +1,7 @@
 package parser;
 
 import core.Scope;
+import core.checkers.StaticChecker;
 import core.values.Function;
 import core.values.Value;
 import org.antlr.v4.runtime.CharStream;
@@ -63,7 +64,7 @@ public final class GifDSLCompiler {
 
         if (enableStaticCheck) {
             print("Started static checker");
-            // TODO run static check
+            new StaticChecker().visit(scope.newChildScope(), main);
             print("Finished static checker");
         }
 

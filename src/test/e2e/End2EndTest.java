@@ -1,7 +1,8 @@
-package test.e2e;
+package e2e;
 
 import builtin.functions.Print;
 import core.Scope;
+import core.evaluators.Evaluator;
 import core.values.Function;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
@@ -28,9 +29,9 @@ public class End2EndTest {
               WITH msg2: "func"
             """;
         GifDSLCompiler compiler = new GifDSLCompiler();
-        compiler.setEnableStaticChecker(false);
         compiler.addPredefinedValues("print", new Print());
         Pair<Function, Scope> main = compiler.compile(CharStreams.fromString(input));
-        main.a.call(main.b);
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b.newChildScope(), main.a);
     }
 }

@@ -4,8 +4,9 @@ import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
 import core.checkers.ArgumentChecker;
 import core.exceptions.InvalidFilePath;
-import core.expressions.ExpressionVisitor;
-import core.values.*;
+import core.values.AbstractFunction;
+import core.values.Image;
+import core.values.StringValue;
 import files.filesystem.FileSystem;
 
 import java.io.FileNotFoundException;
@@ -16,28 +17,25 @@ public class Load extends AbstractFunction {
     public final static String ACTUAL_NAME = "Load";
 
     @Override
-    public Value call(Scope scope) {
+    public Image call(Scope scope) {
         // Documentation for LOAD doesn't have filepath being passed with the WITH keyword so
         // assumed that it's $target
-        StringValue filePath = scope.getVar("$target").asString();
+        StringValue filePath = scope.getVar(AbstractFunction.PARAM_TARGET).asString();
         try {
             ImmutableImage image = FileSystem.openImage(filePath.get());
+            if (image == null) throw new InvalidFilePath("File could not be loaded.");
             return new Image(image);
         } catch (FileNotFoundException e) {
-            throw new InvalidFilePath(filePath + "could not be found.");
+            throw new InvalidFilePath(filePath.get() + " could not be found.");
         }
     }
 
     @Override
-    public void checkArgs(Scope scope) {
+    public Image checkArgs(Scope scope) {
         Map<String, String> params = new HashMap<>() {{
-            put("$target", StringValue.NAME);
+            put(AbstractFunction.PARAM_TARGET, StringValue.NAME);
         }};
         ArgumentChecker.check(scope, params, ACTUAL_NAME);
-    }
-
-    @Override
-    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.visit(ctx, this);
+        return new Image(null);
     }
 }

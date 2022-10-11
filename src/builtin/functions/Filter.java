@@ -3,8 +3,10 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
 import core.checkers.ArgumentChecker;
-import core.expressions.ExpressionVisitor;
-import core.values.*;
+import core.values.AbstractFunction;
+import core.values.Image;
+import core.values.StringValue;
+import core.values.Value;
 import utils.filters.FilterApplicator;
 
 import java.util.HashMap;
@@ -15,20 +17,21 @@ public class Filter extends AbstractFunction {
 
     @Override
     public Value call(Scope scope) {
-        ImmutableImage image = scope.getVar("$target").asImage().get();
-        String filter = scope.getVar("filter").asString().get();
+        ImmutableImage image = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        String filter = scope.getVar("filtering").asString().get();
 
         ImmutableImage filteredImage = performFilter(filter, image);
         return new Image(filteredImage);
     }
 
     @Override
-    public void checkArgs(Scope scope) {
+    public Image checkArgs(Scope scope) {
         Map<String, String> params = new HashMap<>() {{
-            put("$target", Image.NAME);
-            put("filter", StringValue.NAME);
+            put(AbstractFunction.PARAM_TARGET, Image.NAME);
+            put("filtering", StringValue.NAME);
         }};
         ArgumentChecker.check(scope, params, ACTUAL_NAME);
+        return new Image(null);
     }
 
     private ImmutableImage performFilter(String filter, ImmutableImage image) {
@@ -56,10 +59,5 @@ public class Filter extends AbstractFunction {
                 throw new IllegalArgumentException("Filter not supported.");
         }
         return filteredImage;
-    }
-
-    @Override
-    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return null;
     }
 }

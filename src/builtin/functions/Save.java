@@ -2,12 +2,12 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.checkers.ArgumentChecker;
+import core.exceptions.FunctionException;
 import core.exceptions.InternalException;
 import core.exceptions.InvalidFilePath;
-import core.checkers.ArgumentChecker;
-import core.expressions.ExpressionVisitor;
-import files.gif.GifMaker;
 import core.values.*;
+import files.gif.GifMaker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,11 +18,12 @@ public class Save extends AbstractFunction {
     public final static String ACTUAL_NAME = "Save";
 
     @Override
-    public Value call(Scope scope) {
-        ArrayList<ImmutableImage> frames = getImmutableImages(scope.getVar("$target").asArray());
+    public Null call(Scope scope) {
+        ArrayList<ImmutableImage> frames = getImmutableImages(scope.getVar(AbstractFunction.PARAM_TARGET).asArray());
         long duration = scope.getVar("duration").asInteger().get();
         String location = scope.getVar("location").asString().get();
 
+        if (frames.size() < 1) throw new FunctionException("Attempting to save with no image");
         try {
             GifMaker.makeGif(frames, duration, location);
         } catch (IOException ioe) {
@@ -35,12 +36,14 @@ public class Save extends AbstractFunction {
     }
 
     @Override
-    public void checkArgs(Scope scope) {
+    public Null checkArgs(Scope scope) {
         Map<String, String> params = new HashMap<>() {{
+            put(AbstractFunction.PARAM_TARGET, Array.NAME);
             put("duration", IntegerValue.NAME);
             put("location", StringValue.NAME);
         }};
         ArgumentChecker.check(scope, params, ACTUAL_NAME);
+        return Null.NULL;
     }
 
     private ArrayList<ImmutableImage> getImmutableImages(Array array) {
@@ -53,10 +56,5 @@ public class Save extends AbstractFunction {
         }
 
         return immutableImgs;
-    }
-
-    @Override
-    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.visit(ctx, this);
     }
 }

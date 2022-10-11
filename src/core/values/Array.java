@@ -2,6 +2,7 @@ package core.values;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Array extends Value implements Iterable<Value> {
     public static final String NAME = "Array";
@@ -13,8 +14,15 @@ public class Array extends Value implements Iterable<Value> {
         this.arr = new ArrayList<>();
     }
 
-    public void add(Value v) {
-        this.arr.add(v);
+    public Array(List<Value> array) {
+        this();
+        this.arr.addAll(array);
+    }
+
+    public Array add(Value v) {
+        Array newArray = new Array(this.arr);
+        newArray.arr.add(v);
+        return newArray;
     }
 
     public ArrayList<Value> get() {

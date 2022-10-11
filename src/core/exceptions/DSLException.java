@@ -12,4 +12,9 @@ public abstract class DSLException extends RuntimeException {
     protected String getDetails() {
         return "";
     }
+
+    @Override
+    public String getMessage() {
+        return this.message();
+    }
 }

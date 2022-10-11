@@ -2,27 +2,24 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.color.Colors;
-import com.sksamuel.scrimage.metadata.ImageMetadata;
 import core.Scope;
 import core.checkers.ArgumentChecker;
-import core.expressions.ExpressionVisitor;
-import core.values.*;
+import core.values.AbstractFunction;
 import core.values.Image;
+import core.values.IntegerValue;
+import core.values.StringValue;
 
 import java.awt.*;
 import java.awt.font.TextLayout;
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.sksamuel.scrimage.ImmutableImage.wrapAwt;
 
 public class Write extends AbstractFunction {
     public final static String ACTUAL_NAME = "Write";
 
     @Override
-    public Value call(Scope scope) {
-        String text = scope.getVar("$target").asString().get();
+    public Image call(Scope scope) {
+        String text = scope.getVar(AbstractFunction.PARAM_TARGET).asString().get();
 
         int width = scope.getVar("width").asInteger().get();
         int height = scope.getVar("height").asInteger().get();
@@ -58,9 +55,9 @@ public class Write extends AbstractFunction {
     }
 
     @Override
-    public void checkArgs(Scope scope) {
+    public Image checkArgs(Scope scope) {
         Map<String, String> params = new HashMap<>() {{
-            put("$target", StringValue.NAME);
+            put(AbstractFunction.PARAM_TARGET, StringValue.NAME);
             put("width", IntegerValue.NAME);
             put("height", IntegerValue.NAME);
             put("font", StringValue.NAME);
@@ -68,11 +65,6 @@ public class Write extends AbstractFunction {
             put("style", StringValue.NAME);
         }};
         ArgumentChecker.check(scope, params, ACTUAL_NAME);
+        return new Image(null);
     }
-
-    @Override
-    public <C, T> T accept(C ctx, ExpressionVisitor<C, T> v) {
-        return v.visit(ctx, this);
-    }
-
 }
