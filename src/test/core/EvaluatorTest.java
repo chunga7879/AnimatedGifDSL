@@ -1,7 +1,5 @@
 package core;
 
-
-import core.Scope;
 import core.evaluators.Evaluator;
 import core.expressions.ArithmeticExpression;
 import core.expressions.ComparisonExpression;
