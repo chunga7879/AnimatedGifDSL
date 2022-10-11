@@ -37,12 +37,21 @@ public class Save extends AbstractFunction {
 
     @Override
     public Null checkArgs(Scope scope) {
-        Map<String, String> params = new HashMap<>() {{
+        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
+        return checkReturn();
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return new HashMap<>() {{
             put(AbstractFunction.PARAM_TARGET, Array.NAME);
             put("duration", IntegerValue.NAME);
             put("location", StringValue.NAME);
         }};
-        ArgumentChecker.check(scope, params, ACTUAL_NAME);
+    }
+
+    @Override
+    public Null checkReturn() {
         return Null.NULL;
     }
 

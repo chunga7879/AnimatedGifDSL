@@ -62,6 +62,16 @@ public class EvaluatorTest {
                 // do nothing
                 return null;
             }
+
+            @Override
+            public Map<String, String> getParams() {
+                return null;
+            }
+
+            @Override
+            public Value checkReturn() {
+                return null;
+            }
         }
 
         Scope s = new Scope();

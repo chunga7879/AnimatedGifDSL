@@ -4,6 +4,8 @@ import core.Scope;
 import core.exceptions.TypeError;
 import core.expressions.ExpressionVisitor;
 
+import java.util.Map;
+
 public abstract class AbstractFunction extends Value {
     public static final String NAME = "function";
     public static final String PARAM_TARGET = "$target";
@@ -28,4 +30,8 @@ public abstract class AbstractFunction extends Value {
     }
 
     public abstract Value checkArgs(Scope scope);
+
+    public abstract Value checkReturn();
+
+    public abstract Map<String, String> getParams();
 }

@@ -23,12 +23,21 @@ public class CreateColour extends AbstractFunction {
 
     @Override
     public Colour checkArgs(Scope scope) {
-        Map<String, String> params = new HashMap<>() {{
-           put("r", IntegerValue.NAME);
-           put("g", IntegerValue.NAME);
-           put("b", IntegerValue.NAME);
+        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
+        return checkReturn();
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return new HashMap<>() {{
+            put("r", IntegerValue.NAME);
+            put("g", IntegerValue.NAME);
+            put("b", IntegerValue.NAME);
         }};
-        ArgumentChecker.check(scope, params, ACTUAL_NAME);
+    }
+
+    @Override
+    public Colour checkReturn() {
         return new Colour(0, 0, 0);
     }
 }

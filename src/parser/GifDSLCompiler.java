@@ -12,11 +12,13 @@ import org.antlr.v4.runtime.misc.Pair;
 
 public final class GifDSLCompiler {
     private boolean enableStaticCheck;
+    private boolean enableShortcuts;
     private boolean verbose;
     private Scope scope;
 
     public GifDSLCompiler() {
         this.enableStaticCheck = true;
+        this.enableShortcuts = true;
         this.verbose = true;
         this.scope = new Scope();
     }
@@ -27,6 +29,14 @@ public final class GifDSLCompiler {
      */
     public void setEnableStaticChecker(boolean enableStaticCheck) {
         this.enableStaticCheck = enableStaticCheck;
+    }
+
+    /**
+     * Set whether to enable shortcuts
+     * @param enableShortcuts
+     */
+    public void setEnableShortcuts(boolean enableShortcuts) {
+        this.enableShortcuts = enableShortcuts;
     }
 
     /**
@@ -65,6 +75,10 @@ public final class GifDSLCompiler {
         if (enableStaticCheck) {
             print("Started static checker");
             new StaticChecker().visit(scope.newChildScope(), main);
+            if (enableShortcuts) {
+                main = new ShortcutsProcessor().visit(scope.newChildScope(), main);
+                new StaticChecker().visit(scope.newChildScope(), main);
+            }
             print("Finished static checker");
         }
 

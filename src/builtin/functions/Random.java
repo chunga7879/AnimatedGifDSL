@@ -25,11 +25,20 @@ public class Random extends AbstractFunction {
 
     @Override
     public IntegerValue checkArgs(Scope scope) {
-        Map<String, String> params = new HashMap<>() {{
+        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
+        return new IntegerValue(0);
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return new HashMap<>() {{
             put("min", IntegerValue.NAME);
             put("max", IntegerValue.NAME);
         }};
-        ArgumentChecker.check(scope, params, ACTUAL_NAME);
+    }
+
+    @Override
+    public IntegerValue checkReturn() {
         return new IntegerValue(0);
     }
 }

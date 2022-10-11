@@ -13,13 +13,13 @@ DEFINE RANDOM-COLOUR image WITH (min, max):
     WITH r: r
     WITH g: g
     WITH b: b
-  COLOUR-FILL image AS image
+  COLOUR-FILL image
     WITH colour: colour
   RETURN image
 
 LOAD "dvd-logo.png" AS dvd
 
-RESIZE dvd AS dvd
+RESIZE dvd
   WITH width: 40
   WITH height: 20
 RANDOM-COLOUR dvd AS dvd
@@ -75,15 +75,15 @@ LOOP i IN (1, 360):
   OVERLAY dvd ON background AS frame
     WITH x: positionX
     WITH y: positionY
-  ADD frames AS frames
+  ADD frames
     WITH item: frame
 
 CREATE-LIST AS editedFrames
 
 LOOP f IN frames:
-  FILTER f AS f
+  FILTER f
     WITH filtering: "invert"
-  ADD editedFrames AS editedFrames
+  ADD editedFrames
     WITH item: f
 
 SAVE frames

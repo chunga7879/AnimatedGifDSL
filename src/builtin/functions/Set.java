@@ -19,10 +19,19 @@ public class Set extends AbstractFunction {
 
     @Override
     public Value checkArgs(Scope scope) {
-        Map<String, String> params = new HashMap<>() {{
+        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
+        return new Unknown();
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return new HashMap<>() {{
             put(AbstractFunction.PARAM_TARGET, Unknown.NAME);
         }};
-        ArgumentChecker.check(scope, params, ACTUAL_NAME);
+    }
+
+    @Override
+    public Value checkReturn() {
         return new Unknown();
     }
 }

@@ -25,12 +25,21 @@ public class CreateRectangle extends AbstractFunction {
 
     @Override
     public Image checkArgs(Scope scope) {
-        Map<String, String> params = new HashMap<>() {{
+        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
+        return checkReturn();
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return new HashMap<>() {{
             put("width", IntegerValue.NAME);
             put("height", IntegerValue.NAME);
             put("colour", Colour.NAME);
         }};
-        ArgumentChecker.check(scope, params, ACTUAL_NAME);
+    }
+
+    @Override
+    public Image checkReturn() {
         return new Image(null);
     }
 }

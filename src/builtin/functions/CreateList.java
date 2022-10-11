@@ -21,8 +21,17 @@ public class CreateList extends AbstractFunction {
 
     @Override
     public Array checkArgs(Scope scope) {
-        Map<String, String> params = new HashMap<>();
-        ArgumentChecker.check(scope, params, ACTUAL_NAME);
+        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
+        return checkReturn();
+    }
+
+    @Override
+    public Map<String, String> getParams() {
+        return new HashMap<>();
+    }
+
+    @Override
+    public Array checkReturn() {
         return new Array();
     }
 }

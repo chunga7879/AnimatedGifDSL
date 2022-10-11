@@ -12,20 +12,27 @@ import org.antlr.v4.runtime.misc.Pair;
 import parser.GifDSLCompiler;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
             boolean staticCheck = true;
+            boolean shortcuts = false;
             if (args.length < 1) {
                 throw new IOException("Requires input file as arg");
             }
-            if (args.length >= 2 && Objects.equals(args[1].toLowerCase(), "-nocheck")) {
+            HashSet<String> parameters = new HashSet(List.of(args).subList(1, args.length));
+            if (parameters.contains("-nocheck")) {
                 staticCheck = false;
+            }
+            if (parameters.contains("-shortcuts")) {
+                shortcuts = true;
             }
             GifDSLCompiler compiler = new GifDSLCompiler();
             compiler.setEnableStaticChecker(staticCheck);
+            compiler.setEnableShortcuts(shortcuts);
 
             // Add built-in functions / constants
             compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
