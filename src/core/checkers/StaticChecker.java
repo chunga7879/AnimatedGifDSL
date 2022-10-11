@@ -39,14 +39,14 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
     @Override
     public Value visit(Scope ctx, FunctionCall fc) {
         Scope funcScope = ctx.newChildScope();
-        String name = fc.getName();
+        String name = fc.identifier();
         if (!functions.hasVar(name)) {
             throw new FunctionException("called function " + name + " is not defined");
         }
-        for (Map.Entry<String, Expression> entry : fc.getArgs().entrySet()) {
+        for (Map.Entry<String, Expression> entry : fc.args().entrySet()) {
             funcScope.setVar(entry.getKey(), entry.getValue().accept(ctx, this));
         }
-        functions.getVar(fc.getName()).asFunction().accept(funcScope, this);
+        functions.getVar(name).asFunction().accept(funcScope, this);
         return null;
     }
 
@@ -77,15 +77,15 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, FunctionDefinition fd) {
-        String name = fd.getName();
+        String name = fd.name();
 
         if (functions.hasVar(name)) {
             throw new FunctionException("declared function " + name + " already exists");
         } else {
-            functions.setVar(fd.getName(), new Function(fd.getStatements()));
+            functions.setVar(fd.name(), new Function(fd.statements()));
         }
 
-        for (Statement s : fd.getStatements()) {
+        for (Statement s : fd.statements()) {
             s.accept(ctx, this);
         }
         return null;
@@ -93,7 +93,7 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, IfStatement is) {
-        for (Statement s : is.getStatements()) {
+        for (Statement s : is.statements()) {
             s.accept(ctx, this);
         }
         return null;
@@ -101,8 +101,8 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, LoopStatement ls) {
-        ls.getArray().accept(ctx, this);
-        for (Statement s : ls.getStatements()) {
+        ls.array().accept(ctx, this);
+        for (Statement s : ls.statements()) {
             s.accept(ctx, this);
         }
         return null;
@@ -116,7 +116,12 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, VariableAssignment va) {
-        ctx.setVar(va.getDest(), va.getExpr().accept(ctx, this));
+        ctx.setVar(va.dest(), va.expr().accept(ctx, this));
+        return null;
+    }
+
+    @Override
+    public Value visit(Scope ctx, ExpressionWrapper ew) {
         return null;
     }
 
