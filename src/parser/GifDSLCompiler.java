@@ -14,13 +14,13 @@ public final class GifDSLCompiler {
     private boolean enableStaticCheck;
     private boolean enableShortcuts;
     private boolean verbose;
-    private Scope scope;
+    private Scope rootScope;
 
     public GifDSLCompiler() {
         this.enableStaticCheck = true;
         this.enableShortcuts = true;
         this.verbose = true;
-        this.scope = new Scope();
+        this.rootScope = new Scope();
     }
 
     /**
@@ -43,7 +43,7 @@ public final class GifDSLCompiler {
      * Add predefined values (constants & functions)
      */
     public void addPredefinedValues(String name, Value value) {
-        this.scope.setVar(name.toLowerCase(), value);
+        this.rootScope.setVar(name.toLowerCase(), value);
     }
 
     /**
@@ -68,22 +68,22 @@ public final class GifDSLCompiler {
         print("Finished parsing");
 
         print("Started AST conversion");
-        GifDSLConverter converter = new GifDSLConverter(scope);
+        GifDSLConverter converter = new GifDSLConverter(rootScope);
         Program main = converter.convertProgram(parser.program());
         print("Finished AST conversion");
 
         if (enableStaticCheck) {
             print("Started static checker");
-            new StaticChecker().visit(scope.newChildScope(), main);
+            new StaticChecker().visit(rootScope.newChildScope(), main);
             if (enableShortcuts) {
-                main = new ShortcutsProcessor().visit(scope.newChildScope(), main);
-                new StaticChecker().visit(scope.newChildScope(), main);
+                main = new ShortcutsProcessor().visit(rootScope.newChildScope(), main);
+                new StaticChecker().visit(rootScope.newChildScope(), main);
             }
             print("Finished static checker");
         }
 
         print("Finished compilation");
-        return new Pair<>(main, scope);
+        return new Pair<>(main, rootScope);
     }
 
     private void print(String msg) {

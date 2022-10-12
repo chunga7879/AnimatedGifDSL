@@ -28,7 +28,7 @@ public class End2EndTest {
         compiler.addPredefinedValues("print", new Print());
         Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
         Evaluator evaluator = new Evaluator();
-        evaluator.visit(main.b.newChildScope(), main.a);
+        evaluator.visit(main.b, main.a);
     }
 
     @Test
@@ -46,6 +46,6 @@ public class End2EndTest {
         compiler.addPredefinedValues("print", new Print());
         Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
         Evaluator evaluator = new Evaluator();
-        evaluator.visit(main.b.newChildScope(), main.a);
+        evaluator.visit(main.b, main.a);
     }
 }

@@ -69,7 +69,7 @@ public class Main {
 
             System.out.println("[Gif DSL Runner] Starting runner");
             Evaluator evaluator = new Evaluator();
-            evaluator.visit(main.b.newChildScope(), main.a);
+            evaluator.visit(main.b, main.a);
             System.out.println("[Gif DSL Runner] Finished runner");
         } catch (Exception e) {
             System.err.println(e.getMessage());
