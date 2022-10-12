@@ -20,7 +20,7 @@ public class Set extends AbstractFunction {
     @Override
     public Value checkArgs(Scope scope) {
         ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-        return new Unknown();
+        return scope.getVar(AbstractFunction.PARAM_TARGET);
     }
 
     @Override

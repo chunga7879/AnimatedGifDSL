@@ -29,9 +29,22 @@ public abstract class AbstractFunction extends Value {
         return v.visit(ctx, this);
     }
 
+    /**
+     * Check the function arguments of the function
+     * @param scope
+     * @return A value with the return type of the function
+     */
     public abstract Value checkArgs(Scope scope);
 
+    /**
+     * Return a value with the return type of the function
+     * @return
+     */
     public abstract Value checkReturn();
 
+    /**
+     * Get parameters of the function
+     * @return
+     */
     public abstract Map<String, String> getParams();
 }

@@ -1,7 +1,9 @@
 package checker;
 
 import builtin.functions.Add;
+import builtin.functions.Print;
 import builtin.functions.Random;
+import builtin.functions.Set;
 import core.Scope;
 import core.checkers.StaticChecker;
 import core.exceptions.DSLException;
@@ -34,6 +36,8 @@ public class TestStaticChecker {
         scope = new Scope();
         scope.setVar(Add.ACTUAL_NAME, new Add());
         scope.setVar(Random.ACTUAL_NAME, new Random());
+        scope.setVar(Set.ACTUAL_NAME, new Set());
+        scope.setVar(Print.ACTUAL_NAME, new Print());
         staticChecker = new StaticChecker();
     }
 
@@ -280,5 +284,25 @@ public class TestStaticChecker {
             staticChecker.visit(scope, function);
             fail(TRY_BLOCK_FAIL);
         } catch (DSLException ignored) {}
+    }
+
+    /**
+     * Test static checker fails for when user defined variables do not match with function argument type
+     * <pre>
+     * SET 10 + 1 AS x   <- x is an integer
+     * PRINT x       <- x must be string
+     * </pre>
+     */
+    @Test
+    public void testTypeCheckForUserSetVariable() {
+        try {
+            staticChecker.visit(scope, new VariableAssignment("x", new FunctionCall(Set.ACTUAL_NAME, new HashMap<>() {{
+                put(AbstractFunction.PARAM_TARGET, new IntegerValue(10));
+            }})));
+            staticChecker.visit(scope, new FunctionCall(Print.ACTUAL_NAME, new HashMap<>() {{
+                put(AbstractFunction.PARAM_TARGET, new VariableExpression("x"));
+            }}));
+            fail(TRY_BLOCK_FAIL);
+        } catch (Exception ignored) {}
     }
 }
