@@ -1,9 +1,8 @@
 package image;
 
-import builtin.functions.Translate;
 import builtin.functions.Write;
-import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
 import core.values.StringValue;
@@ -11,14 +10,13 @@ import files.filesystem.FileSystem;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 
 class WriteTest {
     @Test
     public void writeSuccess() throws FileNotFoundException {
         Scope scope = new Scope();
-        scope.setVar("$target", new StringValue("Hello, Group 15"));
+        scope.setVar(AbstractFunction.PARAM_TARGET, new StringValue("Hello, Group 15"));
         scope.setVar("size", new IntegerValue(40));
         scope.setVar("font", new StringValue("Serif"));
         scope.setVar("style", new StringValue("bold"));
@@ -39,7 +37,7 @@ class WriteTest {
     @Test
     public void writeSuccessTwo() throws FileNotFoundException {
         Scope scope = new Scope();
-        scope.setVar("$target", new StringValue("Hello, Group 15"));
+        scope.setVar(AbstractFunction.PARAM_TARGET, new StringValue("Hello, Group 15"));
         scope.setVar("size", new IntegerValue(40));
         // use default font if it is not available
         scope.setVar("font", new StringValue("alskdjalskdjalsda"));

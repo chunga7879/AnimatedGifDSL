@@ -1,9 +1,9 @@
 package image;
 
-import builtin.functions.Rotate;
 import builtin.functions.Translate;
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
 import files.filesystem.FileSystem;
@@ -17,7 +17,7 @@ class TranslateTest {
     public void translateSuccess() throws FileNotFoundException {
         Scope scope = new Scope();
         ImmutableImage dvd = FileSystem.openImage("dvd-logo.png");
-        scope.setVar("$target", new Image(dvd));
+        scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
         scope.setVar("x", new IntegerValue(100));
         scope.setVar("y", new IntegerValue(200));
 

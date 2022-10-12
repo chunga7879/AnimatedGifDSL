@@ -158,7 +158,7 @@ public class GifDSLConverter {
         HashMap<String, String> parameters = new HashMap<>();
         List<Statement> statements = new ArrayList<>();
         if (defineCtx.define_target() != null) {
-            parameters.put("$target", Unknown.NAME);
+            parameters.put(AbstractFunction.PARAM_TARGET, Unknown.NAME);
             statements.add(new VariableAssignment(getVariableName(defineCtx.define_target().VARIABLE()), new VariableExpression("$target")));
         }
         if (defineCtx.define_params() != null) {

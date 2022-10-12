@@ -15,7 +15,7 @@ public class Add extends AbstractFunction {
         Array a = scope.getVar(AbstractFunction.PARAM_TARGET).asArray();
         Value i = scope.getVar("item");
 
-        return a.add(i);
+        return a.addCopy(i);
     }
 
     @Override

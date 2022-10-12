@@ -52,7 +52,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallGetB() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Colour(1, 2, 3));
+            put(AbstractFunction.PARAM_TARGET, new Colour(1, 2, 3));
         }};
         testFunctionCallHelper(GetB.ACTUAL_NAME, args);
     }
@@ -60,7 +60,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallGetG() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Colour(1, 2, 3));
+            put(AbstractFunction.PARAM_TARGET, new Colour(1, 2, 3));
         }};
         testFunctionCallHelper(GetG.ACTUAL_NAME, args);
     }
@@ -68,7 +68,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallGetR() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Colour(1, 2, 3));
+            put(AbstractFunction.PARAM_TARGET, new Colour(1, 2, 3));
         }};
         testFunctionCallHelper(GetR.ACTUAL_NAME, args);
     }
@@ -86,7 +86,7 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallColourFill() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
             put("colour", new Colour(1, 2, 3));
         }};
         testFunctionCallHelper(ColourFill.ACTUAL_NAME, args);
@@ -112,7 +112,7 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallCrop() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
             put("width", new IntegerValue(1));
             put("height", new IntegerValue(2));
         }};
@@ -123,7 +123,7 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallFilter() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
             put("filter", new StringValue("string"));
         }};
         testFunctionCallHelper(Filter.ACTUAL_NAME, args);
@@ -133,7 +133,7 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallGetHeight() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
         }};
         testFunctionCallHelper(GetHeight.ACTUAL_NAME, args);
     }
@@ -142,7 +142,7 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallGetWidth() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
         }};
         testFunctionCallHelper(GetWidth.ACTUAL_NAME, args);
     }
@@ -150,7 +150,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallLoad() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new StringValue("string"));
+            put(AbstractFunction.PARAM_TARGET, new StringValue("string"));
         }};
         testFunctionCallHelper(Load.ACTUAL_NAME, args);
     }
@@ -159,8 +159,8 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallOverlay() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
-            put("on", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
+            put(AbstractFunction.PARAM_ON, new Image(img));
             put("x", new IntegerValue(1));
             put("y", new IntegerValue(1));
         }};
@@ -188,7 +188,7 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallResize() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
             put("width", new IntegerValue(1));
             put("height", new IntegerValue(2));
         }};
@@ -199,7 +199,7 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallRotate() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
             put("angle", new IntegerValue(1));
         }};
         testFunctionCallHelper(Rotate.ACTUAL_NAME, args);
@@ -218,7 +218,7 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallSetOpacity() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
             put("amount", new IntegerValue(1));
         }};
         testFunctionCallHelper(SetOpacity.ACTUAL_NAME, args);
@@ -228,7 +228,7 @@ public class TestBuiltInFunctionCalls {
     public void testFunctionCallTranslate() {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Image(img));
+            put(AbstractFunction.PARAM_TARGET, new Image(img));
             put("x", new IntegerValue(1));
             put("y", new IntegerValue(2));
         }};
@@ -238,7 +238,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallWrite() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new StringValue("string"));
+            put(AbstractFunction.PARAM_TARGET, new StringValue("string"));
             put("width", new IntegerValue(1));
             put("height", new IntegerValue(1));
             put("font", new StringValue("string"));

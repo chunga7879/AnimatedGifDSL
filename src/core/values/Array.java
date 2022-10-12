@@ -19,7 +19,10 @@ public class Array extends Value implements Iterable<Value> {
         this.arr.addAll(array);
     }
 
-    public Array add(Value v) {
+    /**
+     * Add and return copy of array
+     */
+    public Array addCopy(Value v) {
         Array newArray = new Array(this.arr);
         newArray.arr.add(v);
         return newArray;

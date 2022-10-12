@@ -15,16 +15,12 @@ public class End2EndTest {
     public void testPrintProgram() {
         String input = """
             DEFINE PRINT2 WITH (msg2):
-              PRINT
-                WITH msg: msg2
+              PRINT msg2
             LOOP i IN (1, 3):
               IF (i = 2):
-                PRINT
-                  WITH msg: "if"
-              PRINT
-                WITH msg: "loop"
-            PRINT
-              WITH msg: "print"
+                PRINT "if"
+              PRINT "loop"
+            PRINT "print"
             PRINT2
               WITH msg2: "func"
             """;

@@ -124,10 +124,11 @@ public class EvaluatorTest {
         final String testArray = "testarray";
         final String loopVar = "i";
 
-        Array a = new Array();
-        for (int i = 0; i < 10; i++) {
-            a.add(new IntegerValue(i));
-        }
+        Array a = new Array(new ArrayList<>(){{
+            for (int i = 0; i < 10; i++) {
+                add(new IntegerValue(i));
+            }
+        }});
         s.setVar(testInt, new IntegerValue(0));
         s.setVar(testArray, a);
 

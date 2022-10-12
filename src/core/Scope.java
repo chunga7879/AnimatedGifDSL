@@ -47,12 +47,10 @@ public class Scope {
             Value prevVal = getVar(name);
             if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new RuntimeException("Cannot redefine function: " + name);
         }
-        // Update the lowest level scope with the name
-        // We don't have enough static checks to make sure that values aren't defined multiple times
-        if (!hasParent() || !this.parent.hasVar(name)) {
-            this.vars.put(name, v);
-        } else {
+        if (this.hasParent() && this.parent.vars.containsKey(name)) {
             this.parent.setVar(name, v);
+        } else {
+            this.vars.put(name, v);
         }
     }
 

@@ -4,6 +4,7 @@ import builtin.functions.ColourFill;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.nio.PngWriter;
 import core.Scope;
+import core.values.AbstractFunction;
 import core.values.Colour;
 import core.values.Image;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,7 @@ public class ColourFillTest {
             catImage = ImmutableImage.loader().fromFile("src/test/filtering/testInputs/cat.png");
             Image cat = new Image(catImage);
             scope = new Scope();
-            scope.setVar("$target", cat);
+            scope.setVar(AbstractFunction.PARAM_TARGET, cat);
         } catch (IOException ioException) {
             Assertions.fail(ioException.getMessage());
         }

@@ -14,7 +14,7 @@ public class Print extends AbstractFunction {
 
     @Override
     public Null call(Scope scope) {
-        System.out.println("builtin print: " + scope.getVar("msg").asString().get());
+        System.out.println("Built-in Print: " + scope.getVar(AbstractFunction.PARAM_TARGET).asString().get());
         return Null.NULL;
     }
 
@@ -27,7 +27,7 @@ public class Print extends AbstractFunction {
     @Override
     public Map<String, String> getParams() {
         return new HashMap<>() {{
-            put("msg", StringValue.NAME);
+            put(AbstractFunction.PARAM_TARGET, StringValue.NAME);
         }};
     }
 
