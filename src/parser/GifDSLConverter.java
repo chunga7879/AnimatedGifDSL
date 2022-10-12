@@ -47,8 +47,8 @@ public class GifDSLConverter {
      * @param programCtx
      * @return
      */
-    public Function convertProgram(ProgramContext programCtx) {
-        return new Function(convertStatements(programCtx.statement()), new HashMap<>());
+    public Program convertProgram(ProgramContext programCtx) {
+        return new Program(convertStatements(programCtx.statement()));
     }
 
     /**

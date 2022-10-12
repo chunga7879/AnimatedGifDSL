@@ -5,8 +5,8 @@ import builtin.functions.colour.GetG;
 import builtin.functions.colour.GetR;
 import core.Scope;
 import core.evaluators.Evaluator;
+import core.statements.Program;
 import core.values.Colour;
-import core.values.Function;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import parser.GifDSLCompiler;
@@ -23,7 +23,7 @@ public class Main {
             if (args.length < 1) {
                 throw new IOException("Requires input file as arg");
             }
-            HashSet<String> parameters = new HashSet(List.of(args).subList(1, args.length));
+            HashSet<String> parameters = new HashSet<>(List.of(args).subList(1, args.length));
             if (parameters.contains("-nocheck")) {
                 staticCheck = false;
             }
@@ -65,7 +65,7 @@ public class Main {
             compiler.addPredefinedValues("green", new Colour(0, 255, 0));
             compiler.addPredefinedValues("blue", new Colour(0, 0, 255));
 
-            Pair<Function, Scope> main = compiler.compile(CharStreams.fromFileName(args[0]));
+            Pair<Program, Scope> main = compiler.compile(CharStreams.fromFileName(args[0]));
 
             System.out.println("[Gif DSL Runner] Starting runner");
             Evaluator evaluator = new Evaluator();

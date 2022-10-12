@@ -10,9 +10,7 @@ import core.expressions.Expression;
 import core.expressions.FunctionCall;
 import core.expressions.VariableExpression;
 import core.expressions.arithmetic.AdditionVisitor;
-import core.statements.FunctionDefinition;
-import core.statements.Statement;
-import core.statements.VariableAssignment;
+import core.statements.*;
 import core.values.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -224,6 +222,7 @@ public class TestStaticChecker {
         }
     }
 
+    @Test
     public void testDefinedVariable() {
         try {
             staticChecker.visit(scope, new VariableAssignment("test", new IntegerValue(1)));
@@ -241,5 +240,43 @@ public class TestStaticChecker {
         } catch (DSLException e) {
             // expected
         }
+    }
+
+    @Test
+    public void testDefineNotOnBaseLevel() {
+        FunctionDefinition funcDef = new FunctionDefinition("func", new ArrayList<>() {{
+            add(new VariableAssignment("test", new IntegerValue(0)));
+        }}, new HashMap<>());
+        IfStatement ifStatement = new IfStatement(new BooleanValue(true), new ArrayList<>() {{
+            add(funcDef);
+        }});
+        try {
+            staticChecker.visit(scope, ifStatement);
+            fail(TRY_BLOCK_FAIL);
+        } catch (DSLException ignored) {}
+
+        LoopStatement loopStatement = new LoopStatement(new Array(), "a", new ArrayList<>() {{
+            add(funcDef);
+        }});
+        try {
+            staticChecker.visit(scope, loopStatement);
+            fail(TRY_BLOCK_FAIL);
+        } catch (DSLException ignored) {}
+
+        FunctionDefinition otherFuncDef = new FunctionDefinition("func", new ArrayList<>() {{
+            add(funcDef);
+        }}, new HashMap<>());
+        try {
+            staticChecker.visit(scope, otherFuncDef);
+            fail(TRY_BLOCK_FAIL);
+        } catch (DSLException ignored) {}
+
+        Function function = new Function(new ArrayList<>() {{
+            add(funcDef);
+        }}, new HashMap<>());
+        try {
+            staticChecker.visit(scope, function);
+            fail(TRY_BLOCK_FAIL);
+        } catch (DSLException ignored) {}
     }
 }

@@ -1,6 +1,9 @@
 package core.statements;
 
 public interface StatementVisitor<C, T> {
+
+    T visit(C ctx, Program program);
+
     T visit(C ctx, FunctionDefinition fd);
 
     T visit(C ctx, IfStatement is);

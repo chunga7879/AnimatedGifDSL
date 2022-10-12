@@ -1,8 +1,8 @@
-package ast.statements;
+package core.statements;
 
 import java.util.List;
 
-public record FunctionDef(String identifier, List<StatementNode> statements) implements StatementNode {
+public record Program(List<Statement> statements) implements Statement {
     @Override
     public <C, T> T accept(C ctx, StatementVisitor<C, T> v) {
         return v.visit(ctx, this);

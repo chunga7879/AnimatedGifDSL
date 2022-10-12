@@ -6,7 +6,6 @@ import core.expressions.FunctionCall;
 import core.expressions.VariableExpression;
 import core.statements.*;
 import core.values.AbstractFunction;
-import core.values.Function;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,17 +16,17 @@ import java.util.Objects;
  * Do be updated
  */
 public class ShortcutsProcessor implements StatementVisitor<Scope, Statement> {
-
-    public Function visit(Scope ctx, Function func) {
+    @Override
+    public Program visit(Scope ctx, Program program) {
         List<Statement> statements = new ArrayList<>();
-        for (Statement statement : func.getStatements()) {
+        for (Statement statement : program.statements()) {
             statements.add(statement.accept(ctx, this));
         }
-        return new Function(statements, func.getParams());
+        return new Program(statements);
     }
 
     @Override
-    public Statement visit(Scope ctx, FunctionDefinition fd) {
+    public FunctionDefinition visit(Scope ctx, FunctionDefinition fd) {
         List<Statement> statements = new ArrayList<>();
         for (Statement statement : fd.statements()) {
             statements.add(statement.accept(ctx, this));
@@ -36,7 +35,7 @@ public class ShortcutsProcessor implements StatementVisitor<Scope, Statement> {
     }
 
     @Override
-    public Statement visit(Scope ctx, IfStatement is) {
+    public IfStatement visit(Scope ctx, IfStatement is) {
         List<Statement> statements = new ArrayList<>();
         for (Statement statement : is.statements()) {
             statements.add(statement.accept(ctx, this));
@@ -45,7 +44,7 @@ public class ShortcutsProcessor implements StatementVisitor<Scope, Statement> {
     }
 
     @Override
-    public Statement visit(Scope ctx, LoopStatement ls) {
+    public LoopStatement visit(Scope ctx, LoopStatement ls) {
         List<Statement> statements = new ArrayList<>();
         for (Statement statement : ls.statements()) {
             statements.add(statement.accept(ctx, this));
@@ -54,12 +53,12 @@ public class ShortcutsProcessor implements StatementVisitor<Scope, Statement> {
     }
 
     @Override
-    public Statement visit(Scope ctx, Return r) {
+    public Return visit(Scope ctx, Return r) {
         return r;
     }
 
     @Override
-    public Statement visit(Scope ctx, VariableAssignment va) {
+    public VariableAssignment visit(Scope ctx, VariableAssignment va) {
         return va;
     }
 

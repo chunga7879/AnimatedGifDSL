@@ -1,6 +1,5 @@
 package core.checkers;
 
-import core.NodeVisitor;
 import core.Scope;
 import core.exceptions.FunctionException;
 import core.exceptions.TypeError;
@@ -12,8 +11,7 @@ import core.values.*;
 import java.util.Map;
 import java.util.Objects;
 
-public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisitor<Scope, Value>,
-    StatementVisitor<Scope, Value> {
+public class StaticChecker implements ExpressionVisitor<Scope, Value>, StatementVisitor<Scope, Value> {
 
     @Override
     public Value visit(Scope ctx, ArithmeticExpression ae) {
@@ -76,6 +74,14 @@ public class StaticChecker implements NodeVisitor<Scope, Value>, ExpressionVisit
             s.accept(ctx, this);
         }
         return new Unknown();
+    }
+
+    @Override
+    public Value visit(Scope ctx, Program program) {
+        for (Statement s : program.statements()) {
+            s.accept(ctx, this);
+        }
+        return null;
     }
 
     @Override

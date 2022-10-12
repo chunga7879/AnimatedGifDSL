@@ -47,7 +47,7 @@ public class Scope {
             Value prevVal = getVar(name);
             if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new RuntimeException("Cannot redefine function: " + name);
         }
-        if (this.hasParent() && this.parent.vars.containsKey(name)) {
+        if (this.hasParent() && this.parent.hasVar(name)) {
             this.parent.setVar(name, v);
         } else {
             this.vars.put(name, v);

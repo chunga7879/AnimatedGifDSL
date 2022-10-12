@@ -2,7 +2,7 @@ package parser;
 
 import core.Scope;
 import core.checkers.StaticChecker;
-import core.values.Function;
+import core.statements.Program;
 import core.values.Value;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -51,7 +51,7 @@ public final class GifDSLCompiler {
      * @param input
      * @return
      */
-    public Pair<Function, Scope> compile(CharStream input) {
+    public Pair<Program, Scope> compile(CharStream input) {
         print("Starting compilation");
 
         print("Starting tokenization");
@@ -69,7 +69,7 @@ public final class GifDSLCompiler {
 
         print("Started AST conversion");
         GifDSLConverter converter = new GifDSLConverter(scope);
-        Function main = converter.convertProgram(parser.program());
+        Program main = converter.convertProgram(parser.program());
         print("Finished AST conversion");
 
         if (enableStaticCheck) {

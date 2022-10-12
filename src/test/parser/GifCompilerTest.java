@@ -1,11 +1,10 @@
-package test.parser;
+package parser;
 
 import core.Scope;
-import core.values.Function;
+import core.statements.Program;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Test;
-import parser.GifDSLCompiler;
 
 public class GifCompilerTest {
 
@@ -87,7 +86,7 @@ public class GifCompilerTest {
         compile(input);
     }
 
-    private Pair<Function, Scope> compile(String input) {
+    private Pair<Program, Scope> compile(String input) {
         GifDSLCompiler compiler = new GifDSLCompiler();
         compiler.setEnableStaticChecker(false);
         return compiler.compile(CharStreams.fromString(input));

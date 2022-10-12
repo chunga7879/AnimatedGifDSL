@@ -3,7 +3,7 @@ package e2e;
 import builtin.functions.Print;
 import core.Scope;
 import core.evaluators.Evaluator;
-import core.values.Function;
+import core.statements.Program;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,25 @@ public class End2EndTest {
             """;
         GifDSLCompiler compiler = new GifDSLCompiler();
         compiler.addPredefinedValues("print", new Print());
-        Pair<Function, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b.newChildScope(), main.a);
+    }
+
+    @Test
+    public void testFunctionInFunction() {
+        String input = """
+            DEFINE PRINT2 WITH (msg):
+              PRINT msg
+            DEFINE PRINT3 WITH (msg):
+              PRINT2
+                WITH msg: msg
+            PRINT3
+              WITH msg: "func"
+            """;
+        GifDSLCompiler compiler = new GifDSLCompiler();
+        compiler.addPredefinedValues("print", new Print());
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
         Evaluator evaluator = new Evaluator();
         evaluator.visit(main.b.newChildScope(), main.a);
     }
