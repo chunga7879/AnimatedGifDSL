@@ -37,7 +37,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, FunctionCall fc) {
-        Scope funcScope = fc.scope().newChildScope();
+        Scope funcScope = ctx.getGlobalScope().newChildScope();
         String name = fc.identifier();
         if (!ctx.hasVar(name)) {
             throw new FunctionException("Called function \"" + name + "\" is not defined");
@@ -93,13 +93,15 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         }
         ctx.setVar(fd.name(), new Function(fd.statements(), fd.params()));
 
-        Scope childScope = ctx.newChildScope();
+        // Check what would happen if defined function is called
+        Scope childScope = ctx.getGlobalScope().newChildScope();
         for (Map.Entry<String, String> entry : fd.params().entrySet()) {
             childScope.setVar(entry.getKey(), new Unknown());
         }
         for (Statement s : fd.statements()) {
             s.accept(childScope, this);
         }
+
         return null;
     }
 

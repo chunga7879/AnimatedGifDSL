@@ -68,16 +68,16 @@ public final class GifDSLCompiler {
         print("Finished parsing");
 
         print("Started AST conversion");
-        GifDSLConverter converter = new GifDSLConverter(rootScope);
+        GifDSLConverter converter = new GifDSLConverter();
         Program main = converter.convertProgram(parser.program());
         print("Finished AST conversion");
 
         if (enableStaticCheck) {
             print("Started static checker");
-            new StaticChecker().visit(rootScope.newChildScope(), main);
+            new StaticChecker().visit(rootScope.copy(), main);
             if (enableShortcuts) {
-                main = new ShortcutsProcessor().visit(rootScope.newChildScope(), main);
-                new StaticChecker().visit(rootScope.newChildScope(), main);
+                main = new ShortcutsProcessor().visit(rootScope.copy(), main);
+                new StaticChecker().visit(rootScope.copy(), main);
             }
             print("Finished static checker");
         }

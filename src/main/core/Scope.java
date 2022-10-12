@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class Scope {
-    private static Scope global;
+    private Scope global;
     private final Scope parent;
     private HashMap<String, Value> vars;
 
@@ -19,6 +19,7 @@ public class Scope {
 
     private Scope(Scope parent) {
         this.parent = parent;
+        this.global = parent != null ? parent.getGlobalScope() : this;
         this.vars = new HashMap<>();
     }
 
@@ -28,6 +29,25 @@ public class Scope {
 
     public Scope newChildScope() {
         return new Scope(this);
+    }
+
+    public Scope getGlobalScope() {
+        return this.global;
+    }
+
+    /**
+     * Create a shallow copy of the Scope
+     * (i.e. actual values are the same)
+     * @return
+     */
+    public Scope copy() {
+        Scope copyParentScope = null;
+        if (this.hasParent()) {
+            copyParentScope = this.parent.copy();
+        }
+        Scope copyScope = new Scope(copyParentScope);
+        copyScope.vars.putAll(this.vars);
+        return copyScope;
     }
 
     public Value getVar(String name) {
