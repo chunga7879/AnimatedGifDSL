@@ -308,7 +308,7 @@ public class TestStaticChecker {
                 put(AbstractFunction.PARAM_TARGET, new VariableExpression("x"));
             }}));
             fail(TRY_BLOCK_FAIL);
-        } catch (Exception ignored) {}
+        } catch (DSLException ignored) {}
 
         try {
             staticChecker.visit(scope, new VariableAssignment("x", new FunctionCall(Set.ACTUAL_NAME, new HashMap<>() {{
@@ -317,7 +317,7 @@ public class TestStaticChecker {
             staticChecker.visit(scope, new FunctionCall(Print.ACTUAL_NAME, new HashMap<>() {{
                 put(AbstractFunction.PARAM_TARGET, new VariableExpression("x"));
             }}));
-        } catch (Exception exception) {
+        } catch (DSLException exception) {
             fail(exception.getMessage());
         }
     }
