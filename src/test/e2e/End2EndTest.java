@@ -138,10 +138,8 @@ public class End2EndTest {
         GifDSLCompiler compiler = new GifDSLCompiler();
         compiler.addPredefinedValues(Random.ACTUAL_NAME, new Random());
         compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
-        Evaluator evaluator = new Evaluator();
         try {
-            Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
-            evaluator.visit(main.b, main.a);
+            compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow missing parameters");
         } catch (Exception ignored) {}
     }
@@ -168,5 +166,21 @@ public class End2EndTest {
         Assertions.assertEquals("hi", main.b.getVar("a").asString().get());
         Assertions.assertEquals("hello", main.b.getVar("b").asString().get());
         Assertions.assertEquals(7, main.b.getVar("c").asInteger().get());
+    }
+
+    @Test
+    public void testLoopVariableWithSameNameAsVariable() {
+        String input = """
+            SET 0 AS x
+            SET 100 AS i
+            LOOP i in (1, 10):
+              SET i + 1 AS x
+            """;
+        GifDSLCompiler compiler = new GifDSLCompiler();
+        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow loop variable with same name as variable");
+        } catch (Exception ignored) {}
     }
 }
