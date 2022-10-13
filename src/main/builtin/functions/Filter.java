@@ -17,8 +17,8 @@ public class Filter extends AbstractFunction {
 
     @Override
     public Value call(Scope scope) {
-        ImmutableImage image = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
-        String filter = scope.getVar("filtering").asString().get();
+        ImmutableImage image = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        String filter = scope.getLocalVar("filtering").asString().get();
 
         ImmutableImage filteredImage = performFilter(filter, image);
         return new Image(filteredImage);

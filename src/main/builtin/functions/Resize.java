@@ -14,9 +14,9 @@ public class Resize extends AbstractFunction {
     public final static String ACTUAL_NAME = "Resize";
     @Override
     public Image call(Scope scope) {
-        ImmutableImage immutableImg = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
-        int width = scope.getVar("width").asInteger().get();
-        int height = scope.getVar("height").asInteger().get();
+        ImmutableImage immutableImg = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        int width = scope.getLocalVar("width").asInteger().get();
+        int height = scope.getLocalVar("height").asInteger().get();
 
         // it scales an image up or down. This operation will change both the canvas and the image.
         return new Image(immutableImg.scaleTo(width, height));

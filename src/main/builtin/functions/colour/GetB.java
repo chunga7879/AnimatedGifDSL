@@ -14,7 +14,7 @@ public class GetB extends AbstractFunction {
 
     @Override
     public IntegerValue call(Scope scope) {
-        Colour colour = scope.getVar(AbstractFunction.PARAM_TARGET).asColour();
+        Colour colour = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asColour();
         return new IntegerValue(colour.getB());
     }
 

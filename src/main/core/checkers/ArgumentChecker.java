@@ -19,7 +19,7 @@ public class ArgumentChecker {
                 throw new FunctionException("Argument " + paramName + " not provided to function call: " + functionName);
             }
             String expectedType = param.getValue();
-            String actualType = scope.getVar(paramName).getTypeName();
+            String actualType = scope.getLocalVar(paramName).getTypeName();
             if (!(Objects.equals(expectedType, actualType)
                 || Objects.equals(Unknown.NAME, expectedType)
                 || Objects.equals(Unknown.NAME, actualType))) {

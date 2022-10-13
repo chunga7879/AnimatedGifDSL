@@ -17,9 +17,9 @@ public class Crop extends AbstractFunction {
     @Override
     public Value call(Scope scope) {
 
-        ImmutableImage immutableImg = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
-        int width = scope.getVar("width").asInteger().get();
-        int height = scope.getVar("height").asInteger().get();
+        ImmutableImage immutableImg = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        int width = scope.getLocalVar("width").asInteger().get();
+        int height = scope.getLocalVar("height").asInteger().get();
 
         return new Image(immutableImg.resizeTo(width, height));
     }

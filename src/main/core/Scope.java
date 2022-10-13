@@ -30,6 +30,11 @@ public class Scope {
         return new Scope(this);
     }
 
+    /**
+     * Get variable from scope
+     * @param name
+     * @return
+     */
     public Value getVar(String name) {
         Value v = this.vars.get(name);
         if (v != null) {
@@ -41,17 +46,50 @@ public class Scope {
         throw new NameError(name);
     }
 
+    /**
+     * Get variable only from local scope
+     * @param name
+     * @return
+     */
+    public Value getLocalVar(String name) {
+        Value v = this.vars.get(name);
+        if (v != null) {
+            return v;
+        }
+        throw new NameError(name);
+    }
+
+    /**
+     * Set variable in scope<br/>
+     * If variables of the same name are defined in different layers, update the most local scope
+     * @param name
+     * @param v
+     */
     public void setVar(String name, Value v) {
         // TODO: might want to split storing for values and functions
         if (hasVar(name)) {
             Value prevVal = getVar(name);
             if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new RuntimeException("Cannot redefine function: " + name);
         }
-        if (this.hasParent() && this.parent.hasVar(name)) {
+        if (!this.vars.containsKey(name) && this.hasParent() && this.parent.hasVar(name)) {
             this.parent.setVar(name, v);
         } else {
             this.vars.put(name, v);
         }
+    }
+
+    /**
+     * Set variable only in local scope
+     * @param name
+     * @param v
+     */
+    public void setLocalVar(String name, Value v) {
+        // TODO: might want to split storing for values and functions
+        if (this.vars.containsKey(name)) {
+            Value prevVal = this.vars.get(name);
+            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new RuntimeException("Cannot redefine function: " + name);
+        }
+        this.vars.put(name, v);
     }
 
     /**

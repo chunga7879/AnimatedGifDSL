@@ -43,8 +43,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
             throw new FunctionException("Called function \"" + name + "\" is not defined");
         }
         for (Map.Entry<String, Expression> entry : fc.args().entrySet()) {
-
-            funcScope.setVar(entry.getKey(), entry.getValue().accept(ctx, this));
+            funcScope.setLocalVar(entry.getKey(), entry.getValue().accept(ctx, this));
         }
         return ctx.getVar(name).asFunction().accept(funcScope, this);
     }
@@ -117,7 +116,8 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         if (!Objects.equals(value.getTypeName(), Array.NAME)) throw new FunctionException("Cannot loop over non-array value"); // TODO - new exception
         Array array = value.asArray();
         Scope loopScope = ctx.newChildScope();
-        loopScope.setVar(ls.loopVar(), array.get().size() > 0 ? array.get().get(0) : new Unknown());
+        if (loopScope.hasVar(ls.loopVar())) throw new FunctionException("Loop variable " + ls.loopVar() + " is already defined");
+        loopScope.setLocalVar(ls.loopVar(), array.get().size() > 0 ? array.get().get(0) : new Unknown());
         for (Statement s : ls.statements()) {
             s.accept(loopScope, this);
         }
