@@ -174,13 +174,16 @@ public class End2EndTest {
             SET 0 AS x
             SET 100 AS i
             LOOP i in (1, 10):
-              SET i + 1 AS x
+              SET i + x AS x
             """;
         GifDSLCompiler compiler = new GifDSLCompiler();
         compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
-        try {
-            compiler.compile(CharStreams.fromString(input));
-            Assertions.fail("Should not allow loop variable with same name as variable");
-        } catch (Exception ignored) {}
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b, main.a);
+        Assertions.assertTrue(main.b.hasVar("i"));
+        Assertions.assertTrue(main.b.hasVar("x"));
+        Assertions.assertEquals(100, main.b.getVar("i").asInteger().get());
+        Assertions.assertEquals(55, main.b.getVar("x").asInteger().get());
     }
 }
