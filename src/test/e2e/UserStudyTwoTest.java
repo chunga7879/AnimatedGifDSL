@@ -26,16 +26,16 @@ public class UserStudyTwoTest {
               WITH width: 3000
               WITH height: 1500
               WITH colour: black
-            DEFINE MOVE-ROTATE image WITH (background, x, y):
+            DEFINE MOVE-ROTATE image WITH (background, angle, x, y):
               ROTATE image
-                WITH angle: 10
+                WITH angle: angle
               OVERLAY image ON background
                 WITH x: x
                 WITH y: y
               RETURN image
             LOAD "./pumpkin.png" AS pumpkin
             CREATE-LIST AS frames
-            SET 50 AS x
+            SET 70 AS x
             SET 50 AS y
             LOOP i in (0, 50):
               SET x + 3 as x
@@ -48,6 +48,7 @@ public class UserStudyTwoTest {
                   WITH colour: white
               MOVE-ROTATE pumpkin AS frame
                 WITH background: background
+                WITH angle: i * 10
                 WITH x: x
                 WITH y: y
               ADD frames
