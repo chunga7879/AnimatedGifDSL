@@ -422,12 +422,12 @@ Plans for user study #2 (done on MVP or finished implementation) can be found [h
 
 #### User Study #2 - Case 1
 https://docs.google.com/document/d/13dpW9UDKtEYe3Ni2mFj5QlVg7VM9vQWI4IcQqZAkxTw/edit#
-- Easier for loop to use natural language
-- Add to frames was not intuitive
-- Overlay was not intuitive
+- Easier for loop to use natural language (e.g. `LOOP i IN 1 TO 3`)
+- User forgot to add to frames (might require docs/tutorial)
+- User forgot to overlay (might require docs/tutorial)
 
 #### User Study #2 - Case 2
-[TODO]
+https://docs.google.com/document/d/1HMK92j9mUhBFW2DignROPrhLQZzBKzrWGZMWgreDc28/edit#
 
 ### Changes to Language Design
 - Slight change to scoping rules to overwrite variables in certain cases
@@ -439,9 +439,9 @@ https://docs.google.com/document/d/13dpW9UDKtEYe3Ni2mFj5QlVg7VM9vQWI4IcQqZAkxTw/
 |------------------------------|---------------|--------------------------|
 | Script                       | 10/14         | Katherine                |
 | Recording video              | 10/14 - 10/15 | Shiven                   |
-| Editing video                | 10/15 - 10/16 | Chunga & Devon           |
-| Bug fixing & testing         | 10/14 - 10/16 | Emiru, Katherine, Shiven |
 | Final implementation changes | 10/14 - 10/15 | Emiru & Shiven           |
+| Bug fixing & testing         | 10/14 - 10/16 | Emiru, Katherine, Shiven |
+| Editing video                | 10/15 - 10/16 | Chunga & Devon           |
 
 
 
