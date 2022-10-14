@@ -411,5 +411,41 @@ Plans for user study #2 (done on MVP or finished implementation) can be found [h
 | Static checking                    | Shiven   |
 | Runtime exceptions                 | Everyone |
 
+# Milestone 5
+### Status of Implementation
+- Full working build - currently testing & bug fixing
+- Further improvements:
+  - Error logging
+  - Some missing static checks
+
+### Final User Study
+
+#### User Study #2 - Case 1
+https://docs.google.com/document/d/13dpW9UDKtEYe3Ni2mFj5QlVg7VM9vQWI4IcQqZAkxTw/edit#
+- Easier for loop to use natural language (e.g. `LOOP i IN 1 TO 3`)
+- User forgot to add to frames (might require docs/tutorial)
+- User forgot to overlay (might require docs/tutorial)
+
+#### User Study #2 - Case 2
+https://docs.google.com/document/d/1HMK92j9mUhBFW2DignROPrhLQZzBKzrWGZMWgreDc28/edit#
+- Feedback: Easy to understand and use syntax/semantics.
+- Suggestion: AND/OR to if-statement for dealing with multiple conditions together to run body
+- Observed: The user forgot to add 'AS frame' when calling a user-defined function. User understands how define function works after explanation.
+
+
+### Changes to Language Design
+- Slight change to scoping rules to overwrite variables in certain cases
+- Renamed some functions
+
+### Planned timeline
+
+| What                         | When          | Who                      |
+|------------------------------|---------------|--------------------------|
+| Script                       | 10/14         | Katherine                |
+| Recording video              | 10/14 - 10/15 | Shiven                   |
+| Final implementation changes | 10/14 - 10/15 | Emiru & Shiven           |
+| Bug fixing & testing         | 10/14 - 10/16 | Emiru, Katherine, Shiven |
+| Editing video                | 10/15 - 10/16 | Chunga & Devon           |
+
 
 
