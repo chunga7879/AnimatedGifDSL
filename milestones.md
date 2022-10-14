@@ -411,5 +411,37 @@ Plans for user study #2 (done on MVP or finished implementation) can be found [h
 | Static checking                    | Shiven   |
 | Runtime exceptions                 | Everyone |
 
+# Milestone 5
+### Status of Implementation
+- Full working build - currently testing & bug fixing
+- Further improvements:
+  - Error logging
+  - Some missing static checks
+
+### Final User Study
+
+#### User Study #2 - Case 1
+https://docs.google.com/document/d/13dpW9UDKtEYe3Ni2mFj5QlVg7VM9vQWI4IcQqZAkxTw/edit#
+- Easier for loop to use natural language
+- Add to frames was not intuitive
+- Overlay was not intuitive
+
+#### User Study #2 - Case 2
+[TODO]
+
+### Changes to Language Design
+- Slight change to scoping rules to overwrite variables in certain cases
+- Renamed some functions
+
+### Planned timeline
+
+| What                         | When          | Who                      |
+|------------------------------|---------------|--------------------------|
+| Script                       | 10/14         | Katherine                |
+| Recording video              | 10/14 - 10/15 | Shiven                   |
+| Editing video                | 10/15 - 10/16 | Chunga & Devon           |
+| Bug fixing & testing         | 10/14 - 10/16 | Emiru, Katherine, Shiven |
+| Final implementation changes | 10/14 - 10/15 | Emiru & Shiven           |
+
 
 
