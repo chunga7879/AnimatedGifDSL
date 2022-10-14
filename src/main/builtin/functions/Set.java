@@ -14,7 +14,7 @@ public class Set extends AbstractFunction {
 
     @Override
     public Value call(Scope scope) {
-        return scope.getVar(AbstractFunction.PARAM_TARGET);
+        return scope.getLocalVar(AbstractFunction.PARAM_TARGET);
     }
 
     @Override

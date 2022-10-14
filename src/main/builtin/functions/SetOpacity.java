@@ -15,8 +15,8 @@ public class SetOpacity extends AbstractFunction {
     public final static String ACTUAL_NAME = "Set-Opacity";
     @Override
     public Image call(Scope scope) {
-        ImmutableImage image = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
-        IntegerValue opacityAmount = scope.getVar("amount").asInteger();
+        ImmutableImage image = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        IntegerValue opacityAmount = scope.getLocalVar("amount").asInteger();
 
         if (opacityAmount.get() > 100 || opacityAmount.get() < 0) {
             throw new IllegalArgumentException("Opacity value should be within [0, 100]");

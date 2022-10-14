@@ -19,9 +19,9 @@ public class Save extends AbstractFunction {
 
     @Override
     public Null call(Scope scope) {
-        ArrayList<ImmutableImage> frames = getImmutableImages(scope.getVar(AbstractFunction.PARAM_TARGET).asArray());
-        long duration = scope.getVar("duration").asInteger().get();
-        String location = scope.getVar("location").asString().get();
+        ArrayList<ImmutableImage> frames = getImmutableImages(scope.getLocalVar(AbstractFunction.PARAM_TARGET).asArray());
+        long duration = scope.getLocalVar("duration").asInteger().get();
+        String location = scope.getLocalVar("location").asString().get();
 
         if (frames.size() < 1) throw new FunctionException("Attempting to save with no image");
         try {

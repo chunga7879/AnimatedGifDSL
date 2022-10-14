@@ -14,9 +14,9 @@ public class CreateRectangle extends AbstractFunction {
     public final static String ACTUAL_NAME = "Create-Rectangle";
     @Override
     public Value call(Scope scope) {
-        int width = scope.getVar("width").asInteger().get();
-        int height = scope.getVar("height").asInteger().get();
-        Colour colour = scope.getVar("colour").asColour();
+        int width = scope.getLocalVar("width").asInteger().get();
+        int height = scope.getLocalVar("height").asInteger().get();
+        Colour colour = scope.getLocalVar("colour").asColour();
 
         ImmutableImage rectangle = ImmutableImage.filled(width, height, new Color(colour.getR(), colour.getG(), colour.getB()));
 

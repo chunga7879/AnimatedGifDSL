@@ -17,8 +17,8 @@ public class Random extends AbstractFunction {
 
     @Override
     public IntegerValue call(Scope scope) {
-        int min = scope.getVar("min").asInteger().get();
-        int max = scope.getVar("max").asInteger().get();
+        int min = scope.getLocalVar("min").asInteger().get();
+        int max = scope.getLocalVar("max").asInteger().get();
         int num = RandomNumber.getRandomNumber(min, max);
         return new IntegerValue(num);
     }

@@ -12,8 +12,8 @@ public class Add extends AbstractFunction {
 
     @Override
     public Array call(Scope scope) {
-        Array a = scope.getVar(AbstractFunction.PARAM_TARGET).asArray();
-        Value i = scope.getVar("item");
+        Array a = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asArray();
+        Value i = scope.getLocalVar("item");
 
         return a.addCopy(i);
     }

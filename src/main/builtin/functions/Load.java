@@ -20,7 +20,7 @@ public class Load extends AbstractFunction {
     public Image call(Scope scope) {
         // Documentation for LOAD doesn't have filepath being passed with the WITH keyword so
         // assumed that it's $target
-        StringValue filePath = scope.getVar(AbstractFunction.PARAM_TARGET).asString();
+        StringValue filePath = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asString();
         try {
             ImmutableImage image = FileSystem.openImage(filePath.get());
             if (image == null) throw new InvalidFilePath("File could not be loaded.");

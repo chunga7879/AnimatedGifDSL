@@ -16,9 +16,9 @@ public class Translate extends AbstractFunction {
 
     @Override
     public Image call(Scope scope) {
-        ImmutableImage immutableImg = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
-        int x = scope.getVar("x").asInteger().get();
-        int y = scope.getVar("y").asInteger().get();
+        ImmutableImage immutableImg = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        int x = scope.getLocalVar("x").asInteger().get();
+        int y = scope.getLocalVar("y").asInteger().get();
 
         return new Image(translate(immutableImg, x, y));
     }

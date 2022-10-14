@@ -14,9 +14,9 @@ public class CreateColour extends AbstractFunction {
 
     @Override
     public Colour call(Scope scope) {
-        IntegerValue r = scope.getVar("r").asInteger();
-        IntegerValue g = scope.getVar("g").asInteger();
-        IntegerValue b = scope.getVar("b").asInteger();
+        IntegerValue r = scope.getLocalVar("r").asInteger();
+        IntegerValue g = scope.getLocalVar("g").asInteger();
+        IntegerValue b = scope.getLocalVar("b").asInteger();
 
         return new Colour(r.get(), g.get(), b.get());
     }
