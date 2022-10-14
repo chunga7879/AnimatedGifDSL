@@ -428,6 +428,10 @@ https://docs.google.com/document/d/13dpW9UDKtEYe3Ni2mFj5QlVg7VM9vQWI4IcQqZAkxTw/
 
 #### User Study #2 - Case 2
 https://docs.google.com/document/d/1HMK92j9mUhBFW2DignROPrhLQZzBKzrWGZMWgreDc28/edit#
+- Feedback: Easy to understand and use syntax/semantics.
+- Suggestion: AND/OR to if-statement for dealing with multiple conditions together to run body
+- Observed: The user forgot to add 'AS frame' when calling a user-defined function. User understands how define function works after explanation.
+
 
 ### Changes to Language Design
 - Slight change to scoping rules to overwrite variables in certain cases
