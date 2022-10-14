@@ -80,7 +80,7 @@ public class EvaluatorTest {
         HashMap<String, String> params = new HashMap<>();
         Function testFunc = new Function(new ArrayList<>() {
             {
-                add(new VariableAssignment(destVar, new FunctionCall(testFuncID, new HashMap<>(), s)));
+                add(new VariableAssignment(destVar, new FunctionCall(testFuncID, new HashMap<>())));
             }
         }, params);
 
@@ -110,7 +110,7 @@ public class EvaluatorTest {
                         add(new Return(new VariableExpression(testArg)));
                     }
                 }, params));
-                add(new VariableAssignment(destVar, new FunctionCall(userFunc, Map.of(testArg, new VariableExpression(testInt)), s)));
+                add(new VariableAssignment(destVar, new FunctionCall(userFunc, Map.of(testArg, new VariableExpression(testInt)))));
             }
         }, params);
         testFunc.accept(s, new Evaluator());
