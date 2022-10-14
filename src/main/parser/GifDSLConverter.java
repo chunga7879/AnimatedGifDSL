@@ -1,6 +1,5 @@
 package parser;
 
-import core.Scope;
 import core.expressions.*;
 import core.expressions.arithmetic.*;
 import core.expressions.comparison.*;
@@ -16,11 +15,7 @@ import static parser.GifDSLParser.*;
  * Converter to perform AST Conversion for parsed Program
  */
 public class GifDSLConverter {
-    private final Scope rootScope;
-
-    public GifDSLConverter(Scope rootScope) {
-        this.rootScope = rootScope;
-    }
+    public GifDSLConverter() {}
 
     /**
      * Count the number of indents/spaces (tabs = 2 spaces)
@@ -123,9 +118,9 @@ public class GifDSLConverter {
             args.put(parameterName, inputValue);
         }
         if (returnVariable == null) {
-            return new ExpressionWrapper(new FunctionCall(functionName, args, rootScope));
+            return new ExpressionWrapper(new FunctionCall(functionName, args));
         } else {
-            return new VariableAssignment(returnVariable, new FunctionCall(functionName, args, rootScope));
+            return new VariableAssignment(returnVariable, new FunctionCall(functionName, args));
         }
     }
 

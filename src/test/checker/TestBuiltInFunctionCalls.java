@@ -33,7 +33,7 @@ public class TestBuiltInFunctionCalls {
 
     public void testFunctionCallHelper(String functionName, HashMap<String, Expression> args) {
         try {
-            staticChecker.visit(scope, new FunctionCall(functionName, args, scope));
+            staticChecker.visit(scope, new FunctionCall(functionName, args));
         } catch (DSLException e) {
             fail(CATCH_BLOCK_FAIL);
         }

@@ -76,7 +76,7 @@ public class Evaluator implements StatementVisitor<Scope, Void>, ExpressionVisit
 
     @Override
     public Value visit(Scope ctx, FunctionCall fc) {
-        Scope funcScope = fc.scope().newChildScope();
+        Scope funcScope = ctx.getGlobalScope().newChildScope();
         for (Map.Entry<String, Expression> entry : fc.args().entrySet()) {
             funcScope.setLocalVar(entry.getKey(), entry.getValue().accept(ctx, this));
         }

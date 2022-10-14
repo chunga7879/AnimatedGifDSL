@@ -1,7 +1,9 @@
 package checker;
 
 import builtin.functions.Add;
+import builtin.functions.Print;
 import builtin.functions.Random;
+import builtin.functions.Set;
 import core.Scope;
 import core.checkers.StaticChecker;
 import core.exceptions.DSLException;
@@ -32,6 +34,10 @@ public class TestStaticChecker {
     @BeforeEach
     public void runBefore() {
         scope = new Scope();
+        scope.setVar(Add.ACTUAL_NAME, new Add());
+        scope.setVar(Random.ACTUAL_NAME, new Random());
+        scope.setVar(Set.ACTUAL_NAME, new Set());
+        scope.setVar(Print.ACTUAL_NAME, new Print());
         staticChecker = new StaticChecker();
     }
 
@@ -41,7 +47,7 @@ public class TestStaticChecker {
         HashMap<String, String> params = new HashMap<>();
         try {
             staticChecker.visit(scope, new FunctionDefinition("foo", statements, params));
-            staticChecker.visit(scope, new FunctionCall("foo", new HashMap<>(), scope));
+            staticChecker.visit(scope, new FunctionCall("foo", new HashMap<>()));
         } catch (DSLException e) {
             System.out.println(e.message());
             fail(CATCH_BLOCK_FAIL);
@@ -51,7 +57,7 @@ public class TestStaticChecker {
     @Test
     public void testFunctionCallUndefinedFunction() {
         try {
-            staticChecker.visit(scope, new FunctionCall("foo", new HashMap<>(), scope));
+            staticChecker.visit(scope, new FunctionCall("foo", new HashMap<>()));
             fail(TRY_BLOCK_FAIL);
         } catch (DSLException e) {
             // expected
@@ -100,7 +106,7 @@ public class TestStaticChecker {
             Map<String, Value> args = new HashMap<>() {{
                 put("min", new IntegerValue(1));
             }};
-            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, new HashMap<>(), scope));
+            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, new HashMap<>()));
             fail(TRY_BLOCK_FAIL);
         } catch (DSLException e) {
             // expected
@@ -114,7 +120,7 @@ public class TestStaticChecker {
                 put("min", new StringValue("1"));
                 put("max", new StringValue("2"));
             }};
-            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, args, scope));
+            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, args));
             fail(CATCH_BLOCK_FAIL);
         } catch (DSLException e) {
             // expected
@@ -129,7 +135,7 @@ public class TestStaticChecker {
                 put("max", new IntegerValue(2));
                 put("size", new IntegerValue(3));
             }};
-            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, new HashMap<>(), scope));
+            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, new HashMap<>()));
             fail(TRY_BLOCK_FAIL);
         } catch (DSLException e) {
             // expected
@@ -143,7 +149,7 @@ public class TestStaticChecker {
                 put("foo", new IntegerValue(1));
                 put("bar", new IntegerValue(2));
             }};
-            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, args, scope));
+            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, args));
             fail(CATCH_BLOCK_FAIL);
         } catch (DSLException e) {
             // expected
@@ -159,7 +165,7 @@ public class TestStaticChecker {
                 put("min", new IntegerValue(1));
                 put("max", new ArithmeticExpression(a, b, new AdditionVisitor()));
             }};
-            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, args, scope));
+            staticChecker.visit(scope, new FunctionCall(Random.ACTUAL_NAME, args));
         } catch (DSLException e) {
             fail(CATCH_BLOCK_FAIL);
         }
@@ -199,7 +205,7 @@ public class TestStaticChecker {
         }};
         try {
             staticChecker.visit(scope, new FunctionDefinition("foo", statements, params));
-            staticChecker.visit(scope, new FunctionCall("foo", args, scope));
+            staticChecker.visit(scope, new FunctionCall("foo", args));
         } catch (DSLException e) {
             fail(CATCH_BLOCK_FAIL);
         }
@@ -216,7 +222,7 @@ public class TestStaticChecker {
         }};
         try {
             staticChecker.visit(scope, new FunctionDefinition("foo", statements, params));
-            staticChecker.visit(scope, new FunctionCall("foo", args, scope));
+            staticChecker.visit(scope, new FunctionCall("foo", args));
         } catch (DSLException e) {
             fail(CATCH_BLOCK_FAIL);
         }
@@ -278,5 +284,41 @@ public class TestStaticChecker {
             staticChecker.visit(scope, function);
             fail(TRY_BLOCK_FAIL);
         } catch (DSLException ignored) {}
+    }
+
+    /**
+     * Test static checker fails for when user defined variables do not match with function argument type
+     * <pre>
+     * // Fail
+     * SET 10 AS x        // x is an integer
+     * PRINT x            // x must be string
+     *
+     * // Pass
+     * SET "hello" AS x   // x is a string
+     * PRINT x            // x must be string
+     * </pre>
+     */
+    @Test
+    public void testTypeCheckForUserSetVariable() {
+        try {
+            staticChecker.visit(scope, new VariableAssignment("x", new FunctionCall(Set.ACTUAL_NAME, new HashMap<>() {{
+                put(AbstractFunction.PARAM_TARGET, new IntegerValue(10));
+            }})));
+            staticChecker.visit(scope, new FunctionCall(Print.ACTUAL_NAME, new HashMap<>() {{
+                put(AbstractFunction.PARAM_TARGET, new VariableExpression("x"));
+            }}));
+            fail(TRY_BLOCK_FAIL);
+        } catch (DSLException ignored) {}
+
+        try {
+            staticChecker.visit(scope, new VariableAssignment("x", new FunctionCall(Set.ACTUAL_NAME, new HashMap<>() {{
+                put(AbstractFunction.PARAM_TARGET, new StringValue("hello"));
+            }})));
+            staticChecker.visit(scope, new FunctionCall(Print.ACTUAL_NAME, new HashMap<>() {{
+                put(AbstractFunction.PARAM_TARGET, new VariableExpression("x"));
+            }}));
+        } catch (DSLException exception) {
+            fail(exception.getMessage());
+        }
     }
 }

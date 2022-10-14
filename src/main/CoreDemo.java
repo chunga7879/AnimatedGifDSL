@@ -28,12 +28,12 @@ public class CoreDemo {
         ArrayList<Statement> statements = new ArrayList<>();
         HashMap<String, Expression> printArgs = new HashMap<>();
         printArgs.put("msg", new StringValue("hello world!"));
-        statements.add(new ExpressionWrapper(new FunctionCall("print", printArgs, rootScope)));
+        statements.add(new ExpressionWrapper(new FunctionCall("print", printArgs)));
 
         statements.add(new VariableAssignment("myvar", new StringValue("testvalue")));
         HashMap<String, Expression> printArgs2 = new HashMap<>();
         printArgs2.put("msg", new VariableExpression("myvar"));
-        statements.add(new ExpressionWrapper(new FunctionCall("print", printArgs2, rootScope)));
+        statements.add(new ExpressionWrapper(new FunctionCall("print", printArgs2)));
         HashMap<String, String> params = new HashMap<>();
         Function mainFunc = new Function(statements, params);
 

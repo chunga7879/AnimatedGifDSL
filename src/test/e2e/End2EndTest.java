@@ -34,12 +34,17 @@ public class End2EndTest {
         evaluator.visit(main.b, main.a);
     }
 
+    /**
+     * Test that user can call a user-defined function from inside a user-defined function
+     */
     @Test
-    public void testFunctionInFunction() {
+    public void testCallUserDefinedFunctionInUserDefinedFunction() {
         String input = """
             DEFINE PRINT2 WITH (msg):
+              PRINT "call print2"
               PRINT msg
             DEFINE PRINT3 WITH (msg):
+              PRINT "call print3"
               PRINT2
                 WITH msg: msg
             PRINT3
