@@ -159,7 +159,7 @@ public class GifDSLConverter {
         List<Statement> statements = new ArrayList<>();
         if (defineCtx.define_target() != null) {
             parameters.put(AbstractFunction.PARAM_TARGET, Unknown.NAME);
-            statements.add(new VariableAssignment(getVariableName(defineCtx.define_target().VARIABLE()), new VariableExpression("$target")));
+            statements.add(new VariableAssignment(getVariableName(defineCtx.define_target().VARIABLE()), new VariableExpression("$target"), true));
         }
         if (defineCtx.define_params() != null) {
             List<TerminalNode> parameterNodes = defineCtx.define_params().VARIABLE();
