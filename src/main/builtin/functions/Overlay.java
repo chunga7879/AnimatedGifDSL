@@ -14,10 +14,10 @@ public class Overlay extends AbstractFunction {
     public final static String ACTUAL_NAME = "Overlay";
     @Override
     public Image call(Scope scope) {
-        ImmutableImage immutableImg = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
-        ImmutableImage on = scope.getVar(AbstractFunction.PARAM_ON).asImage().get();
-        int x = scope.getVar("x").asInteger().get();
-        int y = scope.getVar("y").asInteger().get();
+        ImmutableImage immutableImg = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        ImmutableImage on = scope.getLocalVar(AbstractFunction.PARAM_ON).asImage().get();
+        int x = scope.getLocalVar("x").asInteger().get();
+        int y = scope.getLocalVar("y").asInteger().get();
 
         // (x, y): (0, 0) at the top left => Let me know If it needs to be top bottom (0, 0)
         return new Image(on.overlay(immutableImg, x, y));

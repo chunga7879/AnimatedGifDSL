@@ -15,7 +15,7 @@ public class GetWidth extends AbstractFunction {
     public final static String ACTUAL_NAME = "Get-Width";
     @Override
     public Value call(Scope scope) {
-        ImmutableImage immutableImg = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        ImmutableImage immutableImg = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asImage().get();
 
         return new IntegerValue(immutableImg.width);
     }

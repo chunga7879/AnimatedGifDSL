@@ -41,7 +41,7 @@ public class Evaluator implements StatementVisitor<Scope, Void>, ExpressionVisit
         Array a = ls.array().accept(ctx, this).asArray();
         Scope loopScope = ctx.newChildScope();
         for (Value v : a) {
-            loopScope.setVar(ls.loopVar(), v);
+            loopScope.setLocalVar(ls.loopVar(), v);
             for (Statement stms : ls.statements()) {
                 stms.accept(loopScope, this);
             }
@@ -74,7 +74,7 @@ public class Evaluator implements StatementVisitor<Scope, Void>, ExpressionVisit
     public Value visit(Scope ctx, FunctionCall fc) {
         Scope funcScope = ctx.getGlobalScope().newChildScope();
         for (Map.Entry<String, Expression> entry : fc.args().entrySet()) {
-            funcScope.setVar(entry.getKey(), entry.getValue().accept(ctx, this));
+            funcScope.setLocalVar(entry.getKey(), entry.getValue().accept(ctx, this));
         }
         return ctx.getVar(fc.identifier()).asFunction().accept(funcScope, this);
     }

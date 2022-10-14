@@ -14,7 +14,7 @@ public class Print extends AbstractFunction {
 
     @Override
     public Null call(Scope scope) {
-        System.out.println("Built-in Print: " + scope.getVar(AbstractFunction.PARAM_TARGET).asString().get());
+        System.out.println("Built-in Print: " + scope.getLocalVar(AbstractFunction.PARAM_TARGET).asString().get());
         return Null.NULL;
     }
 

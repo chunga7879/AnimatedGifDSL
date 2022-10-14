@@ -21,8 +21,8 @@ public class Rotate extends AbstractFunction {
     public final static String ACTUAL_NAME = "Rotate";
     @Override
     public Image call(Scope scope) {
-        ImmutableImage immutableImg = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
-        int angle = scope.getVar("angle").asInteger().get();
+        ImmutableImage immutableImg = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        int angle = scope.getLocalVar("angle").asInteger().get();
 
         return new Image(rotate(immutableImg, angle));
     }

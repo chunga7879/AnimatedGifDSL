@@ -19,15 +19,15 @@ public class Write extends AbstractFunction {
 
     @Override
     public Image call(Scope scope) {
-        String text = scope.getVar(AbstractFunction.PARAM_TARGET).asString().get();
+        String text = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asString().get();
 
-        int width = scope.getVar("width").asInteger().get();
-        int height = scope.getVar("height").asInteger().get();
+        int width = scope.getLocalVar("width").asInteger().get();
+        int height = scope.getLocalVar("height").asInteger().get();
 
-        String font = scope.getVar("font").asString().get();
-        int size = scope.getVar("size").asInteger().get();
+        String font = scope.getLocalVar("font").asString().get();
+        int size = scope.getLocalVar("size").asInteger().get();
         // style: plain, bold, italic, OTHERWISE Plain
-        String style = scope.getVar("style").asString().get();
+        String style = scope.getLocalVar("style").asString().get();
         int styleType;
         if (style.equalsIgnoreCase("italic")) {
             styleType = Font.ITALIC;

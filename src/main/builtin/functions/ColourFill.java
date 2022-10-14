@@ -15,8 +15,8 @@ public class ColourFill extends AbstractFunction {
     public final static String ACTUAL_NAME = "Colour-Fill";
     @Override
     public Image call(Scope scope) {
-        ImmutableImage image = scope.getVar(AbstractFunction.PARAM_TARGET).asImage().get();
-        Colour colour = scope.getVar("colour").asColour();
+        ImmutableImage image = scope.getLocalVar(AbstractFunction.PARAM_TARGET).asImage().get();
+        Colour colour = scope.getLocalVar("colour").asColour();
         int r = colour.getR();
         int g = colour.getG();
         int b = colour.getB();
