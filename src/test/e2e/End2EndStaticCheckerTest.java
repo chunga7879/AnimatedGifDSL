@@ -96,6 +96,26 @@ public class End2EndStaticCheckerTest {
     }
 
     @Test
+    public void testUserDefinedMissingParameterButHasVariable() {
+        String input = """
+            DEFINE FUNC WITH (a, b):
+              RETURN a + b
+            SET 0 AS a
+            SET 100 AS b
+            FUNC AS var
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow missing parameters");
+        } catch (DSLException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertTrue(e instanceof FunctionException);
+            Assertions.assertEquals(5, e.getLinePosition());
+            Assertions.assertEquals(0, e.getColumnPosition());
+        }
+    }
+
+    @Test
     public void testWrongParameterNameButHasVariable() {
         String input = """
             SET 0 AS min
@@ -111,6 +131,28 @@ public class End2EndStaticCheckerTest {
             System.out.println(e.getMessage());
             Assertions.assertTrue(e instanceof FunctionException);
             Assertions.assertEquals(3, e.getLinePosition());
+            Assertions.assertEquals(0, e.getColumnPosition());
+        }
+    }
+
+    @Test
+    public void testUserDefinedWrongParameterNameButHasVariable() {
+        String input = """
+            DEFINE FUNC WITH (a, b):
+              RETURN a + b
+            SET 0 AS a
+            SET 100 AS b
+            FUNC AS var
+              WITH a: 10
+              WITH c: 20
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow wrong parameters");
+        } catch (DSLException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertTrue(e instanceof FunctionException);
+            Assertions.assertEquals(5, e.getLinePosition());
             Assertions.assertEquals(0, e.getColumnPosition());
         }
     }
@@ -132,6 +174,27 @@ public class End2EndStaticCheckerTest {
             Assertions.assertTrue(e instanceof FunctionException);
             Assertions.assertEquals(5, e.getLinePosition());
             Assertions.assertEquals(4, e.getColumnPosition());
+        }
+    }
+
+    @Test
+    public void testUserDefinedArgumentType() {
+        // User defined functions do not have a defined type,
+        // the error will be inside the function if it called with a bad type
+        String input = """
+            DEFINE FUNC WITH (a):
+              PRINT a
+            FUNC
+              WITH a: 10
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow wrong parameter type");
+        } catch (DSLException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertTrue(e instanceof FunctionException);
+            Assertions.assertEquals(2, e.getLinePosition());
+            Assertions.assertEquals(2, e.getColumnPosition());
         }
     }
 

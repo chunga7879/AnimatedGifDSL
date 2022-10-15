@@ -2,7 +2,6 @@ package core.values;
 
 import core.Scope;
 import core.checkers.ArgumentChecker;
-import core.exceptions.DSLException;
 import core.expressions.ExpressionVisitor;
 
 import java.util.Map;
@@ -28,7 +27,10 @@ public abstract class AbstractFunction extends Value {
         return v.visit(ctx, this);
     }
 
-
+    /**
+     * Get the name of the function
+     * @return
+     */
     public abstract String getFunctionName();
 
     /**
@@ -37,11 +39,7 @@ public abstract class AbstractFunction extends Value {
      * @return A value with the return type of the function
      */
     public Value checkArgs(Scope scope) {
-        try {
-            ArgumentChecker.check(scope, getParams(), getFunctionName());
-        } catch (DSLException e) {
-            throw e.withPosition(this);
-        }
+        ArgumentChecker.check(scope, getParams(), getFunctionName());
         return checkReturn();
     }
 

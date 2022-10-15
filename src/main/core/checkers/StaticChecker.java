@@ -74,6 +74,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, Function f) {
+        f.checkArgs(ctx);
         for (Statement s : f.getStatements()) {
             s.accept(ctx, this);
         }
@@ -95,15 +96,19 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         if (ctx.hasVar(name)) {
             throw new FunctionNameException("Declared function \"" + name + "\" already exists").withPosition(fd);
         }
-        ctx.setVar(fd.name(), new Function(fd.statements(), fd.params()));
+
+        Function function = new Function(fd.statements(), fd.params());
+        ctx.setVar(fd.name(), function);
 
         // Check what would happen if defined function is called
         Scope childScope = ctx.getGlobalScope().newChildScope();
         for (Map.Entry<String, String> entry : fd.params().entrySet()) {
             childScope.setVar(entry.getKey(), new Unknown());
         }
-        for (Statement s : fd.statements()) {
-            s.accept(childScope, this);
+        try {
+            function.accept(ctx, this);
+        } catch (DSLException e) {
+            e.withPosition(fd);
         }
 
         return null;
