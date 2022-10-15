@@ -32,9 +32,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow usage of undefined variables");
-        } catch (DSLException e) {
+        } catch (NameError e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof NameError);
             Assertions.assertEquals(2, e.getLinePosition());
             Assertions.assertEquals(4, e.getColumnPosition());
         }
@@ -49,9 +48,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow usage of undefined functions");
-        } catch (DSLException e) {
+        } catch (FunctionNameException e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof FunctionNameException);
             Assertions.assertEquals(2, e.getLinePosition());
             Assertions.assertEquals(0, e.getColumnPosition());
         }
@@ -70,9 +68,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow usage of undefined functions");
-        } catch (DSLException e) {
+        } catch (FunctionNameException e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof FunctionNameException);
             Assertions.assertEquals(5, e.getLinePosition());
         }
     }
@@ -87,9 +84,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow missing parameters");
-        } catch (DSLException e) {
+        } catch (FunctionException e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof FunctionException);
             Assertions.assertEquals(3, e.getLinePosition());
             Assertions.assertEquals(0, e.getColumnPosition());
         }
@@ -107,10 +103,27 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow missing parameters");
-        } catch (DSLException e) {
+        } catch (FunctionException e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof FunctionException);
             Assertions.assertEquals(5, e.getLinePosition());
+            Assertions.assertEquals(0, e.getColumnPosition());
+        }
+    }
+
+    @Test
+    public void testUserDefinedMissingTargetButHasVariable() {
+        String input = """
+            SET 0 AS a
+            DEFINE FUNC a:
+              RETURN a
+            FUNC AS var
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow missing target");
+        } catch (FunctionException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(4, e.getLinePosition());
             Assertions.assertEquals(0, e.getColumnPosition());
         }
     }
@@ -127,9 +140,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow wrong parameters");
-        } catch (DSLException e) {
+        } catch (FunctionException e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof FunctionException);
             Assertions.assertEquals(3, e.getLinePosition());
             Assertions.assertEquals(0, e.getColumnPosition());
         }
@@ -149,9 +161,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow wrong parameters");
-        } catch (DSLException e) {
+        } catch (FunctionException e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof FunctionException);
             Assertions.assertEquals(5, e.getLinePosition());
             Assertions.assertEquals(0, e.getColumnPosition());
         }
@@ -169,9 +180,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow wrong parameter type");
-        } catch (DSLException e) {
+        } catch (FunctionException e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof FunctionException);
             Assertions.assertEquals(5, e.getLinePosition());
             Assertions.assertEquals(4, e.getColumnPosition());
         }
@@ -190,9 +200,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow wrong parameter type");
-        } catch (DSLException e) {
+        } catch (FunctionException e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof FunctionException);
             Assertions.assertEquals(2, e.getLinePosition());
             Assertions.assertEquals(2, e.getColumnPosition());
         }
@@ -213,9 +222,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not if comparison with wrong type");
-        } catch (DSLException e) {
+        } catch (TypeError e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof TypeError);
             Assertions.assertEquals(5, e.getLinePosition());
             Assertions.assertEquals(8, e.getColumnPosition());
         }
@@ -231,9 +239,8 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not if comparison with wrong type");
-        } catch (DSLException e) {
+        } catch (TypeError e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof TypeError);
             Assertions.assertEquals(2, e.getLinePosition());
             Assertions.assertEquals(10, e.getColumnPosition());
         }
@@ -252,11 +259,32 @@ public class End2EndStaticCheckerTest {
         try {
             compiler.compile(CharStreams.fromString(input));
             Assertions.fail("Should not allow operation with wrong type");
-        } catch (DSLException e) {
+        } catch (TypeError e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof TypeError);
             Assertions.assertEquals(6, e.getLinePosition());
             Assertions.assertEquals(10, e.getColumnPosition());
         }
+    }
+
+    @Test
+    public void testUserDefinedFunctionNotCalled() {
+        String badInput = """
+            DEFINE FUNC WITH (a):
+              RETURN a + b
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(badInput));
+            Assertions.fail("Should not allow missing parameters");
+        } catch (NameError e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(2, e.getLinePosition());
+            Assertions.assertEquals(13, e.getColumnPosition());
+        }
+
+        String goodInput = """
+            DEFINE FUNC WITH (a, b):
+              RETURN a + b
+            """;
+        compiler.compile(CharStreams.fromString(goodInput));
     }
 }

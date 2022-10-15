@@ -60,7 +60,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     public Value visit(Scope ctx, VariableExpression ve) {
         String name = ve.identifier();
         if (!ctx.hasVar(name)) {
-            throw new NameError("Variable \"" + name + "\" is not defined").withPosition(ve);
+            throw new NameError(name).withPosition(ve);
         }
         return ctx.getVar(name);
     }
@@ -106,12 +106,12 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         // Check what would happen if defined function is called
         Scope childScope = ctx.getGlobalScope().newChildScope();
         for (Map.Entry<String, String> entry : fd.params().entrySet()) {
-            childScope.setVar(entry.getKey(), new Unknown());
+            childScope.setLocalVar(entry.getKey(), new Unknown());
         }
         try {
-            function.accept(ctx, this);
+            function.accept(childScope, this);
         } catch (DSLException e) {
-            e.withPosition(fd);
+            throw e.withPosition(fd);
         }
 
         return null;
@@ -154,7 +154,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         if (ctx.hasVar(dest)) {
             Value prevVal = ctx.getVar(va.dest());
             if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME))
-                throw new NameError("Cannot redefine function: " + va.dest()).withPosition(va);
+                throw new FunctionNameException("Cannot redefine function: " + va.dest()).withPosition(va);
         }
         if (va.local()) {
             ctx.setLocalVar(va.dest(), va.expr().accept(ctx, this));

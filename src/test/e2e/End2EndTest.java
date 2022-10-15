@@ -47,6 +47,33 @@ public class End2EndTest {
         evaluator.visit(main.b, main.a);
     }
 
+    @Test
+    public void testUserDefinedFunction() {
+        String input = """
+            SET 1 AS a
+            SET 2 AS b
+            SET 3 AS c
+            DEFINE func x WITH (a, b):
+              IF (x > 0):
+                SET a + 2 AS a
+              RETURN a + b
+            func a + 100 as d
+              WITH a: 4
+              WITH b: 5
+            """;
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        evaluator.visit(main.b, main.a);
+        Assertions.assertTrue(main.b.hasVar("a"));
+        Assertions.assertTrue(main.b.hasVar("b"));
+        Assertions.assertTrue(main.b.hasVar("c"));
+        Assertions.assertTrue(main.b.hasVar("d"));
+        Assertions.assertFalse(main.b.hasVar("x"));
+        Assertions.assertEquals(1, main.b.getVar("a").asInteger().get());
+        Assertions.assertEquals(2, main.b.getVar("b").asInteger().get());
+        Assertions.assertEquals(3, main.b.getVar("c").asInteger().get());
+        Assertions.assertEquals(11, main.b.getVar("d").asInteger().get());
+    }
+
     /**
      * Test that user can call a user-defined function from inside a user-defined function
      */
