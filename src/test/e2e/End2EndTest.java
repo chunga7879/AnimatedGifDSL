@@ -194,6 +194,25 @@ public class End2EndTest {
     }
 
     @Test
+    public void testUserDefinedTargetParameterVariableWithSameName() {
+        String input = """
+            DEFINE FUNC a:
+              RETURN a + 2
+            SET 10 AS a
+            FUNC 10 + 8 AS b
+            """;
+        GifDSLCompiler compiler = new GifDSLCompiler();
+        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b, main.a);
+        Assertions.assertTrue(main.b.hasVar("a"));
+        Assertions.assertTrue(main.b.hasVar("b"));
+        Assertions.assertEquals(10, main.b.getVar("a").asInteger().get());
+        Assertions.assertEquals(20, main.b.getVar("b").asInteger().get());
+    }
+
+    @Test
     public void testEditConstant() {
         String input = """
             CREATE-COLOUR AS black
