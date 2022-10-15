@@ -26,6 +26,9 @@ public final class GifDSLCompiler {
         this.verbose = true;
         this.rootScope = new Scope();
         this.constants = ColourConstant.getNameList();
+        for (ColourConstant c: ColourConstant.values()) {
+            addPredefinedValues(c.getName(), c.createColour());
+        }
     }
 
     /**

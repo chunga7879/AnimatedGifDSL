@@ -6,11 +6,9 @@ import builtin.functions.colour.GetR;
 import core.Scope;
 import core.evaluators.Evaluator;
 import core.statements.Program;
-import core.values.Colour;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import parser.GifDSLCompiler;
-import utils.ColourConstant;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -59,11 +57,6 @@ public class Main {
             compiler.addPredefinedValues(SetOpacity.ACTUAL_NAME, new SetOpacity());
             compiler.addPredefinedValues(Translate.ACTUAL_NAME, new Translate());
             compiler.addPredefinedValues(Write.ACTUAL_NAME, new Write());
-
-            // Add constants
-            for (ColourConstant c: ColourConstant.values()) {
-                compiler.addPredefinedValues(c.getName(), c.createColour());
-            }
 
             Pair<Program, Scope> main = compiler.compile(CharStreams.fromFileName(args[0]));
 
