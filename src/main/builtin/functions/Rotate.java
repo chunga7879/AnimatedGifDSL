@@ -47,33 +47,14 @@ public class Rotate extends AbstractFunction {
     }
 
     public ImmutableImage rotate(ImmutableImage image, int degree) {
-        if (image.getType() != 0) {
-            return image.rotate(new Degrees(degree));
-        } else {
-            // as it throw error when calling image.rotate with type == 0, it will put image type 2 temporally
-            BufferedImage img = new BufferedImage(image.width, image.height, 2);
+         BufferedImage img = image.getType() != 0 ? new BufferedImage(image.width, image.height, image.getType()) : new BufferedImage(image.width, image.height, 2);
             Radians angle = (new Degrees(degree)).toRadians();
             Graphics2D g2 = (Graphics2D)img.getGraphics();
 
-            int offsetx;
-            int offsety;
-            if (angle.value < 0.0) {
-                offsetx = 0;
-                offsety = image.awt().getWidth();
-            } else if (angle.value > 0.0) {
-                offsetx = image.awt().getHeight();
-                offsety = 0;
-            } else {
-                offsetx = 0;
-                offsety = 0;
-            }
-
-            g2.translate(offsetx, offsety);
-            g2.rotate(angle.value);
+            g2.rotate(angle.value, img.getWidth() / 2, img.getHeight() / 2);
             g2.drawImage(image.awt(), 0, 0, (ImageObserver)null);
             g2.dispose();
 
             return wrapAwt(img, image.getMetadata());
-        }
     }
 }
