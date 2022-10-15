@@ -37,7 +37,7 @@ public class UserStudyTwoTest {
             CREATE-LIST AS frames
             SET 70 AS x
             SET 50 AS y
-            LOOP i in (0, 50):
+            LOOP i in 0 to 50:
               SET x + 3 as x
               SET y + 3 as y
               IF (x = 100):

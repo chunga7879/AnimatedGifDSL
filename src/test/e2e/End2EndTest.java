@@ -19,7 +19,7 @@ public class End2EndTest {
         String input = """
             DEFINE PRINT2 WITH (msg2):
               PRINT msg2
-            LOOP i IN (1, 3):
+            LOOP i IN 1 TO 3:
               IF (i = 2):
                 PRINT "if"
               PRINT "loop"
@@ -178,7 +178,7 @@ public class End2EndTest {
         String input = """
             SET 0 AS x
             SET 100 AS i
-            LOOP i in (1, 10):
+            LOOP i in 1 to 10:
               SET i + x AS x
             """;
         GifDSLCompiler compiler = new GifDSLCompiler();
