@@ -1,7 +1,7 @@
 parser grammar GifDSLParser;
 options { tokenVocab=GifDSLLexer; }
 
-program          : (statement (NL statement)*)? NL? EOF ;
+program          : START_NL? (statement NL)* EOF;
 
 statement        : INDENT? (function | with_statement | return_statement | control | COMMENT) ;
 
