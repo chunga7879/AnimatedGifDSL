@@ -39,7 +39,7 @@ public class TestStaticChecker {
         scope.setVar(Random.ACTUAL_NAME, new Random());
         scope.setVar(Set.ACTUAL_NAME, new Set());
         scope.setVar(Print.ACTUAL_NAME, new Print());
-        staticChecker = new StaticChecker();
+        staticChecker = new StaticChecker(ColourConstant.getNameList());
     }
 
     @Test

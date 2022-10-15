@@ -7,14 +7,17 @@ import core.exceptions.VariableException;
 import core.expressions.*;
 import core.statements.*;
 import core.values.*;
-import utils.ColourConstant;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class StaticChecker implements ExpressionVisitor<Scope, Value>, StatementVisitor<Scope, Value> {
-    private final List<String> constants = ColourConstant.getStream().map(ColourConstant::getName).toList();
+    private List<String> constants;
+
+    public StaticChecker(List<String> constants) {
+        this.constants = constants;
+    }
 
     @Override
     public Value visit(Scope ctx, ArithmeticExpression ae) {

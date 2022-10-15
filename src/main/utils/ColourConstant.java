@@ -2,6 +2,7 @@ package utils;
 
 import core.values.Colour;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public enum ColourConstant {
@@ -37,8 +38,8 @@ public enum ColourConstant {
         return new Colour(r, g, b);
     }
 
-    public static Stream<ColourConstant> getStream() {
-        return Stream.of(ColourConstant.values());
+    public static List<String> getNameList() {
+        return Stream.of(ColourConstant.values()).map(ColourConstant::getName).toList();
     }
 
 }

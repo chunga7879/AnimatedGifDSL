@@ -5,6 +5,7 @@ import builtin.functions.Random;
 import builtin.functions.Set;
 import core.Scope;
 import core.evaluators.Evaluator;
+import core.exceptions.DSLException;
 import core.statements.Program;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
@@ -190,5 +191,23 @@ public class End2EndTest {
         Assertions.assertTrue(main.b.hasVar("x"));
         Assertions.assertEquals(100, main.b.getVar("i").asInteger().get());
         Assertions.assertEquals(55, main.b.getVar("x").asInteger().get());
+    }
+
+    @Test
+    public void testEditConstant() {
+        String input = """
+            CREATE-COLOUR AS black
+              WITH r: 0
+              WITH g: 0
+              WITH b: 0
+            """;
+        GifDSLCompiler compiler = new GifDSLCompiler();
+        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow editing of constant");
+        } catch (DSLException e) {
+            // expected
+        }
     }
 }
