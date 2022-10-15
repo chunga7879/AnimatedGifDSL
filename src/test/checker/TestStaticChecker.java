@@ -224,8 +224,9 @@ public class TestStaticChecker {
         try {
             staticChecker.visit(scope, new FunctionDefinition("foo", statements, params));
             staticChecker.visit(scope, new FunctionCall("foo", args));
+            fail(TRY_BLOCK_FAIL);
         } catch (DSLException e) {
-            fail(CATCH_BLOCK_FAIL);
+            // expected
         }
     }
 

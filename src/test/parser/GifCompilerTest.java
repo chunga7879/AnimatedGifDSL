@@ -163,7 +163,7 @@ public class GifCompilerTest {
               WITH x: 0
             """);
             add("""
-            LOOP x IN (1, 2):
+            LOOP x IN 1 TO 2:
               PRINT "hello"
               WITH x: 0
             """);
@@ -218,7 +218,7 @@ public class GifCompilerTest {
     @Test
     public void testBadIntegerInLoop() {
         String input = """
-            LOOP i IN (-2147483649, 3):
+            LOOP i IN -2147483649 TO 3:
               DO i
             """;
         try {
@@ -227,7 +227,7 @@ public class GifCompilerTest {
         } catch (DSLConverterError e) {
             System.out.println(e.getMessage());
             Assertions.assertEquals(1, e.getLinePosition());
-            Assertions.assertEquals(11, e.getColumnPosition());
+            Assertions.assertEquals(10, e.getColumnPosition());
         }
     }
 
