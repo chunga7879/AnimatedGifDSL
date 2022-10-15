@@ -28,6 +28,7 @@ public class TestBuiltInFunctionCalls {
     @BeforeEach
     public void runBefore() {
         scope = new Scope();
+        setUpScope();
         staticChecker = new StaticChecker();
     }
 
@@ -35,6 +36,7 @@ public class TestBuiltInFunctionCalls {
         try {
             staticChecker.visit(scope, new FunctionCall(functionName, args));
         } catch (DSLException e) {
+            System.out.println(e);
             fail(CATCH_BLOCK_FAIL);
         }
     }
@@ -76,7 +78,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallAdd() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("array", new Array());
+            put("$target", new Array());
             put("item", new IntegerValue(1));
         }};
         testFunctionCallHelper(Add.ACTUAL_NAME, args);
@@ -124,7 +126,7 @@ public class TestBuiltInFunctionCalls {
         ImmutableImage img = ImmutableImage.create(100, 100);
         HashMap<String, Expression> args = new HashMap<>() {{
             put(AbstractFunction.PARAM_TARGET, new Image(img));
-            put("filter", new StringValue("string"));
+            put("filtering", new StringValue("string"));
         }};
         testFunctionCallHelper(Filter.ACTUAL_NAME, args);
     }
@@ -170,7 +172,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallPrint() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("msg", new StringValue("message"));
+            put("$target", new StringValue("string"));
         }};
         testFunctionCallHelper(Print.ACTUAL_NAME, args);
     }
@@ -208,6 +210,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallSave() {
         HashMap<String, Expression> args = new HashMap<>() {{
+            put("$target", new Array());
             put("duration", new IntegerValue(1));
             put("location", new StringValue("string"));
         }};
@@ -246,5 +249,30 @@ public class TestBuiltInFunctionCalls {
             put("style", new StringValue("italic"));
         }};
         testFunctionCallHelper(Write.ACTUAL_NAME, args);
+    }
+
+    private void setUpScope() {
+        scope.setVar(CreateColour.ACTUAL_NAME, new CreateColour());
+        scope.setVar(GetB.ACTUAL_NAME, new GetB());
+        scope.setVar(GetG.ACTUAL_NAME, new GetG());
+        scope.setVar(GetR.ACTUAL_NAME, new GetR());
+        scope.setVar(Add.ACTUAL_NAME, new Add());
+        scope.setVar(ColourFill.ACTUAL_NAME, new ColourFill());
+        scope.setVar(CreateList.ACTUAL_NAME, new CreateList());
+        scope.setVar(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
+        scope.setVar(Crop.ACTUAL_NAME, new Crop());
+        scope.setVar(Filter.ACTUAL_NAME, new Filter());
+        scope.setVar(GetHeight.ACTUAL_NAME, new GetHeight());
+        scope.setVar(GetWidth.ACTUAL_NAME, new GetWidth());
+        scope.setVar(Load.ACTUAL_NAME, new Load());
+        scope.setVar(Overlay.ACTUAL_NAME, new Overlay());
+        scope.setVar(Print.ACTUAL_NAME, new Print());
+        scope.setVar(Random.ACTUAL_NAME, new Random());
+        scope.setVar(Resize.ACTUAL_NAME, new Resize());
+        scope.setVar(Rotate.ACTUAL_NAME, new Rotate());
+        scope.setVar(Save.ACTUAL_NAME, new Save());
+        scope.setVar(SetOpacity.ACTUAL_NAME, new SetOpacity());
+        scope.setVar(Translate.ACTUAL_NAME, new Translate());
+        scope.setVar(Write.ACTUAL_NAME, new Write());
     }
 }
