@@ -6,7 +6,6 @@ public abstract class DSLException extends RuntimeException {
     private final String defaultDetails;
     private int linePosition = -1;
     private int columnPosition = -1;
-
     public DSLException(String defaultDetails) {
         this.defaultDetails = defaultDetails;
     }

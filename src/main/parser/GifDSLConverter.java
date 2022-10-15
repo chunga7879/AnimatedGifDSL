@@ -8,6 +8,7 @@ import core.statements.*;
 import core.values.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import parser.exceptions.DSLConverterError;
 
 import java.util.*;
 
@@ -81,7 +82,7 @@ public class GifDSLConverter {
             List<With_statementContext> withStatementContexts = new ArrayList<>();
             for (StatementContext inner : innerStatementCtxs) {
                 if (inner.with_statement() == null) throw withExceptionPosition(
-                    new DSLParserException("Function call has a non-with statement attached"), inner);
+                    new DSLConverterError("Function call has a non-with statement attached"), inner);
                 withStatementContexts.add(inner.with_statement());
             }
             return convertFunction(statementCtx.function(), withStatementContexts);
@@ -90,7 +91,7 @@ public class GifDSLConverter {
         } else if (statementCtx.return_statement() != null) {
             return convertReturn(statementCtx.return_statement());
         }
-        throw withExceptionPosition(new DSLParserException("Statement is not a function or a control"), statementCtx);
+        throw withExceptionPosition(new DSLConverterError("Statement is not a function or a control"), statementCtx);
     }
 
     /**
@@ -142,7 +143,7 @@ public class GifDSLConverter {
         } else if (controlTypeCtx.loop_statement() != null) {
             return convertLoop(controlTypeCtx.loop_statement(), innerStatementCtxs);
         }
-        throw withExceptionPosition(new DSLParserException("Statement is not define, if, or loop"), controlCtx);
+        throw withExceptionPosition(new DSLConverterError("Statement is not define, if, or loop"), controlCtx);
     }
 
     /**
@@ -248,7 +249,7 @@ public class GifDSLConverter {
         } else if (expressionContext.COLOUR() != null) {
             return convertColour(expressionContext.COLOUR());
         }
-        throw withExceptionPosition(new DSLParserException("Invalid expression"), expressionContext);
+        throw withExceptionPosition(new DSLConverterError("Invalid expression"), expressionContext);
     }
 
     /**
@@ -267,7 +268,7 @@ public class GifDSLConverter {
         } else if (arithmeticContext.num_or_var().size() == 1) {
             return convertNumOrVar(arithmeticContext.num_or_var(0));
         } else {
-            throw withExceptionPosition(new DSLParserException("Invalid arithmetic operation"), arithmeticContext);
+            throw withExceptionPosition(new DSLConverterError("Invalid arithmetic operation"), arithmeticContext);
         }
     }
 
@@ -282,7 +283,7 @@ public class GifDSLConverter {
         } else if (numOrVarCtx.VARIABLE() != null) {
             return convertVariable(numOrVarCtx.VARIABLE());
         }
-        throw withExceptionPosition(new DSLParserException("Not a number or variable"), numOrVarCtx);
+        throw withExceptionPosition(new DSLConverterError("Not a number or variable"), numOrVarCtx);
     }
 
     /**
@@ -323,7 +324,7 @@ public class GifDSLConverter {
         try {
             return withExpressionPosition(new Colour(colourNode.getText()), colourNode);
         } catch (Exception e) {
-            throw withExceptionPosition(new DSLParserException(e.getMessage()), colourNode);
+            throw withExceptionPosition(new DSLConverterError(e.getMessage()), colourNode);
         }
     }
 
@@ -345,7 +346,7 @@ public class GifDSLConverter {
         try {
             return Integer.parseInt(integerNode.getText());
         } catch (NumberFormatException e) {
-            throw withExceptionPosition(new DSLParserException("Bad number format"), integerNode);
+            throw withExceptionPosition(new DSLConverterError("Bad number format"), integerNode);
         }
     }
 
@@ -362,7 +363,7 @@ public class GifDSLConverter {
             case "<" -> new LTVisitor();
             case ">=" -> new GTEVisitor();
             case "<=" -> new LTEVisitor();
-            default -> throw withExceptionPosition(new DSLParserException("Invalid comparator"), node);
+            default -> throw withExceptionPosition(new DSLConverterError("Invalid comparator"), node);
         };
     }
 
@@ -377,7 +378,7 @@ public class GifDSLConverter {
             case "-" -> new SubtractionVisitor();
             case "*" -> new MultiplicationVisitor();
             case "/" -> new DivisionVisitor();
-            default -> throw withExceptionPosition(new DSLParserException("Invalid arithmetic operator"), node);
+            default -> throw withExceptionPosition(new DSLConverterError("Invalid arithmetic operator"), node);
         };
     }
 

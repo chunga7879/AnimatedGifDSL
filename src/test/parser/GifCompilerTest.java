@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import parser.exceptions.DSLConverterError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +103,7 @@ public class GifCompilerTest {
         try {
             compile(input);
             Assertions.fail("Should not allow non-with statements inside of function calls");
-        } catch (DSLParserException e) {
+        } catch (DSLConverterError e) {
             System.out.println(e.getMessage());
             Assertions.assertEquals(2, e.getLinePosition());
             Assertions.assertEquals(0, e.getColumnPosition());
@@ -137,7 +138,7 @@ public class GifCompilerTest {
             try {
                 compile(input);
                 Assertions.fail("Should not allow with statements outside of function calls");
-            } catch (DSLParserException e) {
+            } catch (DSLConverterError e) {
                 System.out.println(e.getMessage());
                 Assertions.assertEquals(3, e.getLinePosition());
                 Assertions.assertEquals(0, e.getColumnPosition());
@@ -153,7 +154,7 @@ public class GifCompilerTest {
         try {
             compile(input);
             Assertions.fail("Should not allow bad colour format");
-        } catch (DSLParserException e) {
+        } catch (DSLConverterError e) {
             System.out.println(e.getMessage());
             Assertions.assertEquals(1, e.getLinePosition());
             Assertions.assertEquals(3, e.getColumnPosition());
@@ -168,7 +169,7 @@ public class GifCompilerTest {
         try {
             compile(input);
             Assertions.fail("Should not allow above max integer");
-        } catch (DSLParserException e) {
+        } catch (DSLConverterError e) {
             System.out.println(e.getMessage());
             Assertions.assertEquals(1, e.getLinePosition());
             Assertions.assertEquals(3, e.getColumnPosition());
@@ -184,7 +185,7 @@ public class GifCompilerTest {
         try {
             compile(input);
             Assertions.fail("Should not allow above max integer");
-        } catch (DSLParserException e) {
+        } catch (DSLConverterError e) {
             System.out.println(e.getMessage());
             Assertions.assertEquals(1, e.getLinePosition());
             Assertions.assertEquals(11, e.getColumnPosition());
