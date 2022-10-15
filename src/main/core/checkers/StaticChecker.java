@@ -149,7 +149,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     public Value visit(Scope ctx, VariableAssignment va) {
         String dest = va.dest();
         if (constants.contains(dest)) {
-            throw new VariableException("Cannot edit constant: " + dest);
+            throw new VariableException("Cannot edit constant: " + dest).withPosition(va);
         }
         if (ctx.hasVar(dest)) {
             Value prevVal = ctx.getVar(va.dest());
