@@ -55,17 +55,28 @@ public abstract class DSLException extends RuntimeException {
         return this.linePosition >= 0;
     }
 
+
+    /**
+     * Set line, column position of the exception
+     * @param linePosition
+     * @param columnPosition
+     * @return
+     */
+    public DSLException withPosition(int linePosition, int columnPosition) {
+        this.linePosition = linePosition;
+        this.columnPosition = columnPosition;
+        return this;
+    }
+
     /**
      * Set line, column position of the exception if it is set in the Node and it is not already set
      * @param node
      * @return
      */
     public DSLException withPosition(Node node) {
-        if (!this.isPositionSet() && node.isPositionSet()) {
-            this.linePosition = node.getLinePosition();
-            this.columnPosition = node.getColumnPosition();
-        }
-        return this;
+        return !this.isPositionSet() && node.isPositionSet() ?
+            this.withPosition(node.getLinePosition(), node.getColumnPosition()):
+            this;
     }
     //endregion
 }

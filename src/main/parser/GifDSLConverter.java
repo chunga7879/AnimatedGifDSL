@@ -1,5 +1,6 @@
 package parser;
 
+import core.exceptions.DSLException;
 import core.expressions.*;
 import core.expressions.arithmetic.*;
 import core.expressions.comparison.*;
@@ -79,7 +80,8 @@ public class GifDSLConverter {
         if (statementCtx.function() != null) {
             List<With_statementContext> withStatementContexts = new ArrayList<>();
             for (StatementContext inner : innerStatementCtxs) {
-                if (inner.with_statement() == null) throw new DSLParserException("Function inner statement is not a with");
+                if (inner.with_statement() == null) throw withExceptionPosition(
+                    new DSLParserException("Function call has a non-with statement attached"), inner);
                 withStatementContexts.add(inner.with_statement());
             }
             return convertFunction(statementCtx.function(), withStatementContexts);
@@ -88,7 +90,7 @@ public class GifDSLConverter {
         } else if (statementCtx.return_statement() != null) {
             return convertReturn(statementCtx.return_statement());
         }
-        throw new DSLParserException("Not a function or control");
+        throw withExceptionPosition(new DSLParserException("Statement is not a function or a control"), statementCtx);
     }
 
     /**
@@ -140,7 +142,7 @@ public class GifDSLConverter {
         } else if (controlTypeCtx.loop_statement() != null) {
             return convertLoop(controlTypeCtx.loop_statement(), innerStatementCtxs);
         }
-        throw new DSLParserException("Not define, if, or loop");
+        throw withExceptionPosition(new DSLParserException("Statement is not define, if, or loop"), controlCtx);
     }
 
     /**
@@ -175,7 +177,7 @@ public class GifDSLConverter {
      */
     private IfStatement convertIf(If_statementContext ifCtx, List<StatementContext> innerStatementCtxs) {
         ComparisonContext comparisonCtx = ifCtx.comparison();
-        ComparisonVisitor comparator =  convertComparator(comparisonCtx.COMPARE().getText());
+        ComparisonVisitor comparator =  convertComparator(comparisonCtx.COMPARE());
         Expression expression1 = convertArithmetic(comparisonCtx.arithmetic(0));
         Expression expression2 = convertArithmetic(comparisonCtx.arithmetic(1));
         List<Statement> innerStatements = convertStatements(innerStatementCtxs);
@@ -209,11 +211,17 @@ public class GifDSLConverter {
     }
 
     private Array convertRange(RangeContext rangeCtx) {
-        int min = getIntegerValue(rangeCtx.NUMBER(0));
-        int max = getIntegerValue(rangeCtx.NUMBER(1));
+        int from = getIntegerValue(rangeCtx.NUMBER(0));
+        int to = getIntegerValue(rangeCtx.NUMBER(1));
         List<Value> array = new ArrayList<>();
-        for (int i = min; i <= max; i++) {
-            array.add(new IntegerValue(i));
+        if (from <= to) {
+            for (int i = from; i <= to; i++) {
+                array.add(new IntegerValue(i));
+            }
+        } else {
+            for (int i = from; i >= to; i--) {
+                array.add(new IntegerValue(i));
+            }
         }
         return withExpressionPosition(new Array(array), rangeCtx);
     }
@@ -240,7 +248,7 @@ public class GifDSLConverter {
         } else if (expressionContext.COLOUR() != null) {
             return convertColour(expressionContext.COLOUR());
         }
-        throw new DSLParserException("Invalid expression");
+        throw withExceptionPosition(new DSLParserException("Invalid expression"), expressionContext);
     }
 
     /**
@@ -250,7 +258,7 @@ public class GifDSLConverter {
      */
     private Expression convertArithmetic(ArithmeticContext arithmeticContext) {
         if (arithmeticContext.num_or_var().size() == 2) {
-            ArithmeticVisitor operator = convertArithmeticOperator(arithmeticContext.OPERATOR().getText());
+            ArithmeticVisitor operator = convertArithmeticOperator(arithmeticContext.OPERATOR());
             return withExpressionPosition(new ArithmeticExpression(
                 convertNumOrVar(arithmeticContext.num_or_var(0)),
                 convertNumOrVar(arithmeticContext.num_or_var(1)),
@@ -259,7 +267,7 @@ public class GifDSLConverter {
         } else if (arithmeticContext.num_or_var().size() == 1) {
             return convertNumOrVar(arithmeticContext.num_or_var(0));
         } else {
-            throw new DSLParserException("Invalid arithmetic");
+            throw withExceptionPosition(new DSLParserException("Invalid arithmetic operation"), arithmeticContext);
         }
     }
 
@@ -269,14 +277,12 @@ public class GifDSLConverter {
      * @return
      */
     public Expression convertNumOrVar(Num_or_varContext numOrVarCtx) {
-        try {
-            if (numOrVarCtx.NUMBER() != null) {
-                return convertInteger(numOrVarCtx.NUMBER());
-            } else if (numOrVarCtx.VARIABLE() != null) {
-                return convertVariable(numOrVarCtx.VARIABLE());
-            }
-        } catch (NumberFormatException ignored) {}
-        throw new DSLParserException("Invalid number or variable");
+        if (numOrVarCtx.NUMBER() != null) {
+            return convertInteger(numOrVarCtx.NUMBER());
+        } else if (numOrVarCtx.VARIABLE() != null) {
+            return convertVariable(numOrVarCtx.VARIABLE());
+        }
+        throw withExceptionPosition(new DSLParserException("Not a number or variable"), numOrVarCtx);
     }
 
     /**
@@ -314,7 +320,11 @@ public class GifDSLConverter {
      * @return
      */
     private Colour convertColour(TerminalNode colourNode) {
-        return withExpressionPosition(new Colour(colourNode.getText()), colourNode);
+        try {
+            return withExpressionPosition(new Colour(colourNode.getText()), colourNode);
+        } catch (Exception e) {
+            throw withExceptionPosition(new DSLParserException(e.getMessage()), colourNode);
+        }
     }
 
     /**
@@ -332,38 +342,42 @@ public class GifDSLConverter {
      * @return
      */
     private int getIntegerValue(TerminalNode integerNode) {
-        return Integer.parseInt(integerNode.getText());
+        try {
+            return Integer.parseInt(integerNode.getText());
+        } catch (NumberFormatException e) {
+            throw withExceptionPosition(new DSLParserException("Bad number format"), integerNode);
+        }
     }
 
     /**
-     * Convert a string a comparator
-     * @param string
+     * Convert a node to a comparator
+     * @param node
      * @return
      */
-    private static ComparisonVisitor convertComparator(String string) {
-        return switch (string) {
+    private static ComparisonVisitor convertComparator(TerminalNode node) {
+        return switch (node.getText()) {
             case "=" -> new EQVisitor();
             case "!=" -> new NEVisitor();
             case ">" -> new GTVisitor();
             case "<" -> new LTVisitor();
             case ">=" -> new GTEVisitor();
             case "<=" -> new LTEVisitor();
-            default -> throw new DSLParserException("Invalid comparator");
+            default -> throw withExceptionPosition(new DSLParserException("Invalid comparator"), node);
         };
     }
 
     /**
-     * Convert string to an arithmetic operator
-     * @param string
+     * Convert a node to an arithmetic operator
+     * @param node
      * @return
      */
-    private static ArithmeticVisitor convertArithmeticOperator(String string) {
-        return switch (string) {
+    private static ArithmeticVisitor convertArithmeticOperator(TerminalNode node) {
+        return switch (node.getText()) {
             case "+" -> new AdditionVisitor();
             case "-" -> new SubtractionVisitor();
             case "*" -> new MultiplicationVisitor();
             case "/" -> new DivisionVisitor();
-            default -> throw new DSLParserException("Invalid operator");
+            default -> throw withExceptionPosition(new DSLParserException("Invalid arithmetic operator"), node);
         };
     }
 
@@ -403,21 +417,24 @@ public class GifDSLConverter {
         return expression;
     }
 
-//    /**
-//     * Get line in program for context
-//     * @param ctx
-//     * @return
-//     */
-//    private static int getContextLine(ParserRuleContext ctx) {
-//        return ctx.getStart().getLine();
-//    }
-//
-//    /**
-//     * Get the column position in line in program for context
-//     * @param ctx
-//     * @return
-//     */
-//    private static int getContextColumnPosition(ParserRuleContext ctx) {
-//        return ctx.getStart().getCharPositionInLine();
-//    }
+    /**
+     * Set line and column position in program for exception
+     * @param exception The exception to add position to
+     * @param ctx The ParserRuleContext where the exception occurred
+     * @return The same exception
+     */
+    private static DSLException withExceptionPosition(DSLException exception, ParserRuleContext ctx) {
+        return exception.withPosition(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
+    }
+
+    /**
+     * Set line and column position in program for exception
+     * @param exception The exception to add position to
+     * @param node The TerminalNode where the exception occurred
+     * @return The same exception
+     */
+    private static DSLException withExceptionPosition(DSLException exception, TerminalNode node) {
+        return exception.withPosition(node.getSymbol().getLine(), node.getSymbol().getCharPositionInLine());
+    }
+
 }

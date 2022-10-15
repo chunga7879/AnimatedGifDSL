@@ -23,7 +23,7 @@ public class ArgumentChecker {
             if (!(Objects.equals(expectedType, actualType)
                 || Objects.equals(Unknown.NAME, expectedType)
                 || Objects.equals(Unknown.NAME, actualType))) {
-                throw new FunctionException("Argument " + paramName + " is of type " + actualType + " but expected type "
+                throw new FunctionException("Argument \"" + paramName + "\" is of type " + actualType + " but expected type "
                     + expectedType + " for function \"" + functionName + "\"");
             }
         }

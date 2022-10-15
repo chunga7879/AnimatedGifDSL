@@ -25,6 +25,8 @@ public class End2EndTest {
         compiler.addPredefinedValues(Print.ACTUAL_NAME, new Print());
         compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
         compiler.addPredefinedValues(Random.ACTUAL_NAME, new Random());
+        compiler.setEnableStaticChecker(true);
+        compiler.setEnableShortcuts(true);
         evaluator = new Evaluator();
     }
 
