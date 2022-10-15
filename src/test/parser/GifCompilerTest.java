@@ -62,9 +62,7 @@ public class GifCompilerTest {
               PRINT "hi1"
               LOOP j IN array:
                 PRINT "hi2"
-            LOOP i IN (20, 1):
-              PRINT "hi3"
-            PRINT "hi4"
+            PRINT "hi3"
             """;
         compile(input);
     }

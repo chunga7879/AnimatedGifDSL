@@ -212,17 +212,11 @@ public class GifDSLConverter {
     }
 
     private Array convertRange(RangeContext rangeCtx) {
-        int from = getIntegerValue(rangeCtx.NUMBER(0));
-        int to = getIntegerValue(rangeCtx.NUMBER(1));
+        int min = getIntegerValue(rangeCtx.NUMBER(0));
+        int max = getIntegerValue(rangeCtx.NUMBER(1));
         List<Value> array = new ArrayList<>();
-        if (from <= to) {
-            for (int i = from; i <= to; i++) {
-                array.add(new IntegerValue(i));
-            }
-        } else {
-            for (int i = from; i >= to; i--) {
-                array.add(new IntegerValue(i));
-            }
+        for (int i = min; i <= max; i++) {
+            array.add(new IntegerValue(i));
         }
         return withExpressionPosition(new Array(array), rangeCtx);
     }
