@@ -80,7 +80,7 @@ IF ([value] [>=, <=, >, <, =, !=] [value]):
 Loop - Loop over the inner statements from numbers "from" to "to"
 - *Iterator variable* is assigned each number from "from" to "to" during the loop iterations
 ```
-LOOP [iterator variable] IN ([from], [to]):
+LOOP [iterator variable] IN [from] TO [to]:
   [...]
 ```
 Loop - Loop over the inner statements for each of the elements in the list
