@@ -6,10 +6,16 @@ import core.expressions.Expression;
 public final class VariableAssignment extends Statement {
     private final String dest;
     private final Expression expr;
+    private final boolean local;
 
-    public VariableAssignment(String dest, Expression expr) {
+    public VariableAssignment(String dest, Expression expr, boolean local) {
         this.dest = dest;
         this.expr = expr;
+        this.local = local;
+    }
+
+    public VariableAssignment(String dest, Expression expr) {
+        this(dest, expr, false);
     }
 
     @Override
@@ -23,5 +29,9 @@ public final class VariableAssignment extends Statement {
 
     public Expression expr() {
         return expr;
+    }
+
+    public boolean local() {
+        return local;
     }
 }

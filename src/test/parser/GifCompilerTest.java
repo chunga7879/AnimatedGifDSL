@@ -1,7 +1,12 @@
 package parser;
 
 import core.Scope;
+import core.statements.ExpressionWrapper;
+import core.statements.LoopStatement;
 import core.statements.Program;
+import core.values.Array;
+import core.values.IntegerValue;
+import core.values.Value;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Assertions;
@@ -58,13 +63,49 @@ public class GifCompilerTest {
     @Test
     public void testCompileLoop() {
         String input = """
-            LOOP i IN (1, 20):
+            LOOP i IN 1 TO 20:
               PRINT "hi1"
               LOOP j IN array:
                 PRINT "hi2"
-            PRINT "hi3"
+            LOOP i-x IN 100 TO -4:
+              PRINT "hi3"
+            PRINT "hi4"
             """;
-        compile(input);
+        Program program = compile(input).a;
+        Assertions.assertEquals(3, program.statements().size());
+
+        Assertions.assertTrue(program.statements().get(0) instanceof LoopStatement);
+        Assertions.assertTrue(program.statements().get(1) instanceof LoopStatement);
+        Assertions.assertTrue(program.statements().get(2) instanceof ExpressionWrapper);
+        Assertions.assertTrue(program.statements().get(2) instanceof ExpressionWrapper);
+
+        LoopStatement loop1 = (LoopStatement) program.statements().get(0);
+        LoopStatement loop2 = (LoopStatement) program.statements().get(1);
+
+        Assertions.assertEquals("i", loop1.loopVar());
+        Assertions.assertEquals(2, loop1.statements().size());
+        Assertions.assertTrue(loop1.statements().get(0) instanceof ExpressionWrapper);
+        Assertions.assertTrue(loop1.statements().get(1) instanceof LoopStatement);
+        Array array1 = (Array) loop1.array();
+        Assertions.assertEquals(20, array1.get().size());
+        int i = 1;
+        for (Value v : array1) {
+            Assertions.assertTrue(v instanceof IntegerValue);
+            Assertions.assertEquals(i, ((IntegerValue) v).get());
+            i++;
+        }
+
+        Assertions.assertEquals("i-x", loop2.loopVar());
+        Assertions.assertEquals(1, loop2.statements().size());
+        Assertions.assertTrue(loop2.statements().get(0) instanceof ExpressionWrapper);
+        Array array2 = (Array) loop2.array();
+        Assertions.assertEquals(105, array2.get().size());
+        int i_x = 100;
+        for (Value v : array2) {
+            Assertions.assertTrue(v instanceof IntegerValue);
+            Assertions.assertEquals(i_x, ((IntegerValue) v).get());
+            i_x--;
+        }
     }
 
     @Test

@@ -11,18 +11,26 @@ import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.misc.Pair;
 import parser.exceptions.DSLParserErrorListener;
 import parser.exceptions.DSLTokenizerErrorListener;
+import utils.ColourConstant;
+
+import java.util.List;
 
 public final class GifDSLCompiler {
     private boolean enableStaticCheck;
     private boolean enableShortcuts;
     private boolean verbose;
     private Scope rootScope;
+    private List<String> constants;
 
     public GifDSLCompiler() {
         this.enableStaticCheck = true;
         this.enableShortcuts = true;
         this.verbose = true;
         this.rootScope = new Scope();
+        this.constants = ColourConstant.getNameList();
+        for (ColourConstant c: ColourConstant.values()) {
+            addPredefinedValues(c.getName(), c.createColour());
+        }
     }
 
     /**
@@ -76,10 +84,10 @@ public final class GifDSLCompiler {
 
         if (enableStaticCheck) {
             print("Started static checker");
-            new StaticChecker().visit(rootScope.copy(), main);
+            new StaticChecker(constants).visit(rootScope.copy(), main);
             if (enableShortcuts) {
                 main = new ShortcutsProcessor().visit(rootScope.copy(), main);
-                new StaticChecker().visit(rootScope.copy(), main);
+                new StaticChecker(constants).visit(rootScope.copy(), main);
             }
             print("Finished static checker");
         }

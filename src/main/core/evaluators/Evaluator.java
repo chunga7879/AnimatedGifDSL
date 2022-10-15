@@ -69,7 +69,11 @@ public class Evaluator implements StatementVisitor<Scope, Void>, ExpressionVisit
     @Override
     public Void visit(Scope ctx, VariableAssignment va) {
         try {
-            ctx.setVar(va.dest(), va.expr().accept(ctx, this));
+            if (va.local()) {
+                ctx.setLocalVar(va.dest(), va.expr().accept(ctx, this));
+            } else {
+                ctx.setVar(va.dest(), va.expr().accept(ctx, this));
+            }
             return null;
         } catch (DSLException e) {
             throw e.withPosition(va);
