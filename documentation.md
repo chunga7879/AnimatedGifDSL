@@ -23,7 +23,7 @@ This is the updated documentation file after Milestone 3.
   - List:
     - Stores a list of images
 - Variables are created when `AS [variable]` is used when a function is called
-  - Or when they are defined as function parameters or loop iterators
+  - Or when they are defined as function parameters or loop iterator variables
 - All variables/functions are case-insensitive
   - e.g. `SET 10 AS X` is the same as `set 10 as x`
 - There are no reference variables, so multiple variables will never be a reference to the same object (i.e. image). Every built-in function will return a copy of any input and `RETURN` will always copy the value before setting to the function's `AS` variable.
