@@ -166,7 +166,7 @@ public class GifDSLConverter {
         List<Statement> statements = new ArrayList<>();
         if (defineCtx.define_target() != null) {
             parameters.put(AbstractFunction.PARAM_TARGET, Unknown.NAME);
-            statements.add(new VariableAssignment(getVariableName(defineCtx.define_target().VARIABLE()), new VariableExpression("$target")));
+            statements.add(new VariableAssignment(getVariableName(defineCtx.define_target().VARIABLE()), new VariableExpression("$target"), true));
         }
         if (defineCtx.define_params() != null) {
             List<TerminalNode> parameterNodes = defineCtx.define_params().VARIABLE();
@@ -212,12 +212,23 @@ public class GifDSLConverter {
         return new LoopStatement(array, loopCtx.loop_variable().VARIABLE().getText(), innerStatements);
     }
 
+    /**
+     * Convert a range (e.g. "10 to 20")
+     * @param rangeCtx
+     * @return
+     */
     private Array convertRange(RangeContext rangeCtx) {
-        int min = getIntegerValue(rangeCtx.NUMBER(0));
-        int max = getIntegerValue(rangeCtx.NUMBER(1));
+        int from = getIntegerValue(rangeCtx.NUMBER(0));
+        int to = getIntegerValue(rangeCtx.NUMBER(1));
         List<Value> array = new ArrayList<>();
-        for (int i = min; i <= max; i++) {
-            array.add(new IntegerValue(i));
+        if (from <= to) {
+            for (int i = from; i <= to; i++) {
+                array.add(new IntegerValue(i));
+            }
+        } else {
+            for (int i = from; i >= to; i--) {
+                array.add(new IntegerValue(i));
+            }
         }
         return new Array(array);
     }

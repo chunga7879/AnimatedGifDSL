@@ -14,14 +14,6 @@ public class UserStudyTwoTest {
     @Test
     public void testUserStudyProgram() {
         String input = """
-            CREATE-COLOUR AS black
-              WITH r: 0
-              WITH g: 0
-              WITH b: 0
-            CREATE-COLOUR AS white
-              WITH r: 255
-              WITH g: 255
-              WITH b: 255
             CREATE-RECTANGLE AS background
               WITH width: 3000
               WITH height: 1500
@@ -37,7 +29,7 @@ public class UserStudyTwoTest {
             CREATE-LIST AS frames
             SET 70 AS x
             SET 50 AS y
-            LOOP i in (0, 50):
+            LOOP i in 0 to 50:
               SET x + 3 as x
               SET y + 3 as y
               IF (x = 100):

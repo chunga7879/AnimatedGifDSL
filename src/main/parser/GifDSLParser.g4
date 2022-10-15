@@ -17,7 +17,7 @@ if_statement     : IF BRACKET_START comparison BRACKET_END ;
 comparison       : arithmetic COMPARE arithmetic ;
 loop_statement   : LOOP loop_variable IN (range | VARIABLE) ;
 loop_variable    : VARIABLE ;
-range            : BRACKET_START NUMBER BRACKET_SEP NUMBER BRACKET_END ;
+range            : NUMBER TO NUMBER ;
 
 function         : FUNCTION_NAME function_target? function_on? function_as? ;
 function_target  : expression ;

@@ -34,7 +34,7 @@ This is the updated documentation file after Milestone 3.
 - User-defined variables cannot have the same name as constants
 - All constants
   - Colours:
-    - Black, Grey, White, Red, Green, Blue, Yellow, Cyan, Magenta, Orange, Purple
+    - Black, Grey, White, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Purple
 
 ### Functions
 - Functions are statements that performs an action
@@ -78,9 +78,9 @@ IF ([value] [>=, <=, >, <, =, !=] [value]):
   [...]
 ```
 Loop - Loop over the inner statements from numbers "from" to "to"
-- *Iterator variable* is assigned each number from "from" to "to" during the loop iterations
+- *Iterator variable* is assigned each number from "from" to "to" (inclusive) during the loop iterations
 ```
-LOOP [iterator variable] IN ([from], [to]):
+LOOP [iterator variable] IN [from] TO [to]:
   [...]
 ```
 Loop - Loop over the inner statements for each of the elements in the list
