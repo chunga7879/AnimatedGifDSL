@@ -32,25 +32,30 @@ public class GifCompilerTest {
     @Test
     public void testEmptyLinesAndNewLines() {
         String newLineAtStartAndEnd = "\nDO hello\n";
-        compile(newLineAtStartAndEnd);
-
         String newLineAtStartAndEnd2 = "\r\n\r\nDO hello\r\n\r\n";
-        compile(newLineAtStartAndEnd2);
-
         String noNewLineAtStart = "DO hello\r\n";
-        compile(noNewLineAtStart);
-
         String emptyLinesBetween = "DO hello\r\n\r\n\r\nDO something\r\n";
-        compile(emptyLinesBetween);
-
         String emptyLinesWithSpaceBetween = "DO hello\r\n  \r\n  \r\nDO something\r\n";
-        compile(emptyLinesWithSpaceBetween);
-
         String newLineAtStartAndEndWithEmptyLine = "  \nDo hello  \n    \n";
-        compile(newLineAtStartAndEndWithEmptyLine);
-
-        String lotsOfSpaceBetween = "     IF   (    x     >      hello   )   :  \n";
-        compile(lotsOfSpaceBetween);
+        List<Pair<String, Integer>> inputs = new ArrayList<>() {{
+            add(new Pair<>(newLineAtStartAndEnd, 1));
+            add(new Pair<>(newLineAtStartAndEnd2, 1));
+            add(new Pair<>(noNewLineAtStart, 1));
+            add(new Pair<>(emptyLinesBetween, 2));
+            add(new Pair<>(emptyLinesWithSpaceBetween, 2));
+            add(new Pair<>(newLineAtStartAndEndWithEmptyLine, 1));
+        }};
+        for (Pair<String, Integer> input : inputs) {
+            try {
+                Program program = compile(input.a).a;
+                Assertions.assertEquals(input.b, program.statements().size());
+                for (Statement statement : program.statements()) {
+                    Assertions.assertTrue(statement instanceof ExpressionWrapper);
+                }
+            } catch (DSLParserException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     @Test
