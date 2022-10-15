@@ -35,7 +35,7 @@ public class GifCompilerTest {
         String newLineAtStartAndEnd2 = "\r\n\r\nDO hello\r\n\r\n";
         String noNewLineAtStart = "DO hello\r\n";
         String emptyLinesBetween = "DO hello\r\n\r\n\r\nDO something\r\n";
-        String emptyLinesWithSpaceBetween = "DO hello\r\n  \r\n  \r\nDO something\r\n";
+        String emptyLinesWithSpaceBetween = "DO hello\r\n\r\n  \r\n  \r\nDO something\r\n \r\n\r\n\tWITH x: 0\r\n";
         String newLineAtStartAndEndWithEmptyLine = "  \nDo hello  \n    \n";
         List<Pair<String, Integer>> inputs = new ArrayList<>() {{
             add(new Pair<>(newLineAtStartAndEnd, 1));
@@ -46,14 +46,10 @@ public class GifCompilerTest {
             add(new Pair<>(newLineAtStartAndEndWithEmptyLine, 1));
         }};
         for (Pair<String, Integer> input : inputs) {
-            try {
-                Program program = compile(input.a).a;
-                Assertions.assertEquals(input.b, program.statements().size());
-                for (Statement statement : program.statements()) {
-                    Assertions.assertTrue(statement instanceof ExpressionWrapper);
-                }
-            } catch (DSLParserException e) {
-                System.out.println(e.getMessage());
+            Program program = compile(input.a).a;
+            Assertions.assertEquals(input.b, program.statements().size());
+            for (Statement statement : program.statements()) {
+                Assertions.assertTrue(statement instanceof ExpressionWrapper);
             }
         }
     }
@@ -61,9 +57,18 @@ public class GifCompilerTest {
     @Test
     public void testSpaces() {
         String lotsOfSpaceBetween = "     IF   (    x     >      hello   )   :  \n";
-        Program program = compile(lotsOfSpaceBetween).a;
-        Assertions.assertEquals(1, program.statements().size());
-        Assertions.assertTrue(program.statements().get(0) instanceof IfStatement);
+        String lotsOfTabBetween = "\t\t\t\t\t\tIF\t\t\t(\t\t\tx\t\t\t\t>\t\t\t\thello\t\t\t)\t:\t\t\t\t\n";
+        String lotsOfSpaceAndTabBetween = "  \t   IF \t  ( \t   x  \t   >  \t    hello \t  )  \t : \t  \n";
+        List<String> inputs = new ArrayList<>() {{
+            add(lotsOfSpaceBetween);
+            add(lotsOfTabBetween);
+            add(lotsOfSpaceAndTabBetween);
+        }};
+        for (String input : inputs) {
+            Program program = compile(input).a;
+            Assertions.assertEquals(1, program.statements().size());
+            Assertions.assertTrue(program.statements().get(0) instanceof IfStatement);
+        }
     }
 
     @Test
