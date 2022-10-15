@@ -1,10 +1,7 @@
 package core.checkers;
 
 import core.Scope;
-import core.exceptions.DSLException;
-import core.exceptions.FunctionNameException;
-import core.exceptions.NameError;
-import core.exceptions.TypeError;
+import core.exceptions.*;
 import core.expressions.*;
 import core.statements.*;
 import core.values.*;
