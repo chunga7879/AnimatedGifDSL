@@ -34,7 +34,7 @@ This is the updated documentation file after Milestone 3.
 - User-defined variables cannot have the same name as constants
 - All constants
   - Colours:
-    - Black, Grey, White, Red, Green, Blue, Yellow, Cyan, Magenta, Orange, Purple
+    - Black, Grey, White, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Purple
 
 ### Functions
 - Functions are statements that performs an action
