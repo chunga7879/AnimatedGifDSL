@@ -136,7 +136,11 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
             Value prevVal = ctx.getVar(va.dest());
             if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new FunctionException("Cannot redefine function: " + va.dest());
         }
-        ctx.setVar(va.dest(), va.expr().accept(ctx, this));
+        if (va.local()) {
+            ctx.setLocalVar(va.dest(), va.expr().accept(ctx, this));
+        } else {
+            ctx.setVar(va.dest(), va.expr().accept(ctx, this));
+        }
         return null;
     }
 
