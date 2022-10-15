@@ -59,7 +59,7 @@ This is the updated documentation file after Milestone 3.
 - Define statements create a custom function
 - Define is only allowed on the root level (i.e. not inside if, loop, define, etc...)
 - Define must be called before using the function
-- The statements inside can access any parameters and variables defined before the define call
+- The statements inside can access any variables defined before the define call (and target/parameters)
 - Target and parameters are copies of the inputs passed in
   - Target and parameters get deleted at the end of the function
 - Target, parameters, and return value are optional
