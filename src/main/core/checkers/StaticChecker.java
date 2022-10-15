@@ -7,11 +7,14 @@ import core.exceptions.VariableException;
 import core.expressions.*;
 import core.statements.*;
 import core.values.*;
+import utils.ColourConstant;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class StaticChecker implements ExpressionVisitor<Scope, Value>, StatementVisitor<Scope, Value> {
+    private final List<String> constants = ColourConstant.getStream().map(ColourConstant::getName).toList();
 
     @Override
     public Value visit(Scope ctx, ArithmeticExpression ae) {
@@ -132,9 +135,14 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, VariableAssignment va) {
-        if (ctx.hasVar(va.dest())) {
-            Value prevVal = ctx.getVar(va.dest());
-            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new FunctionException("Cannot redefine function: " + va.dest());
+        String dest = va.dest();
+        if (constants.contains(dest)) {
+            throw new VariableException("Cannot edit constant: " + dest);
+        }
+        if (ctx.hasVar(dest)) {
+            Value prevVal = ctx.getVar(dest);
+            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME))
+                throw new FunctionException("Cannot redefine function: " + dest);
         }
         ctx.setVar(va.dest(), va.expr().accept(ctx, this));
         return null;

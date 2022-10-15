@@ -10,6 +10,7 @@ import core.values.Colour;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import parser.GifDSLCompiler;
+import utils.ColourConstant;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -34,7 +35,7 @@ public class Main {
             compiler.setEnableStaticChecker(staticCheck);
             compiler.setEnableShortcuts(shortcuts);
 
-            // Add built-in functions / constants
+            // Add built-in functions
             compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
             compiler.addPredefinedValues(CreateColour.ACTUAL_NAME, new CreateColour());
             compiler.addPredefinedValues(GetB.ACTUAL_NAME, new GetB());
@@ -59,11 +60,10 @@ public class Main {
             compiler.addPredefinedValues(Translate.ACTUAL_NAME, new Translate());
             compiler.addPredefinedValues(Write.ACTUAL_NAME, new Write());
 
-            compiler.addPredefinedValues("white", new Colour(255, 255, 255));
-            compiler.addPredefinedValues("black", new Colour(0, 0, 0));
-            compiler.addPredefinedValues("red", new Colour(255, 0, 0));
-            compiler.addPredefinedValues("green", new Colour(0, 255, 0));
-            compiler.addPredefinedValues("blue", new Colour(0, 0, 255));
+            // Add constants
+            for (ColourConstant c: ColourConstant.values()) {
+                compiler.addPredefinedValues(c.getName(), c.createColour());
+            }
 
             Pair<Program, Scope> main = compiler.compile(CharStreams.fromFileName(args[0]));
 

@@ -16,6 +16,7 @@ import core.statements.*;
 import core.values.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.ColourConstant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -319,6 +320,17 @@ public class TestStaticChecker {
             }}));
         } catch (DSLException exception) {
             fail(exception.getMessage());
+        }
+    }
+
+    @Test
+    public void testEditConstant() {
+        try {
+            staticChecker.visit(scope, new VariableAssignment(ColourConstant.RED.getName(),
+                new Colour(0, 255, 255)));
+            fail(TRY_BLOCK_FAIL);
+        } catch (DSLException exception) {
+            // expected
         }
     }
 }
