@@ -1,13 +1,14 @@
 package core.values;
 
 import core.Scope;
-import core.exceptions.TypeError;
+import core.checkers.ArgumentChecker;
+import core.exceptions.DSLException;
 import core.expressions.ExpressionVisitor;
 
 import java.util.Map;
 
 public abstract class AbstractFunction extends Value {
-    public static final String NAME = "function";
+    public static final String NAME = "Function";
     public static final String PARAM_TARGET = "$target";
     public static final String PARAM_ON = "$on";
 
@@ -15,9 +16,7 @@ public abstract class AbstractFunction extends Value {
         super(AbstractFunction.NAME);
     }
 
-    public Value call(Scope scope) {
-        throw new TypeError("this function requires a target");
-    }
+    public abstract Value call(Scope scope);
 
     @Override
     public AbstractFunction asFunction() {
@@ -29,12 +28,22 @@ public abstract class AbstractFunction extends Value {
         return v.visit(ctx, this);
     }
 
+
+    public abstract String getFunctionName();
+
     /**
      * Check the function arguments of the function
      * @param scope
      * @return A value with the return type of the function
      */
-    public abstract Value checkArgs(Scope scope);
+    public Value checkArgs(Scope scope) {
+        try {
+            ArgumentChecker.check(scope, getParams(), getFunctionName());
+        } catch (DSLException e) {
+            throw e.withPosition(this);
+        }
+        return checkReturn();
+    }
 
     /**
      * Return a value with the return type of the function

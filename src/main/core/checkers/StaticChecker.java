@@ -1,9 +1,10 @@
 package core.checkers;
 
 import core.Scope;
-import core.exceptions.FunctionException;
+import core.exceptions.DSLException;
+import core.exceptions.FunctionNameException;
+import core.exceptions.NameError;
 import core.exceptions.TypeError;
-import core.exceptions.VariableException;
 import core.expressions.*;
 import core.statements.*;
 import core.values.*;
@@ -19,7 +20,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         String expressionB = ae.b().accept(ctx, this).getTypeName();
         if (!(expressionA.equals(IntegerValue.NAME) || expressionA.equals(Unknown.NAME)) ||
             !(expressionB.equals(IntegerValue.NAME) || expressionB.equals(Unknown.NAME))) {
-            throw new TypeError("Invalid arithmetic expression");
+            throw new TypeError("Invalid arithmetic expression").withPosition(ae);
         }
         return new IntegerValue(0);
     }
@@ -30,7 +31,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         String expressionB = ce.b().accept(ctx, this).getTypeName();
         if (!(expressionA.equals(IntegerValue.NAME) || expressionA.equals(Unknown.NAME)) ||
             !(expressionB.equals(IntegerValue.NAME) || expressionB.equals(Unknown.NAME))) {
-            throw new TypeError("Invalid comparison expression");
+            throw new TypeError("Invalid comparison expression").withPosition(ce);
         }
         return new BooleanValue(true);
     }
@@ -40,19 +41,23 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         Scope funcScope = ctx.getGlobalScope().newChildScope();
         String name = fc.identifier();
         if (!ctx.hasVar(name)) {
-            throw new FunctionException("Called function \"" + name + "\" is not defined");
+            throw new FunctionNameException("Called function \"" + name + "\" is not defined").withPosition(fc);
         }
         for (Map.Entry<String, Expression> entry : fc.args().entrySet()) {
             funcScope.setLocalVar(entry.getKey(), entry.getValue().accept(ctx, this));
         }
-        return ctx.getVar(name).asFunction().accept(funcScope, this);
+        try {
+            return ctx.getVar(name).asFunction().accept(funcScope, this);
+        } catch (DSLException e) {
+            throw e.withPosition(fc);
+        }
     }
 
     @Override
     public Value visit(Scope ctx, VariableExpression ve) {
         String name = ve.identifier();
         if (!ctx.hasVar(name)) {
-            throw new VariableException("Variable " + name + " is undefined");
+            throw new NameError("Variable \"" + name + "\" is not defined").withPosition(ve);
         }
         return ctx.getVar(name);
     }
@@ -88,7 +93,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         String name = fd.name();
 
         if (ctx.hasVar(name)) {
-            throw new FunctionException("declared function " + name + " already exists");
+            throw new FunctionNameException("Declared function \"" + name + "\" already exists").withPosition(fd);
         }
         ctx.setVar(fd.name(), new Function(fd.statements(), fd.params()));
 
@@ -106,6 +111,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, IfStatement is) {
+        is.cond().accept(ctx, this);
         for (Statement s : is.statements()) {
             s.accept(ctx, this);
         }
@@ -115,7 +121,8 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     @Override
     public Value visit(Scope ctx, LoopStatement ls) {
         Value value = ls.array().accept(ctx, this);
-        if (!Objects.equals(value.getTypeName(), Array.NAME)) throw new FunctionException("Cannot loop over non-array value"); // TODO - new exception
+        if (!Objects.equals(value.getTypeName(), Array.NAME))
+            throw new TypeError("Cannot loop over non-array value").withPosition(ls.array());
         Array array = value.asArray();
         Scope loopScope = ctx.newChildScope();
         loopScope.setLocalVar(ls.loopVar(), array.get().size() > 0 ? array.get().get(0) : new Unknown());
@@ -134,7 +141,8 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     public Value visit(Scope ctx, VariableAssignment va) {
         if (ctx.hasVar(va.dest())) {
             Value prevVal = ctx.getVar(va.dest());
-            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new FunctionException("Cannot redefine function: " + va.dest());
+            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME))
+                throw new NameError("Cannot redefine function: " + va.dest()).withPosition(va);
         }
         ctx.setVar(va.dest(), va.expr().accept(ctx, this));
         return null;

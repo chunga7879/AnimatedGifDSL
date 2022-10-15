@@ -2,7 +2,6 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
-import core.checkers.ArgumentChecker;
 import core.values.Image;
 import core.values.*;
 
@@ -24,9 +23,8 @@ public class CreateRectangle extends AbstractFunction {
     }
 
     @Override
-    public Image checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-        return checkReturn();
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override

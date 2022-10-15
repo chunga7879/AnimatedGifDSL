@@ -5,6 +5,7 @@ import core.expressions.arithmetic.*;
 import core.expressions.comparison.*;
 import core.statements.*;
 import core.values.*;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.util.*;
@@ -117,11 +118,11 @@ public class GifDSLConverter {
             Expression inputValue = convertExpression(withStatementContext.expression());
             args.put(parameterName, inputValue);
         }
-        if (returnVariable == null) {
-            return new ExpressionWrapper(new FunctionCall(functionName, args));
-        } else {
-            return new VariableAssignment(returnVariable, new FunctionCall(functionName, args));
-        }
+        FunctionCall funcCall = withExpressionPosition(new FunctionCall(functionName, args), functionCtx);
+        Statement statement = returnVariable == null ?
+            new ExpressionWrapper(funcCall) :
+            new VariableAssignment(returnVariable, funcCall);
+        return withStatementLine(statement, functionCtx);
     }
 
     /**
@@ -163,7 +164,7 @@ public class GifDSLConverter {
             }
         }
         statements.addAll(convertStatements(innerStatementCtxs));
-        return new FunctionDefinition(functionName, statements, parameters);
+        return withStatementLine(new FunctionDefinition(functionName, statements, parameters), defineCtx);
     }
 
     /**
@@ -178,7 +179,11 @@ public class GifDSLConverter {
         Expression expression1 = convertArithmetic(comparisonCtx.arithmetic(0));
         Expression expression2 = convertArithmetic(comparisonCtx.arithmetic(1));
         List<Statement> innerStatements = convertStatements(innerStatementCtxs);
-        return new IfStatement(new ComparisonExpression(expression1, expression2, comparator), innerStatements);
+        ComparisonExpression comparison = withExpressionPosition(
+            new ComparisonExpression(expression1, expression2, comparator),
+            comparisonCtx
+        );
+        return withStatementLine(new IfStatement(comparison, innerStatements), ifCtx);
     }
 
     /**
@@ -197,7 +202,10 @@ public class GifDSLConverter {
             array = convertRange(loopCtx.range());
         }
         List<Statement> innerStatements = convertStatements(innerStatementCtxs);
-        return new LoopStatement(array, loopCtx.loop_variable().VARIABLE().getText(), innerStatements);
+        return withStatementLine(
+            new LoopStatement(array, loopCtx.loop_variable().VARIABLE().getText(), innerStatements),
+            loopCtx
+        );
     }
 
     private Array convertRange(RangeContext rangeCtx) {
@@ -207,7 +215,7 @@ public class GifDSLConverter {
         for (int i = min; i <= max; i++) {
             array.add(new IntegerValue(i));
         }
-        return new Array(array);
+        return withExpressionPosition(new Array(array), rangeCtx);
     }
 
     /**
@@ -216,7 +224,7 @@ public class GifDSLConverter {
      * @return
      */
     private Return convertReturn(Return_statementContext ctx) {
-        return new Return(convertExpression(ctx.expression()));
+        return withStatementLine(new Return(convertExpression(ctx.expression())), ctx);
     }
 
     /**
@@ -230,7 +238,7 @@ public class GifDSLConverter {
         } else if (expressionContext.TEXT() != null) {
             return convertString(expressionContext.TEXT());
         } else if (expressionContext.COLOUR() != null) {
-            return new Colour(expressionContext.COLOUR().getText());
+            return convertColour(expressionContext.COLOUR());
         }
         throw new DSLParserException("Invalid expression");
     }
@@ -243,11 +251,11 @@ public class GifDSLConverter {
     private Expression convertArithmetic(ArithmeticContext arithmeticContext) {
         if (arithmeticContext.num_or_var().size() == 2) {
             ArithmeticVisitor operator = convertArithmeticOperator(arithmeticContext.OPERATOR().getText());
-            return new ArithmeticExpression(
+            return withExpressionPosition(new ArithmeticExpression(
                 convertNumOrVar(arithmeticContext.num_or_var(0)),
                 convertNumOrVar(arithmeticContext.num_or_var(1)),
                 operator
-            );
+            ), arithmeticContext);
         } else if (arithmeticContext.num_or_var().size() == 1) {
             return convertNumOrVar(arithmeticContext.num_or_var(0));
         } else {
@@ -277,7 +285,7 @@ public class GifDSLConverter {
      * @return
      */
     private VariableExpression convertVariable(TerminalNode variableNode) {
-        return new VariableExpression(getVariableName(variableNode));
+        return withExpressionPosition(new VariableExpression(getVariableName(variableNode)), variableNode);
     }
 
     /**
@@ -286,7 +294,7 @@ public class GifDSLConverter {
      * @return
      */
     private IntegerValue convertInteger(TerminalNode integerNode) {
-        return new IntegerValue(getIntegerValue(integerNode));
+        return withExpressionPosition(new IntegerValue(getIntegerValue(integerNode)), integerNode);
     }
 
     /**
@@ -297,7 +305,16 @@ public class GifDSLConverter {
     private StringValue convertString(TerminalNode stringNode) {
         String string = stringNode.getText();
         // to remove the quotation marks
-        return new StringValue(string.substring(1, string.length() - 1));
+        return withExpressionPosition(new StringValue(string.substring(1, string.length() - 1)), stringNode);
+    }
+
+    /**
+     * Convert a colour from a TerminalNode
+     * @param colourNode
+     * @return
+     */
+    private Colour convertColour(TerminalNode colourNode) {
+        return withExpressionPosition(new Colour(colourNode.getText()), colourNode);
     }
 
     /**
@@ -349,4 +366,58 @@ public class GifDSLConverter {
             default -> throw new DSLParserException("Invalid operator");
         };
     }
+
+    /**
+     * Set line position in program for statement
+     * @param statement The statement
+     * @param ctx The context of where the statement is
+     * @return
+     * @param <T>
+     */
+    private static <T extends Statement> T withStatementLine(T statement, ParserRuleContext ctx) {
+        statement.setPosition(ctx.getStart().getLine());
+        return statement;
+    }
+
+    /**
+     * Set line and column position in program for expression
+     * @param expression The expression
+     * @param ctx The context of where the expression is
+     * @return
+     * @param <T>
+     */
+    private static <T extends Expression> T withExpressionPosition(T expression, ParserRuleContext ctx) {
+        expression.setPosition(ctx.getStart().getLine(), ctx.getStart().getCharPositionInLine());
+        return expression;
+    }
+
+    /**
+     * Set line and column position in program for expression
+     * @param expression The expression
+     * @param node The TerminalNode of where the expression is
+     * @return
+     * @param <T>
+     */
+    private static <T extends Expression> T withExpressionPosition(T expression, TerminalNode node) {
+        expression.setPosition(node.getSymbol().getLine(), node.getSymbol().getCharPositionInLine());
+        return expression;
+    }
+
+//    /**
+//     * Get line in program for context
+//     * @param ctx
+//     * @return
+//     */
+//    private static int getContextLine(ParserRuleContext ctx) {
+//        return ctx.getStart().getLine();
+//    }
+//
+//    /**
+//     * Get the column position in line in program for context
+//     * @param ctx
+//     * @return
+//     */
+//    private static int getContextColumnPosition(ParserRuleContext ctx) {
+//        return ctx.getStart().getCharPositionInLine();
+//    }
 }

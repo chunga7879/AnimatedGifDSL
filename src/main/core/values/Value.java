@@ -8,7 +8,7 @@ import core.expressions.ExpressionVisitor;
 import core.expressions.arithmetic.ArithmeticVisitor;
 import core.expressions.comparison.ComparisonVisitor;
 
-public abstract class Value implements Expression {
+public abstract class Value extends Expression {
     private final String typeName;
 
     public Value(String typeName) {

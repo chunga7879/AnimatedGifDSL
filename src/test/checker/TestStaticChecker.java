@@ -49,7 +49,7 @@ public class TestStaticChecker {
             staticChecker.visit(scope, new FunctionDefinition("foo", statements, params));
             staticChecker.visit(scope, new FunctionCall("foo", new HashMap<>()));
         } catch (DSLException e) {
-            System.out.println(e.message());
+            System.out.println(e.getMessage());
             fail(CATCH_BLOCK_FAIL);
         }
     }
