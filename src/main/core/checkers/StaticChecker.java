@@ -8,10 +8,16 @@ import core.expressions.*;
 import core.statements.*;
 import core.values.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class StaticChecker implements ExpressionVisitor<Scope, Value>, StatementVisitor<Scope, Value> {
+    private List<String> constants;
+
+    public StaticChecker(List<String> constants) {
+        this.constants = constants;
+    }
 
     @Override
     public Value visit(Scope ctx, ArithmeticExpression ae) {
@@ -132,9 +138,14 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, VariableAssignment va) {
-        if (ctx.hasVar(va.dest())) {
-            Value prevVal = ctx.getVar(va.dest());
-            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new FunctionException("Cannot redefine function: " + va.dest());
+        String dest = va.dest();
+        if (constants.contains(dest)) {
+            throw new VariableException("Cannot edit constant: " + dest);
+        }
+        if (ctx.hasVar(dest)) {
+            Value prevVal = ctx.getVar(dest);
+            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME))
+                throw new FunctionException("Cannot redefine function: " + dest);
         }
         if (va.local()) {
             ctx.setLocalVar(va.dest(), va.expr().accept(ctx, this));

@@ -14,6 +14,7 @@ import core.expressions.FunctionCall;
 import core.values.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.ColourConstant;
 
 import java.util.HashMap;
 
@@ -29,7 +30,7 @@ public class TestBuiltInFunctionCalls {
     public void runBefore() {
         scope = new Scope();
         setUpScope();
-        staticChecker = new StaticChecker();
+        staticChecker = new StaticChecker(ColourConstant.getNameList());
     }
 
     public void testFunctionCallHelper(String functionName, HashMap<String, Expression> args) {
