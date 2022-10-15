@@ -2,7 +2,7 @@ lexer grammar GifDSLLexer;
 
 options { caseInsensitive=true; }
 
-START_NL      : [ \t\r\n]*[\r\n]+ ;
+START_NL      : [ \t\r\n]*[\r\n]+ -> channel(HIDDEN);
 INDENT        : [ \t]+ ;
 COMMENT       : '//' ~[\r\n]* -> mode(OPTIONS_MODE);
 DEFINE        : 'DEFINE' -> mode(OPTIONS_MODE);
