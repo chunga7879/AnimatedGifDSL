@@ -1,4 +1,5 @@
-// video.gliffy
+// WARNING: this may take a long time to run
+
 DEFINE RANDOM-COLOUR image WITH (min, max):
   RANDOM AS r
     WITH min: min
@@ -181,35 +182,47 @@ DEFINE USER-STUDY2 WITH (i):
   RETURN frame
 
 // user study 1
-DEFINE USER-STUDY1 WITH (i):
-  CREATE-COLOUR AS colour
-    WITH r: 0
-    WITH g: 0
-    WITH b: 0
+CREATE-LIST AS frames4
+DEFINE JUMP image WITH (y, background):
+  LOOP i IN (1, 3):
+    SET y + 10 AS y
+    OVERLAY image ON background AS frame
+      WITH x: 150
+      WITH y: y
+    ADD frames4
+      WITH item: frame
+
+  LOOP i IN (1, 3):
+    SET y - 10 AS y
+    OVERLAY image ON background AS frame
+      WITH x: 150
+      WITH y: y
+    ADD frames4
+      WITH item: frame
+DEFINE USER-STUDY1:
+  LOAD "./src/test/e2e/testImages/cat.png" AS cat
+
+  SET 200 AS y
+  SET 200 AS x
+
+  RESIZE cat
+    WITH width: 120
+    WITH height: 90
 
   CREATE-RECTANGLE AS background
     WITH width: 400
     WITH height: 400
-    WITH colour: colour
+    WITH colour: #001339
 
-  // TODO change path to userStudyImages folder (#89)
-  LOAD "./src/test/e2e/testImages/cat.png" AS cat
-
-  RESIZE cat AS cat
-    with width: 100
-    with height: 100
-
-  CREATE-LIST AS frames4
-
-  SET 200 AS y
-  SET 300 AS x
-
-  ROTATE cat AS rotatedCat
-    WITH angle: i * 10
-  OVERLAY rotatedCat ON background AS frame
-    WITH x: x
-    WITH y: y
-  RETURN frame
+  LOOP i IN (1, 15):
+    JUMP cat
+      WITH y: 200
+      WITH background: background
+    OVERLAY cat ON background AS frame
+      WITH x: 150
+      WITH y: y
+    ADD frames4
+      WITH item: frame
 
 CREATE-LIST as frames
 
@@ -243,8 +256,11 @@ LOOP i in (1, 12):
     ADD frames
       WITH item: f
 
+    USER-STUDY1
+
     LOOP i in (1, 35):
-      USER-STUDY1 as us1
+      INDEX as us1
+        WITH a: frames4
         WITH i: i
       USER-STUDY2 as us2
         WITH i: i

@@ -40,6 +40,7 @@ public class GifDSLCompiler extends DSLCompiler {
             new Translate(),
             new Write(),
             new Range(),
+            new Index(),
             new Concat()
         );
         for (AbstractFunction function : builtInFunctions) {
