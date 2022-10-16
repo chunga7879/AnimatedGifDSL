@@ -1,0 +1,91 @@
+// Set image to a random colour
+DEFINE RANDOM-COLOUR image WITH (min, max):
+  RANDOM AS r
+    WITH min: min
+    WITH max: max
+  RANDOM AS g
+    WITH min: min
+    WITH max: max
+  RANDOM AS b
+    WITH min: min
+    WITH max: max
+  CREATE-COLOUR AS colour
+    WITH r: r
+    WITH g: g
+    WITH b: b
+  COLOUR-FILL image
+    WITH colour: colour
+  RETURN image
+
+LOAD "examples/dvd-logo.png" AS dvd
+
+RESIZE dvd
+  WITH width: 40
+  WITH height: 20
+RANDOM-COLOUR dvd AS dvd
+  WITH min: 0
+  WITH max: 200
+
+CREATE-RECTANGLE AS background
+  WITH width: 400
+  WITH height: 400
+  WITH colour: WHITE
+
+GET-WIDTH dvd as dvd-width
+GET-HEIGHT dvd as dvd-height
+GET-WIDTH background as background-width
+GET-HEIGHT background as background-height
+
+CREATE-LIST AS frames
+
+SET background-width / 2 AS positionX
+SET background-height / 2 AS positionY
+RANDOM AS directionX
+  WITH min: 1
+  WITH max: 10
+SET 11 - directionX AS directionY
+
+LOOP i IN 1 TO 360:
+  SET positionX + directionX AS positionX
+  SET positionY + directionY AS positionY
+  IF (positionX < 0):
+    SET 0 AS positionX
+    SET directionX * -1 AS directionX
+    RANDOM-COLOUR dvd AS dvd
+      WITH min: 0
+      WITH max: 200
+  IF (positionX > background-width - dvd-width):
+    SET background-width - dvd-width AS positionX
+    SET directionX * -1 AS directionX
+    RANDOM-COLOUR dvd AS dvd
+      WITH min: 0
+      WITH max: 200
+  IF (positionY < 0):
+    SET 0 AS positionY
+    SET directionY * -1 AS directionY
+    RANDOM-COLOUR dvd AS dvd
+      WITH min: 0
+      WITH max: 200
+  IF (positionY > background-height - dvd-height):
+    SET background-height - dvd-height AS positionY
+    SET directionY * -1 AS directionY
+    RANDOM-COLOUR dvd AS dvd
+      WITH min: 0
+      WITH max: 200
+  OVERLAY dvd ON background AS frame
+    WITH x: positionX
+    WITH y: positionY
+  ADD frames
+    WITH item: frame
+
+CREATE-LIST AS editedFrames
+
+LOOP f IN frames:
+  FILTER f
+    WITH filtering: "invert"
+  ADD editedFrames
+    WITH item: f
+
+SAVE editedFrames
+  WITH duration: 4
+  WITH location: "examples/dvd.gif"

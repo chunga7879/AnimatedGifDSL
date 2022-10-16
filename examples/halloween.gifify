@@ -1,0 +1,38 @@
+LOAD "./examples/pumpkin.png" AS pumpkin
+
+CREATE-RECTANGLE AS background
+  WITH width: 500
+  WITH height: 500
+  WITH colour: black
+
+DEFINE MOVE-ROTATE image WITH (background, angle, x, y):
+  ROTATE image
+    WITH angle: angle
+  OVERLAY image ON background AS frame
+    WITH x: x
+    WITH y: y
+  RETURN frame
+
+CREATE-LIST AS frames
+
+SET 0 AS x
+SET 0 AS y
+
+RESIZE pumpkin
+  WITH width: 200
+  WITH height: 200
+
+LOOP i in 0 to 50:
+  SET x + 8 AS x
+  SET y + 8 AS y
+  MOVE-ROTATE pumpkin AS frame
+    WITH background: background
+    WITH angle: i * 40
+    WITH x: x
+    WITH y: y
+  ADD frames
+    WITH item: frame
+
+SAVE frames
+  WITH duration: 5
+  WITH location: "./examples/halloween.gif"

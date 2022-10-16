@@ -1,0 +1,33 @@
+LOAD "./examples/cat.png" AS cat
+
+CREATE-COLOUR AS colour
+  WITH r: 0
+  WITH g: 0
+  WITH b: 0
+
+CREATE-RECTANGLE AS background
+  WITH width: 400
+  WITH height: 400
+  WITH colour: colour
+
+RESIZE cat AS cat
+  with width: 200
+  with height: 200
+
+CREATE-LIST AS frames
+
+SET 100 AS y
+SET 100 AS x
+
+LOOP i in 1 TO 360:
+  ROTATE cat AS rotatedCat
+    WITH angle: i
+  OVERLAY rotatedCat ON background AS frame
+    WITH x: x
+    WITH y: y
+  ADD frames
+    WITH item: frame
+
+SAVE frames
+  WITH duration: 5
+  WITH location: "./examples/spinning-cat.gif"

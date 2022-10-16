@@ -1,0 +1,45 @@
+LOAD "./examples/cat.png" AS cat
+CREATE-LIST AS frames
+
+SET 155 AS y
+SET 140 AS x
+
+RESIZE cat
+  WITH width: 120
+  WITH height: 90
+
+CREATE-RECTANGLE AS background
+  WITH width: 400
+  WITH height: 400
+  WITH colour: #001339
+
+DEFINE JUMP image WITH (y, background):
+  LOOP i IN 1 TO 3:
+    SET y + 10 AS y
+    OVERLAY image ON background AS frame
+      WITH x: 140
+      WITH y: y
+    ADD frames
+      WITH item: frame
+
+  LOOP i IN 1 TO 3:
+   SET y - 10 AS y
+   OVERLAY image ON background AS frame
+     WITH x: 140
+     WITH y: y
+   ADD frames
+     WITH item: frame
+
+LOOP i IN 1 TO 15:
+  JUMP cat
+    WITH y: 155
+    WITH background: background
+  OVERLAY cat ON background AS frame
+    WITH x: 140
+    WITH y: y
+  ADD frames
+    WITH item: frame
+
+SAVE frames
+  WITH duration: 10
+  WITH location: "./examples/jumping-cat.gif"
