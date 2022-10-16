@@ -32,4 +32,9 @@ public class StringValue extends Value {
     public Value accept(ArithmeticVisitor av, Value b, Scope s) {
         return av.visit(this, b, s);
     }
+
+    @Override
+    public String toString() {
+        return this.s;
+    }
 }

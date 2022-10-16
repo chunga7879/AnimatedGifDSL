@@ -147,6 +147,54 @@ Comments are any lines starting with `//`.
 ```
 
 ### Built-in Functions
+### Miscellaneous
+`RANGE` - Create an array of integers [start, end)
+- start: an integer
+- end: an integer
+```
+RANGE as r
+  WITH start: 0
+  WITH end: 4
+LOOP i in r:
+  // will run 4 times: 0,1,2,3
+```
+
+`CONCAT` - Concatenate an array of strings and/or integers to a single string
+- v: the array
+```
+CREATE-LIST as strings
+ADD strings
+  WITH item: "a"
+ADD strings
+  WITH item: "b"
+ADD strings
+  WITH item: "c"
+  
+CONCAT as mystring
+  WITH v: strings
+// mystring = "abc"
+```
+
+`INDEX` - Return the element at `a[i]`.
+- a: the array
+- i: the index n the array
+```
+CREATE-LIST as strings
+ADD strings
+  WITH item: "a"
+ADD strings
+  WITH item: "b"
+  
+INDEX as idx1
+  WITH a: strings
+  WITH i: 0
+// idx1 = "a"
+
+INDEX as idx2
+  WITH a: strings
+  WITH i: 0
+// idx2 = "b"
+```
 #### File System
 Load - Create an image variable from an image file
 ```
