@@ -1,5 +1,7 @@
 # Project1Group15 - Gif DSL
 
+![Alt text](https://media0.giphy.com/media/o7nouq5RZguiuWZv0Y/giphy.gif?cid=790b7611d751fe8e3133a02a6ec9319cadbddb3a4700fe7d&rid=giphy.gif&ct=g)
+
 ### Basics
 - The goal of this language is to create a GIF file from a series of static images (PNG, JPEG, etc...) that are manipulated by the statements
 
@@ -21,15 +23,28 @@ The entry point to our program is `./src/main/Main.java`. You must specify the l
 Our language is similar to programming languages like Python with syntax that reflects natural language.
 
 The basic workflow of our code is:
-1. Load images from the computer
-2. Perform manipulations to the images
-3. Add the images to a list of frames
-4. Create the final gif from those frames
+1. Load images from your local device
+2. Create a background image either using a built-in function or a loaded image
+3. Perform manipulations to the images (`ROTATE`, `COLOUR-FILL`, etc...)
+4. Overlay the manipulated image onto the background
+5. Add the images to a list of frames for the GIF creation
+6. Create the final GIF from those frames
 
 Example:
 ```
 // Load an image of a dog from "./dog.png"
 LOAD "./dog.png" AS dog
+
+// Create background using CREATE-RECTANGLE
+CREATE-RECTANGLE AS background
+  WITH width: 400
+  WITH height: 400
+ 
+// Depends on the dog image's size, but typically will have to 
+// resize the image to overlay it on the background 
+RESIZE dog 
+  WITH width: 20
+  WITH height: 20
 
 // Create a list
 CREATE-LIST AS frames
@@ -39,15 +54,23 @@ LOOP i IN 1 TO 30:
   // Rotate the image of the dog by 1
   ROTATE dog
     WITH angle: 1
-  // Add the image to a list of frames
+    
+  // Overlay image on background created
+  OVERLAY dog ON background AS frame
+    WITH x: 200
+    WITH y: 200 
+    
+  // Add the manipulated image overlaid on the background to the list of GIF frames
   ADD frames
-    WITH item: dog
+    WITH item: frame
 
 // Save the list of frames as a Gif of 10 seconds to "./final.gif"
 SAVE frames
   WITH duration: 10
   WITH location: "./final.gif"
 ```
+
+****Note**: All programs should end with a new line (\n) character.**
 
 For information on language features & syntax: [API documentation](../main/documentation.md)
 
