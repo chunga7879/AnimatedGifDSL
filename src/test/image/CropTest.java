@@ -1,27 +1,23 @@
 package image;
 
 import builtin.functions.Crop;
-import builtin.functions.GetHeight;
 import com.sksamuel.scrimage.ImmutableImage;
-import com.sksamuel.scrimage.nio.PngWriter;
 import core.Scope;
+import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
 import files.filesystem.FileSystem;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CropTest {
     @Test
     public void cropSuccess() throws FileNotFoundException {
         Scope scope = new Scope();
-        ImmutableImage dvd = FileSystem.openImage("dvd-logo.png");
-        scope.setVar("$target", new Image(dvd));
+        ImmutableImage dvd = FileSystem.openImage("src/test/image/inputs/dvd-logo.png");
+        scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
         scope.setVar("width", new IntegerValue(1000));
         scope.setVar("height", new IntegerValue(300));
 

@@ -4,6 +4,8 @@ import builtin.functions.SetOpacity;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.nio.PngWriter;
 import core.Scope;
+import core.exceptions.InvalidArgumentException;
+import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +22,7 @@ public class SetOpacityTest {
             ImmutableImage catMouth = ImmutableImage.loader().fromFile("src/test/filtering/testInputs/cat.png");
             Image catImage = new Image(catMouth);
             Scope scope = new Scope();
-            scope.setVar("$target", catImage);
+            scope.setVar(AbstractFunction.PARAM_TARGET, catImage);
             scope.setVar("amount", new IntegerValue(80));
 
             SetOpacity opacityFunction = new SetOpacity();
@@ -38,7 +40,7 @@ public class SetOpacityTest {
             ImmutableImage catMouth = ImmutableImage.loader().fromFile("src/test/filtering/testInputs/cat.png");
             Image catImage = new Image(catMouth);
             Scope scope = new Scope();
-            scope.setVar("$target", catImage);
+            scope.setVar(AbstractFunction.PARAM_TARGET, catImage);
             scope.setVar("amount", new IntegerValue(0));
 
             SetOpacity opacityFunction = new SetOpacity();
@@ -56,7 +58,7 @@ public class SetOpacityTest {
             ImmutableImage catMouth = ImmutableImage.loader().fromFile("src/test/filtering/testInputs/cat.png");
             Image catImage = new Image(catMouth);
             Scope scope = new Scope();
-            scope.setVar("$target", catImage);
+            scope.setVar(AbstractFunction.PARAM_TARGET, catImage);
             scope.setVar("amount", new IntegerValue(110));
 
             SetOpacity opacityFunction = new SetOpacity();
@@ -65,8 +67,8 @@ public class SetOpacityTest {
             Assertions.fail("Illegal argument exception should have been thrown.");
         } catch (IOException exception) {
             Assertions.fail(exception.getMessage());
-        } catch (IllegalArgumentException illegalArgumentException) {
-            // Should catch IllegalArgumentException
+        } catch (InvalidArgumentException invalidArgumentException) {
+            // Should catch InvalidArgumentException
         }
     }
 }

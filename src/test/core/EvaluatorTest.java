@@ -1,7 +1,5 @@
-package test.core;
+package core;
 
-
-import core.Scope;
 import core.evaluators.Evaluator;
 import core.expressions.ArithmeticExpression;
 import core.expressions.ComparisonExpression;
@@ -31,12 +29,12 @@ public class EvaluatorTest {
 
         s.setVar(testVar, testInt);
 
-
+        HashMap<String, String> params = new HashMap<>();
         Function testFunc = new Function(new ArrayList<Statement>() {
             {
                 add(new VariableAssignment(testVar2, new VariableExpression(testVar)));
             }
-        });
+        }, params);
 
         testFunc.accept(s, new Evaluator());
 
@@ -58,16 +56,32 @@ public class EvaluatorTest {
                 called = true;
                 return testInt;
             }
+
+            @Override
+            public String getFunctionName() {
+                return null;
+            }
+
+            @Override
+            public Map<String, String> getParams() {
+                return null;
+            }
+
+            @Override
+            public Value checkReturn() {
+                return null;
+            }
         }
 
         Scope s = new Scope();
         s.setVar(testFuncID, new TestFunc());
 
+        HashMap<String, String> params = new HashMap<>();
         Function testFunc = new Function(new ArrayList<>() {
             {
-                add(new VariableAssignment(destVar, new FunctionCall(testFuncID, new HashMap<>(), s)));
+                add(new VariableAssignment(destVar, new FunctionCall(testFuncID, new HashMap<>())));
             }
-        });
+        }, params);
 
 
         testFunc.accept(s, new Evaluator());
@@ -86,6 +100,7 @@ public class EvaluatorTest {
 
         Scope s = new Scope();
         s.setVar(testInt, new IntegerValue(testIntVal));
+        HashMap<String, String> params = new HashMap<>();
 
         Function testFunc = new Function(new ArrayList<>() {
             {
@@ -93,10 +108,10 @@ public class EvaluatorTest {
                     {
                         add(new Return(new VariableExpression(testArg)));
                     }
-                }));
-                add(new VariableAssignment(destVar, new FunctionCall(userFunc, Map.of(testArg, new VariableExpression(testInt)), s)));
+                }, params));
+                add(new VariableAssignment(destVar, new FunctionCall(userFunc, Map.of(testArg, new VariableExpression(testInt)))));
             }
-        });
+        }, params);
         testFunc.accept(s, new Evaluator());
         assertEquals(s.getVar(destVar).asInteger().get(), testIntVal);
     }
@@ -108,13 +123,15 @@ public class EvaluatorTest {
         final String testArray = "testarray";
         final String loopVar = "i";
 
-        Array a = new Array();
-        for (int i = 0; i < 10; i++) {
-            a.add(new IntegerValue(i));
-        }
+        Array a = new Array(new ArrayList<>(){{
+            for (int i = 0; i < 10; i++) {
+                add(new IntegerValue(i));
+            }
+        }});
         s.setVar(testInt, new IntegerValue(0));
         s.setVar(testArray, a);
 
+        HashMap<String, String> params = new HashMap<>();
         Function testFunc = new Function(new ArrayList<>() {
             {
                 add(new LoopStatement(new VariableExpression(testArray), loopVar, new ArrayList<>() {{
@@ -124,7 +141,7 @@ public class EvaluatorTest {
                     );
                 }}));
             }
-        });
+        }, params);
         testFunc.accept(s, new Evaluator());
         assertEquals(s.getVar(testInt).asInteger().get(), 45);
     }
@@ -142,6 +159,7 @@ public class EvaluatorTest {
         s.setVar(varA, new BooleanValue(false));
         s.setVar(varB, new BooleanValue(false));
 
+        HashMap<String, String> params = new HashMap<>();
         Function testFunc = new Function(new ArrayList<>() {
             {
                 add(new IfStatement(
@@ -157,7 +175,7 @@ public class EvaluatorTest {
                     }}
                 ));
             }
-        });
+        }, params);
         testFunc.accept(s, new Evaluator());
 
         assertTrue(s.getVar(varA).asBoolean().get());

@@ -1,9 +1,9 @@
 package image;
 
-import builtin.functions.Crop;
 import builtin.functions.Resize;
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
 import files.filesystem.FileSystem;
@@ -16,8 +16,8 @@ class ResizeTest {
     @Test
     public void resizeSuccess() throws FileNotFoundException {
         Scope scope = new Scope();
-        ImmutableImage dvd = FileSystem.openImage("dvd-logo.png");
-        scope.setVar("$target", new Image(dvd));
+        ImmutableImage dvd = FileSystem.openImage("src/test/image/inputs/dvd-logo.png");
+        scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
         scope.setVar("width", new IntegerValue(100));
         scope.setVar("height", new IntegerValue(200));
 

@@ -1,0 +1,11 @@
+// car gif
+LOAD "examples/car-1.png" as car1
+LOAD "examples/car-2.png" as car2
+LOAD "examples/road.jpg" as road
+
+CREATE-LIST AS frames
+
+LOOP i in 1 TO 10:
+  OVERLAY car 1
+
+

@@ -1,9 +1,9 @@
 package image;
 
 import builtin.functions.Overlay;
-import builtin.functions.Rotate;
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
 import files.filesystem.FileSystem;
@@ -17,11 +17,11 @@ class OverlayTest {
     @Test
     public void overlaySuccess() throws FileNotFoundException {
         Scope scope = new Scope();
-        ImmutableImage dvd = FileSystem.openImage("dvd-logo.png");
-        scope.setVar("$target", new Image(dvd));
+        ImmutableImage dvd = FileSystem.openImage("src/test/image/inputs/dvd-logo.png");
+        scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
 
         ImmutableImage background = ImmutableImage.filled(2000, 2000, Color.WHITE);
-        scope.setVar("on", new Image(background));
+        scope.setVar(AbstractFunction.PARAM_ON, new Image(background));
         scope.setVar("x", new IntegerValue((2000 - dvd.width) / 2));
         scope.setVar("y", new IntegerValue((2000 - dvd.height) / 2));
 

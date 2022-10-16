@@ -23,10 +23,9 @@ This is the updated documentation file after Milestone 3.
   - List:
     - Stores a list of images
 - Variables are created when `AS [variable]` is used when a function is called
+  - Or when they are defined as function parameters or loop iterator variables
 - All variables/functions are case-insensitive
   - e.g. `SET 10 AS X` is the same as `set 10 as x`
-- Variables are global scoped and can be accessed anywhere if it has been created
-  - Parameters are function scoped
 - There are no reference variables, so multiple variables will never be a reference to the same object (i.e. image). Every built-in function will return a copy of any input and `RETURN` will always copy the value before setting to the function's `AS` variable.
 
 #### Constants
@@ -34,7 +33,7 @@ This is the updated documentation file after Milestone 3.
 - User-defined variables cannot have the same name as constants
 - All constants
   - Colours:
-    - Black, Grey, White, Red, Green, Blue, Yellow, Cyan, Magenta, Orange, Purple
+    - Black, Grey, White, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Purple
 
 ### Functions
 - Functions are statements that performs an action
@@ -43,8 +42,9 @@ This is the updated documentation file after Milestone 3.
   - This may not exist depending on the function
 - **Return variable** is the variable that will be assigned the return value of the function
   - This is required unless the function does not return anything or when the shortcut is used
-  - Shortcut: If a function returns a value, and you insert a variable into the target, you can omit the `AS [variable]` to assign the return value to the same variable. 
+  - **Shortcut**: If a built-in function returns a value, and you insert a variable into the target, you can omit the `AS [variable]` to assign the return value to the same variable. 
     - e.g. `FUNCTION var1` is equivalent to `FUNCTION var1 AS var1`
+    - For functions with `[variable] ON [variable]`, it will be assigned to the latter variable
 - **Parameters** are the secondary inputs of the function
   - In built-in functions, some parameters are optional
   - Can be in any order as long as all the required parameters are given values
@@ -58,8 +58,11 @@ This is the updated documentation file after Milestone 3.
 
 #### Define statement
 - Define statements create a custom function
+- Define is only allowed on the root level (i.e. not inside if, loop, define, etc...)
+- Define must be called before using the function
+- The statements inside can access any variables defined before the define call (and target/parameters)
 - Target and parameters are copies of the inputs passed in
-    - Target and parameters get deleted at the end of the function
+  - Target and parameters get deleted at the end of the function
 - Target, parameters, and return value are optional
 - **Return value** will be assigned to the return variable after the function completes
 ```
@@ -78,9 +81,9 @@ IF ([value] [>=, <=, >, <, =, !=] [value]):
   [...]
 ```
 Loop - Loop over the inner statements from numbers "from" to "to"
-- *Iterator variable* is assigned each number from "from" to "to" during the loop iterations
+- *Iterator variable* is assigned each number from "from" to "to" (inclusive) during the loop iterations
 ```
-LOOP [iterator variable] IN ([from], [to]):
+LOOP [iterator variable] IN [from] TO [to]:
   [...]
 ```
 Loop - Loop over the inner statements for each of the elements in the list
@@ -91,13 +94,110 @@ LOOP [iterator variable] IN [list of images]:
 ```
 
 #### Indent Rule
-Indents indicate function parameters and functions inside of if/loop/defines. The only rules are:
-  1) parameters / if / loop / define ends when it returns to the same indent level or below,
-  2) indent level shouldn't change if there is no function / if / loop / define before it. Tabs are equivalent to 2 spaces.
+Indents indicate function parameters and functions inside of control statement. The only rules are:
+1) Parameters / control statements end when it returns to the same indent level or below,
+2) Indent level shouldn't change if there is no function / control statement before it. Tabs are equivalent to 2 spaces.
+
+### Scoping
+- `DEFINE` and `LOOP` create a new scope inside:
+  - Variables first created (i.e. `AS [variable]` is used) inside the scope will be deleted at the end
+    - Parameters or iterator variable gets deleted when the function or loop ends
+  - Any outer-scope variable defined before an `DEFINE` and `LOOP` can be accessed inside it
+  - Parameters or iterator variables can be the same name as another variable already defined in its scope
+    - Any change to the parameter or iterator variable will not affect the outer-scope variable
+    - The name will refer back to the other variable afterwards
+- `IF` does not create a new scope inside
+
+Example: Parameter overlapping variable
+```
+SET 1 as a    // <- This a refers to the top-level variable
+SET 2 as b    // <- This b refers to the top-level variable
+DEFINE function WITH (a):
+  SET 3 AS a  // <- This a refers to the parameter
+  SET 4 AS b  // <- This b refers to the top-level variable
+SET 5 as a    // <- This a refers to the top-level variable
+SET 6 as b    // <- This b refers to the top-level variable
+```
+
+Example 2: Accessible variables
+```
+SET 0 AS x
+DEFINE function WITH (a):
+  // Can access x and a here
+  // Cannot access y, z, or i here
+SET 0 AS y
+IF (...):
+  SET 0 AS z
+  // Can access x, y, and z here
+  // Cannot access a or i here
+  function
+    WITH a: (...)
+  LOOP i in (...):
+    // Can access x, y, z, i here
+    // Cannot access a here
+// Can access x, y, and z here
+// Cannot access a, or i here
+```
+
+### Comments
+Comments are any lines starting with `//`.
+- Any text inside a comment will not be evaluated.
+- You can indent comments
+```
+// [comment]
+```
 
 ### Built-in Functions
+### Miscellaneous
+`RANGE` - Create an array of integers [start, end)
+- start: an integer
+- end: an integer
+```
+RANGE as r
+  WITH start: 0
+  WITH end: 4
+LOOP i in r:
+  // will run 4 times: 0,1,2,3
+```
+
+`CONCAT` - Concatenate an array of strings and/or integers to a single string
+- v: the array
+```
+CREATE-LIST as strings
+ADD strings
+  WITH item: "a"
+ADD strings
+  WITH item: "b"
+ADD strings
+  WITH item: "c"
+  
+CONCAT as mystring
+  WITH v: strings
+// mystring = "abc"
+```
+
+`INDEX` - Return the element at `a[i]`.
+- a: the array
+- i: the index n the array
+```
+CREATE-LIST as strings
+ADD strings
+  WITH item: "a"
+ADD strings
+  WITH item: "b"
+  
+INDEX as idx1
+  WITH a: strings
+  WITH i: 0
+// idx1 = "a"
+
+INDEX as idx2
+  WITH a: strings
+  WITH i: 0
+// idx2 = "b"
+```
 #### File System
-Load - Create an image variable from a image file
+Load - Create an image variable from an image file
 ```
 LOAD [file path] AS [variable name]
 ```
@@ -188,7 +288,7 @@ Filter - Apply a filter to an image
 *Supported Filters:* `"invert"`, `"greyscale"`, `"blur"`, `"sharpen"`, `"sepia"`, `"chrome"`
 ```
 FILTER [image] AS [variable name]
-  WITH filter: [filter name]
+  WITH filtering: [filter name]
 ```
 #### Custom Functions
 Define - Create a custom function
@@ -228,12 +328,6 @@ Add - Add a copy of an item to list
 ```
 ADD [list]
   WITH item: [item]
-```
-Add - Add a list to another list (items will be copied)
-- The final result will have order: `list1`, `list2`
-```
-ADD [list1]
-  WITH list: [item2]
 ```
 Create Colour - Create a colour from RGB values
 ```

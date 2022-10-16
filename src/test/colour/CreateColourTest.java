@@ -2,6 +2,7 @@ package colour;
 
 import builtin.functions.colour.CreateColour;
 import core.Scope;
+import core.exceptions.InvalidArgumentException;
 import core.values.Colour;
 import core.values.IntegerValue;
 import org.junit.jupiter.api.Assertions;
@@ -33,7 +34,7 @@ public class CreateColourTest {
             Colour colour = (Colour) createColour.call(scope);
             // CREATE-COLOUR should throw an exception given invalid colour value
             Assertions.assertTrue(false);
-        } catch (IllegalArgumentException illegalArgumentException) {
+        } catch (InvalidArgumentException invalidArgumentException) {
             Assertions.assertTrue(true);
         }
     }
