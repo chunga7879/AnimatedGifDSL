@@ -112,7 +112,6 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         }
 
         Function function = new Function(fd.statements(), fd.params());
-        ctx.setVar(fd.name(), function);
 
         // Check what would happen if defined function is called
         Scope childScope = ctx.getGlobalScope().newChildScope();
@@ -124,6 +123,8 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         } catch (DSLException e) {
             throw e.withPosition(fd);
         }
+
+        ctx.setVar(fd.name(), function);
 
         return null;
     }
