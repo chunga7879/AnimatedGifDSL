@@ -39,10 +39,10 @@ LOAD "./dog.png" AS dog
 CREATE-RECTANGLE AS background
   WITH width: 400
   WITH height: 400
- 
-// Depends on the dog image's size, but typically will have to 
-// resize the image to overlay it on the background 
-RESIZE dog 
+
+// Depends on the dog image's size, but typically will have to
+// resize the image to overlay it on the background
+RESIZE dog
   WITH width: 20
   WITH height: 20
 
@@ -54,12 +54,12 @@ LOOP i IN 1 TO 30:
   // Rotate the image of the dog by 1
   ROTATE dog
     WITH angle: 1
-    
+
   // Overlay image on background created
   OVERLAY dog ON background AS frame
     WITH x: 200
-    WITH y: 200 
-    
+    WITH y: 200
+
   // Add the manipulated image overlaid on the background to the list of GIF frames
   ADD frames
     WITH item: frame
@@ -90,3 +90,10 @@ Our static checker can apply checks to make sure the code runs beforehand. Here 
 And the static checker performs more minor checks which are not listed here.
 
 Our static checker will indicate the line and column of where the error occurred in the format `line:column`.
+
+### Running a `.gifify` file with in Intellij
+1. Select `Run` > `Edit configurations`
+2. Add the path to the `.gifify` file in `Program arguments`
+3. Click OK
+4. Navigate to `src/main`
+5. Right click `Main` and select `Run 'Main.main()'`

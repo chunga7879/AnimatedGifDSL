@@ -41,10 +41,12 @@ public class Main {
             // Quit early for -onlycheck
             if (parameters.contains("-onlycheck")) return;
 
+            long start = System.currentTimeMillis();
             System.out.println("[Gif DSL Runner] Starting runner");
             Evaluator evaluator = new Evaluator();
             evaluator.visit(main.b, main.a);
-            System.out.println("[Gif DSL Runner] Finished runner");
+            long end = System.currentTimeMillis();
+            System.out.println("[Gif DSL Runner] Finished runner in " + String.valueOf(end-start) + "ms");
         } catch (Exception e) {
             System.err.println(e.getMessage());
 //            throw e;
