@@ -22,7 +22,7 @@ public class UserStudyTwoTest {
               OVERLAY image ON background
                 WITH x: x
                 WITH y: y
-              RETURN image
+              RETURN background
             LOAD "src/test/e2e/userStudyImages/pumpkin.png" AS pumpkin
             CREATE-LIST AS frames
             SET 70 AS x

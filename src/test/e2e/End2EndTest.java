@@ -5,12 +5,15 @@ import core.evaluators.Evaluator;
 import core.exceptions.DSLException;
 import core.exceptions.NameError;
 import core.statements.Program;
+import core.values.Value;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import parser.GifDSLCompiler;
+
+import java.util.List;
 
 public class End2EndTest {
     private GifDSLCompiler compiler;
@@ -400,5 +403,36 @@ public class End2EndTest {
         } catch (DSLException e) {
             // expected
         }
+    }
+
+    @Test
+    public void testLoopUserDefinedFunctionParameter() {
+        String input = """
+            CREATE-LIST as list1
+            DEFINE func WITH (texts):
+              LOOP text IN texts:
+                ADD list1
+                  WITH item: text
+            CREATE-LIST as list2
+            ADD list2
+              WITH item: "hi1"
+            ADD list2
+              WITH item: "hi2"
+            func
+              WITH texts: list2
+            """;
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b, main.a);
+        Assertions.assertTrue(main.b.hasVar("list1"));
+        Assertions.assertTrue(main.b.hasVar("list2"));
+        List<Value> list1 = main.b.getVar("list1").asArray().get();
+        List<Value> list2 = main.b.getVar("list2").asArray().get();
+        Assertions.assertEquals(2, list1.size());
+        Assertions.assertEquals(2, list2.size());
+        Assertions.assertEquals("hi1", list1.get(0).asString().get());
+        Assertions.assertEquals("hi2", list1.get(1).asString().get());
+        Assertions.assertEquals("hi1", list2.get(0).asString().get());
+        Assertions.assertEquals("hi2", list2.get(1).asString().get());
     }
 }

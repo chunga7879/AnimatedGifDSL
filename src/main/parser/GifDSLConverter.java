@@ -127,7 +127,6 @@ public class GifDSLConverter {
             Expression target = convertExpression(functionCtx.function_target().expression());
             args.put(AbstractFunction.PARAM_TARGET, target);
         }
-        // TODO: add shortcut for as
         for (With_statementContext withStatementContext : withCtx) {
             String parameterName = getVariableName(withStatementContext.VARIABLE());
             Expression inputValue = convertExpression(withStatementContext.expression());
