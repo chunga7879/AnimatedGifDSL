@@ -1,21 +1,16 @@
 package parser;
 
 import core.Scope;
-import core.statements.ExpressionWrapper;
-import core.statements.LoopStatement;
-import core.statements.Program;
+import core.statements.*;
 import core.values.Array;
 import core.values.IntegerValue;
 import core.values.Value;
-import core.statements.*;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import parser.exceptions.DSLConverterError;
-
-import java.util.ArrayList;
-import java.util.List;
+import parser.exceptions.DSLParserError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +28,7 @@ public class GifCompilerTest {
             try {
                 compile(input);
                 Assertions.fail("Requires new line at the end");
-            } catch (DSLParserException e) {
+            } catch (DSLParserError e) {
                 System.out.println(e.getMessage());
             }
         }
