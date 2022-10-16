@@ -46,7 +46,21 @@ public class GifDSLConverter {
      * @return
      */
     public Program convertProgram(ProgramContext programCtx) {
-        return new Program(convertStatements(programCtx.statement()));
+        List<StatementContext> filteredStatements = filterOutComments(programCtx.statement());
+        return new Program(convertStatements(filteredStatements));
+    }
+
+    /**
+     * Remove comment statements from list
+     * @param statementCtxs
+     * @return
+     */
+    public List<StatementContext> filterOutComments(List<StatementContext> statementCtxs) {
+        List<StatementContext> filtered = new ArrayList<>();
+        for (StatementContext statement : statementCtxs) {
+            if (statement.COMMENT() == null) filtered.add(statement);
+        }
+        return filtered;
     }
 
     /**
@@ -59,14 +73,12 @@ public class GifDSLConverter {
         List<Statement> statements = new ArrayList<>();
         while (statementCtxQueue.size() > 0) {
             StatementContext statement = statementCtxQueue.remove();
-            if (statement.COMMENT() == null) {
-                int indent = countIndent(statement);
-                List<StatementContext> innerStatements = new ArrayList<>();
-                while (statementCtxQueue.size() > 0 && countIndent(statementCtxQueue.peek()) > indent) {
-                    innerStatements.add(statementCtxQueue.remove());
-                }
-                statements.add(convertStatement(statement, innerStatements));
+            int indent = countIndent(statement);
+            List<StatementContext> innerStatements = new ArrayList<>();
+            while (statementCtxQueue.size() > 0 && countIndent(statementCtxQueue.peek()) > indent) {
+                innerStatements.add(statementCtxQueue.remove());
             }
+            statements.add(convertStatement(statement, innerStatements));
         }
         return statements;
     }

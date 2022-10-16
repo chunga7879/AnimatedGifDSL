@@ -1,9 +1,7 @@
 package parser;
 
 import core.Scope;
-import core.statements.ExpressionWrapper;
-import core.statements.LoopStatement;
-import core.statements.Program;
+import core.statements.*;
 import core.values.Array;
 import core.values.IntegerValue;
 import core.values.Value;
@@ -12,11 +10,96 @@ import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import parser.exceptions.DSLConverterError;
+import parser.exceptions.DSLParserError;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GifCompilerTest {
+
+    @Test
+    public void testRequireNewLineAtEnd() {
+        List<String> inputs = new ArrayList<>() {{
+            add("DO hello");
+            add("DO hello\n// hello");
+            add("Do hello\n     ");
+        }};
+        for (String input : inputs) {
+            try {
+                compile(input);
+                Assertions.fail("Requires new line at the end");
+            } catch (DSLParserError e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    @Test
+    public void testEmptyLinesAndNewLines() {
+        String newLineAtStartAndEnd = "\nDO hello\n";
+        String newLineAtStartAndEnd2 = "\r\n\r\nDO hello\r\n\r\n";
+        String noNewLineAtStart = "DO hello\r\n";
+        String emptyLinesBetween = "DO hello\r\n\r\n\r\nDO something\r\n";
+        String emptyLinesWithSpaceBetween = "DO hello\r\n\r\n  \r\n  \r\nDO something\r\n \r\n\r\n\tWITH x: 0\r\n";
+        String newLineAtStartAndEndWithEmptyLine = "  \nDo hello  \n    \n";
+        List<Pair<String, Integer>> inputs = new ArrayList<>() {{
+            add(new Pair<>(newLineAtStartAndEnd, 1));
+            add(new Pair<>(newLineAtStartAndEnd2, 1));
+            add(new Pair<>(noNewLineAtStart, 1));
+            add(new Pair<>(emptyLinesBetween, 2));
+            add(new Pair<>(emptyLinesWithSpaceBetween, 2));
+            add(new Pair<>(newLineAtStartAndEndWithEmptyLine, 1));
+        }};
+        for (Pair<String, Integer> input : inputs) {
+            Program program = compile(input.a).a;
+            Assertions.assertEquals(input.b, program.statements().size());
+            for (Statement statement : program.statements()) {
+                Assertions.assertTrue(statement instanceof ExpressionWrapper);
+            }
+        }
+    }
+
+    @Test
+    public void testSpaces() {
+        String lotsOfSpaceBetween = "     IF   (    x     >      hello   )   :  \n";
+        String lotsOfTabBetween = "\t\t\t\t\t\tIF\t\t\t(\t\t\tx\t\t\t\t>\t\t\t\thello\t\t\t)\t:\t\t\t\t\n";
+        String lotsOfSpaceAndTabBetween = "  \t   IF \t  ( \t   x  \t   >  \t    hello \t  )  \t : \t  \n";
+        List<String> inputs = new ArrayList<>() {{
+            add(lotsOfSpaceBetween);
+            add(lotsOfTabBetween);
+            add(lotsOfSpaceAndTabBetween);
+        }};
+        for (String input : inputs) {
+            Program program = compile(input).a;
+            Assertions.assertEquals(1, program.statements().size());
+            Assertions.assertTrue(program.statements().get(0) instanceof IfStatement);
+        }
+    }
+
+    @Test
+    public void testComments() {
+        String input = """
+            // comment 1
+            DEFINE func1 b WITH (c):
+              // comment 2
+              IF (x > 2):
+                               // comment 3
+                DO a
+                     // comment 4
+            // comment 5
+                        //comment 6
+            """;
+        Program program = compile(input).a;
+        Assertions.assertEquals(1, program.statements().size());
+        Assertions.assertTrue(program.statements().get(0) instanceof FunctionDefinition);
+        FunctionDefinition funcDef = (FunctionDefinition) program.statements().get(0);
+        Assertions.assertEquals(2, funcDef.statements().size());
+        Assertions.assertTrue(funcDef.statements().get(0) instanceof VariableAssignment);
+        Assertions.assertTrue(funcDef.statements().get(1) instanceof IfStatement);
+        IfStatement ifStatement = (IfStatement) funcDef.statements().get(1);
+        Assertions.assertEquals(1, ifStatement.statements().size());
+        Assertions.assertTrue(ifStatement.statements().get(0) instanceof ExpressionWrapper);
+    }
 
     @Test
     public void testCompileDefine() {
