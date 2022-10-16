@@ -1,9 +1,6 @@
 package core;
 
-import core.checkers.TypeChecker;
-import core.exceptions.FunctionNameException;
 import core.exceptions.NameError;
-import core.values.AbstractFunction;
 import core.values.Value;
 
 import java.util.HashMap;
@@ -87,11 +84,6 @@ public class Scope {
      * @param v
      */
     public void setVar(String name, Value v) {
-        // TODO: might want to split storing for values and functions
-        if (hasVar(name)) {
-            Value prevVal = getVar(name);
-            if (TypeChecker.checkValueIsType(prevVal, AbstractFunction.NAME)) throw new FunctionNameException("Cannot redefine function: " + name);
-        }
         if (!this.vars.containsKey(name) && this.hasParent() && this.parent.hasVar(name)) {
             this.parent.setVar(name, v);
         } else {
@@ -105,11 +97,6 @@ public class Scope {
      * @param v
      */
     public void setLocalVar(String name, Value v) {
-        // TODO: might want to split storing for values and functions
-        if (this.vars.containsKey(name)) {
-            Value prevVal = this.vars.get(name);
-            if (TypeChecker.checkValueIsType(prevVal, AbstractFunction.NAME)) throw new FunctionNameException("Cannot redefine function: " + name);
-        }
         this.vars.put(name, v);
     }
 

@@ -25,4 +25,13 @@ public final class TypeChecker {
         String valueTypeName = value.getTypeName();
         return valueTypeName.equals(typeName) || typeName.equals(Unknown.NAME);
     }
+
+    /**
+     * Check if the type of the value is Unknown
+     * @param value
+     * @return
+     */
+    public static boolean checkValueIsUnknown(Value value) {
+        return value.getTypeName().equals(Unknown.NAME);
+    }
 }
