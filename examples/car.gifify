@@ -1,7 +1,7 @@
 // car gif
-LOAD "examples/car-1.png" as car1
-LOAD "examples/car-2.png" as car2
-LOAD "examples/road.jpg" as road
+LOAD "examples/exampleImages/car-1.png" as car1
+LOAD "examples/exampleImages/car-2.png" as car2
+LOAD "examples/exampleImages/road.jpg" as road
 
 CREATE-LIST AS frames
 

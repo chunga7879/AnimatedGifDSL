@@ -1,5 +1,5 @@
 // spongebob gif
-LOAD "examples/spongebob.png" as krabbyPatty
+LOAD "examples/exampleImages/spongebob.png" as krabbyPatty
 
 CREATE-LIST AS frames
 
@@ -38,4 +38,4 @@ Loop i in 5 TO 0:
 
 SAVE reversedFrames
   WITH duration: 5
-  WITH location: "examples/spongebob.gif"
+  WITH location: "examples/exampleOutputs/spongebob.gif"
