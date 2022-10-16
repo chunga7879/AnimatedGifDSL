@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Range extends AbstractFunction {
-    private final static String ACTUAL_NAME = "Range";
+    public final static String ACTUAL_NAME = "Range";
 
     @Override
     public Value call(Scope scope) {

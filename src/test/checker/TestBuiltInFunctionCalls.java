@@ -79,7 +79,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallAdd() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Array());
+            put(AbstractFunction.PARAM_TARGET, new Array());
             put("item", new IntegerValue(1));
         }};
         testFunctionCallHelper(Add.ACTUAL_NAME, args);
@@ -93,6 +93,14 @@ public class TestBuiltInFunctionCalls {
             put("colour", new Colour(1, 2, 3));
         }};
         testFunctionCallHelper(ColourFill.ACTUAL_NAME, args);
+    }
+
+    @Test
+    public void testFunctionCallConcat() {
+        HashMap<String, Expression> args = new HashMap<>() {{
+            put("v", new Array());
+        }};
+        testFunctionCallHelper(Concat.ACTUAL_NAME, args);
     }
 
     @Test
@@ -151,6 +159,15 @@ public class TestBuiltInFunctionCalls {
     }
 
     @Test
+    public void testFunctionCallIndex() {
+        HashMap<String, Expression> args = new HashMap<>() {{
+            put("a", new Array());
+            put("i", new IntegerValue(0));
+        }};
+        testFunctionCallHelper(Index.ACTUAL_NAME, args);
+    }
+
+    @Test
     public void testFunctionCallLoad() {
         HashMap<String, Expression> args = new HashMap<>() {{
             put(AbstractFunction.PARAM_TARGET, new StringValue("string"));
@@ -173,7 +190,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallPrint() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new StringValue("string"));
+            put(AbstractFunction.PARAM_TARGET, new StringValue("string"));
         }};
         testFunctionCallHelper(Print.ACTUAL_NAME, args);
     }
@@ -185,6 +202,15 @@ public class TestBuiltInFunctionCalls {
             put("max", new IntegerValue(2));
         }};
         testFunctionCallHelper(Random.ACTUAL_NAME, args);
+    }
+
+    @Test
+    public void testFunctionCallRange() {
+        HashMap<String, Expression> args = new HashMap<>() {{
+            put("start", new IntegerValue(1));
+            put("end", new IntegerValue(2));
+        }};
+        testFunctionCallHelper(Range.ACTUAL_NAME, args);
     }
 
     @Test
@@ -211,7 +237,7 @@ public class TestBuiltInFunctionCalls {
     @Test
     public void testFunctionCallSave() {
         HashMap<String, Expression> args = new HashMap<>() {{
-            put("$target", new Array());
+            put(AbstractFunction.PARAM_TARGET, new Array());
             put("duration", new IntegerValue(1));
             put("location", new StringValue("string"));
         }};
