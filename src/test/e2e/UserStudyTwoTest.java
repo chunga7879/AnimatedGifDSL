@@ -25,7 +25,7 @@ public class UserStudyTwoTest {
                 WITH x: x
                 WITH y: y
               RETURN image
-            LOAD "./pumpkin.png" AS pumpkin
+            LOAD "src/test/e2e/userStudyImages/pumpkin.png" AS pumpkin
             CREATE-LIST AS frames
             SET 70 AS x
             SET 50 AS y
@@ -47,7 +47,7 @@ public class UserStudyTwoTest {
                 WITH item: frame
             SAVE frames
               WITH duration: 7
-              WITH location: "./halloween.gif"
+              WITH location: "src/test/e2e/userStudyImages/halloween.gif"
             """;
         GifDSLCompiler compiler = new GifDSLCompiler();
         compiler.addPredefinedValues("create-rectangle", new CreateRectangle());

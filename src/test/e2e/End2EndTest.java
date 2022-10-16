@@ -1,5 +1,6 @@
 package e2e;
 
+import builtin.functions.*;
 import builtin.functions.Print;
 import builtin.functions.Random;
 import builtin.functions.Set;
@@ -10,6 +11,7 @@ import core.exceptions.NameError;
 import core.statements.Program;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,22 @@ public class End2EndTest {
         compiler.setEnableStaticChecker(true);
         compiler.setEnableShortcuts(true);
         evaluator = new Evaluator();
+    }
+
+    GifDSLCompiler compiler;
+    @BeforeEach
+    public void beforeEach() {
+        compiler = new GifDSLCompiler();
+        compiler.addPredefinedValues(ColourFill.ACTUAL_NAME, new ColourFill());
+        compiler.addPredefinedValues(Save.ACTUAL_NAME, new Save());
+        compiler.addPredefinedValues(Add.ACTUAL_NAME, new Add());
+        compiler.addPredefinedValues(Rotate.ACTUAL_NAME, new Rotate());
+        compiler.addPredefinedValues(Overlay.ACTUAL_NAME, new Overlay());
+        compiler.addPredefinedValues(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
+        compiler.addPredefinedValues(CreateList.ACTUAL_NAME, new CreateList());
+        compiler.addPredefinedValues(Load.ACTUAL_NAME, new Load());
+        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
+        compiler.addPredefinedValues(Resize.ACTUAL_NAME, new Resize());
     }
 
     @Test
@@ -92,6 +110,187 @@ public class End2EndTest {
             """;
         Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
         evaluator.visit(main.b, main.a);
+    }
+
+    @Test
+    public void testSaveProgram() {
+        String input = """
+            CREATE-RECTANGLE AS background
+              WITH width: 400
+              WITH height: 400
+              WITH colour: #82A24F
+                        
+            LOAD "src/test/e2e/testImages/cat.png" AS cat
+            
+            RESIZE cat AS smallerCat
+              WITH width: 20
+              WITH height: 20
+            
+            CREATE-LIST AS frames
+            
+            OVERLAY smallerCat ON background AS frame
+              WITH x: 200
+              WITH y: 200
+            ADD frames
+              WITH item: frame
+                        
+            LOOP i in (1, 10):
+              ROTATE smallerCat AS rotatedCat
+                WITH angle: i
+              // ADD frames
+                // WITH item: rotatedCat
+              OVERLAY rotatedCat ON background AS frame
+                WITH x: 200
+                WITH y: 200
+              ADD frames
+                WITH item: frame
+                        
+            COLOUR-FILL smallerCat AS coloured-cat
+              WITH colour: #123456
+              
+            ADD frames
+              WITH item: coloured-cat
+                                                
+            SAVE frames
+              WITH duration: 5
+              WITH location: "src/test/e2e/testImages/newGif.gif"
+            """;
+        GifDSLCompiler compiler = new GifDSLCompiler();
+        compiler.addPredefinedValues(ColourFill.ACTUAL_NAME, new ColourFill());
+        compiler.addPredefinedValues(Save.ACTUAL_NAME, new Save());
+        compiler.addPredefinedValues(Add.ACTUAL_NAME, new Add());
+        compiler.addPredefinedValues(Rotate.ACTUAL_NAME, new Rotate());
+        compiler.addPredefinedValues(Overlay.ACTUAL_NAME, new Overlay());
+        compiler.addPredefinedValues(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
+        compiler.addPredefinedValues(CreateList.ACTUAL_NAME, new CreateList());
+        compiler.addPredefinedValues(Load.ACTUAL_NAME, new Load());
+        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
+        compiler.addPredefinedValues(Resize.ACTUAL_NAME, new Resize());
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b.newChildScope(), main.a);
+    }
+
+    @Test
+    public void testRectangleProgram() {
+        String input = """     
+            LOAD "src/test/e2e/testImages/cat.png" AS cat
+            
+            RESIZE cat AS smallerCat
+              WITH width: 100
+              WITH height: 100
+            
+            CREATE-LIST AS frames
+                        
+            CREATE-RECTANGLE AS background
+              WITH width: 400
+              WITH height: 400
+              WITH colour: #82A24F
+            ADD frames
+                WITH item: background
+                
+            CREATE-RECTANGLE AS background2
+              WITH width: 400
+              WITH height: 400
+              WITH colour: #000000
+            ADD frames
+              WITH item: background2
+                        
+            COLOUR-FILL smallerCat AS coloured-cat
+              WITH colour: #FE892D
+              
+            ADD frames
+              WITH item: coloured-cat
+                                                
+            SAVE frames
+              WITH duration: 5
+              WITH location: "src/test/e2e/testImages/simpleNewGif.gif"
+            """;
+        GifDSLCompiler compiler = new GifDSLCompiler();
+        compiler.addPredefinedValues(ColourFill.ACTUAL_NAME, new ColourFill());
+        compiler.addPredefinedValues(Save.ACTUAL_NAME, new Save());
+        compiler.addPredefinedValues(Add.ACTUAL_NAME, new Add());
+        compiler.addPredefinedValues(Rotate.ACTUAL_NAME, new Rotate());
+        compiler.addPredefinedValues(Overlay.ACTUAL_NAME, new Overlay());
+        compiler.addPredefinedValues(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
+        compiler.addPredefinedValues(CreateList.ACTUAL_NAME, new CreateList());
+        compiler.addPredefinedValues(Load.ACTUAL_NAME, new Load());
+        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
+        compiler.addPredefinedValues(Resize.ACTUAL_NAME, new Resize());
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b.newChildScope(), main.a);
+    }
+
+    @Test
+    public void testUserTesting2() {
+        String input = """     
+            LOAD "src/test/e2e/testImages/cat.png" AS cat
+                        
+            RESIZE cat AS smallerCat
+              WITH tall: 40
+              WITH width: 40
+                        
+            CREATE-LIST AS frames
+                        
+            SET 200 AS y
+            SET 200 AS x
+                        
+            CREATE-RECTANGLE AS background
+              WITH width: 400
+              WITH height: 400
+              WITH colour: #001339
+                                
+            DEFINE JUMP image WITH (background):
+              LOOP i IN (1,3):
+                SET y + 1 AS y
+                OVERLAY image ON background AS frame
+                  WITH x: 200
+                  WITH y: y
+                ADD frames
+                  WITH item: frame
+                        
+              LOOP i IN (1,3):
+                SET y - 1 AS y
+                OVERLAY image ON background AS frame
+                  WITH x: 200
+                  WITH y: y
+                ADD frames
+                  WITH item: frame
+                        
+            LOOP i IN (1,10):
+              LOOP i IN (1,3):
+                SET y + 1 AS y
+                OVERLAY smallerCat ON background AS frame
+                  WITH x: 200
+                  WITH y: y
+                ADD frames
+                  WITH item: frame
+                        
+              LOOP i IN (1,3):
+                SET y - 1 AS y
+                OVERLAY smallerCat ON background AS frame
+                  WITH x: 200
+                  WITH y: y
+                ADD frames
+                  WITH item: frame
+              COLOUR-FILL smallerCat AS colourcat
+                WITH colour: #7C2BCE
+              ROTATE colourcat AS rotatedCat
+                WITH angle: 180
+              OVERLAY rotatedCat ON background AS frame
+                WITH x: 200
+                WITH y: y
+              ADD frames
+                WITH item: frame
+                        
+            SAVE frames
+              WITH duration: 7
+              WITH location: "src/test/e2e/testImages/final.gif"
+            """;
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b.newChildScope(), main.a);
     }
 
     @Test
