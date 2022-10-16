@@ -42,8 +42,9 @@ This is the updated documentation file after Milestone 3.
   - This may not exist depending on the function
 - **Return variable** is the variable that will be assigned the return value of the function
   - This is required unless the function does not return anything or when the shortcut is used
-  - Shortcut: If a function returns a value, and you insert a variable into the target, you can omit the `AS [variable]` to assign the return value to the same variable. 
+  - **Shortcut**: If a built-in function returns a value, and you insert a variable into the target, you can omit the `AS [variable]` to assign the return value to the same variable. 
     - e.g. `FUNCTION var1` is equivalent to `FUNCTION var1 AS var1`
+    - For functions with `[variable] ON [variable]`, it will be assigned to the latter variable
 - **Parameters** are the secondary inputs of the function
   - In built-in functions, some parameters are optional
   - Can be in any order as long as all the required parameters are given values

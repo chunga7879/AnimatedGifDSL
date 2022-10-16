@@ -2,10 +2,9 @@ package core.checkers;
 
 import core.Scope;
 import core.exceptions.FunctionException;
-import core.values.Unknown;
+import core.values.Value;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class ArgumentChecker {
     public static void check(Scope scope, Map<String, String> params, String functionName) {
@@ -19,11 +18,9 @@ public class ArgumentChecker {
                 throw new FunctionException("Argument \"" + paramName + "\" not provided to function \"" + functionName + "\"");
             }
             String expectedType = param.getValue();
-            String actualType = scope.getLocalVar(paramName).getTypeName();
-            if (!(Objects.equals(expectedType, actualType)
-                || Objects.equals(Unknown.NAME, expectedType)
-                || Objects.equals(Unknown.NAME, actualType))) {
-                throw new FunctionException("Argument \"" + paramName + "\" is of type " + actualType + " but expected type "
+            Value argument = scope.getLocalVar(paramName);
+            if (!TypeChecker.checkValueIsTypeOrUnknown(argument, expectedType)) {
+                throw new FunctionException("Argument \"" + paramName + "\" is of type " + argument.getTypeName() + " but expected type "
                     + expectedType + " for function \"" + functionName + "\"");
             }
         }

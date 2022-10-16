@@ -1,11 +1,12 @@
 package core;
 
+import core.checkers.TypeChecker;
+import core.exceptions.FunctionNameException;
 import core.exceptions.NameError;
 import core.values.AbstractFunction;
 import core.values.Value;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class Scope {
     private Scope global;
@@ -89,7 +90,7 @@ public class Scope {
         // TODO: might want to split storing for values and functions
         if (hasVar(name)) {
             Value prevVal = getVar(name);
-            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new RuntimeException("Cannot redefine function: " + name);
+            if (TypeChecker.checkValueIsType(prevVal, AbstractFunction.NAME)) throw new FunctionNameException("Cannot redefine function: " + name);
         }
         if (!this.vars.containsKey(name) && this.hasParent() && this.parent.hasVar(name)) {
             this.parent.setVar(name, v);
@@ -107,7 +108,7 @@ public class Scope {
         // TODO: might want to split storing for values and functions
         if (this.vars.containsKey(name)) {
             Value prevVal = this.vars.get(name);
-            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME)) throw new RuntimeException("Cannot redefine function: " + name);
+            if (TypeChecker.checkValueIsType(prevVal, AbstractFunction.NAME)) throw new FunctionNameException("Cannot redefine function: " + name);
         }
         this.vars.put(name, v);
     }

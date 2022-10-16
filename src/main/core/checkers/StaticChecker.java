@@ -8,9 +8,8 @@ import core.values.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-public class StaticChecker implements ExpressionVisitor<Scope, Value>, StatementVisitor<Scope, Value> {
+public class StaticChecker implements ExpressionVisitor<Scope, Value>, StatementVisitor<Scope, Void> {
     private List<String> constants;
 
     public StaticChecker(List<String> constants) {
@@ -19,10 +18,10 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, ArithmeticExpression ae) {
-        String expressionA = ae.a().accept(ctx, this).getTypeName();
-        String expressionB = ae.b().accept(ctx, this).getTypeName();
-        if (!(expressionA.equals(IntegerValue.NAME) || expressionA.equals(Unknown.NAME)) ||
-            !(expressionB.equals(IntegerValue.NAME) || expressionB.equals(Unknown.NAME))) {
+        Value valueA = ae.a().accept(ctx, this);
+        Value valueB = ae.b().accept(ctx, this);
+        if (!TypeChecker.checkValueIsTypeOrUnknown(valueA, IntegerValue.NAME) ||
+            !TypeChecker.checkValueIsTypeOrUnknown(valueB, IntegerValue.NAME)) {
             throw new TypeError("Invalid arithmetic expression").withPosition(ae);
         }
         return new IntegerValue(0);
@@ -30,10 +29,10 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, ComparisonExpression ce) {
-        String expressionA = ce.a().accept(ctx, this).getTypeName();
-        String expressionB = ce.b().accept(ctx, this).getTypeName();
-        if (!(expressionA.equals(IntegerValue.NAME) || expressionA.equals(Unknown.NAME)) ||
-            !(expressionB.equals(IntegerValue.NAME) || expressionB.equals(Unknown.NAME))) {
+        Value valueA = ce.a().accept(ctx, this);
+        Value valueB = ce.b().accept(ctx, this);
+        if (!TypeChecker.checkValueIsTypeOrUnknown(valueA, IntegerValue.NAME) ||
+            !TypeChecker.checkValueIsTypeOrUnknown(valueB, IntegerValue.NAME)) {
             throw new TypeError("Invalid comparison expression").withPosition(ce);
         }
         return new BooleanValue(true);
@@ -93,7 +92,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, Program program) {
+    public Void visit(Scope ctx, Program program) {
         for (Statement s : program.statements()) {
             s.accept(ctx, this);
         }
@@ -101,7 +100,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, FunctionDefinition fd) {
+    public Void visit(Scope ctx, FunctionDefinition fd) {
         String name = fd.name();
 
         if (ctx.hasVar(name)) {
@@ -130,7 +129,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, IfStatement is) {
+    public Void visit(Scope ctx, IfStatement is) {
         is.cond().accept(ctx, this);
         for (Statement s : is.statements()) {
             failIfFunctionDefinition(s);
@@ -140,9 +139,9 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, LoopStatement ls) {
+    public Void visit(Scope ctx, LoopStatement ls) {
         Value value = ls.array().accept(ctx, this);
-        if (!Objects.equals(value.getTypeName(), Array.NAME))
+        if (!TypeChecker.checkValueIsTypeOrUnknown(value, Array.NAME))
             throw new TypeError("Cannot loop over non-array value").withPosition(ls.array());
         Array array = value.asArray();
         Scope loopScope = ctx.newChildScope();
@@ -155,19 +154,19 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, Return r) {
+    public Void visit(Scope ctx, Return r) {
         throw new StatementException("Return can only be inside of Define").withPosition(r);
     }
 
     @Override
-    public Value visit(Scope ctx, VariableAssignment va) {
+    public Void visit(Scope ctx, VariableAssignment va) {
         String dest = va.dest();
         if (constants.contains(dest)) {
             throw new VariableException("Cannot edit constant: " + dest).withPosition(va);
         }
         if (ctx.hasVar(dest)) {
             Value prevVal = ctx.getVar(va.dest());
-            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME))
+            if (TypeChecker.checkValueIsType(prevVal, AbstractFunction.NAME))
                 throw new FunctionNameException("Cannot redefine function: " + va.dest()).withPosition(va);
         }
 
@@ -184,7 +183,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, ExpressionWrapper ew) {
+    public Void visit(Scope ctx, ExpressionWrapper ew) {
         ew.e().accept(ctx, this);
         return null;
     }
