@@ -6,6 +6,7 @@ import core.exceptions.DSLException;
 import core.exceptions.InvalidArgumentException;
 import core.exceptions.NameError;
 import core.statements.Program;
+import core.values.Value;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Assertions;
@@ -404,6 +405,114 @@ public class End2EndTest {
         } catch (DSLException e) {
             // expected
         }
+    }
+
+    @Test
+    public void testLoopUserDefinedFunctionParameter() {
+        String input = """
+            CREATE-LIST as list1
+            DEFINE func WITH (texts):
+              LOOP text IN texts:
+                ADD list1
+                  WITH item: text
+            CREATE-LIST as list2
+            ADD list2
+              WITH item: "hi1"
+            ADD list2
+              WITH item: "hi2"
+            func
+              WITH texts: list2
+            """;
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b, main.a);
+        Assertions.assertTrue(main.b.hasVar("list1"));
+        Assertions.assertTrue(main.b.hasVar("list2"));
+        List<Value> list1 = main.b.getVar("list1").asArray().get();
+        List<Value> list2 = main.b.getVar("list2").asArray().get();
+        Assertions.assertEquals(2, list1.size());
+        Assertions.assertEquals(2, list2.size());
+        Assertions.assertEquals("hi1", list1.get(0).asString().get());
+        Assertions.assertEquals("hi2", list1.get(1).asString().get());
+        Assertions.assertEquals("hi1", list2.get(0).asString().get());
+        Assertions.assertEquals("hi2", list2.get(1).asString().get());
+    }
+
+    @Test
+    public void testParameterOverlapsFunction() {
+        String input = """
+            SET 2 as a
+            SET 3 as b
+            SET 4 as c
+            DEFINE func:
+              SET 10 / a AS a
+            DEFINE func2 WITH (func):
+              SET func AS b
+            DEFINE func3 func2:
+              SET func2 * c as c
+            func
+            func2
+              WITH func: 10
+            func3 20
+            """;
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b, main.a);
+        Assertions.assertTrue(main.b.hasVar("a"));
+        Assertions.assertTrue(main.b.hasVar("b"));
+        Assertions.assertTrue(main.b.hasVar("c"));
+        Assertions.assertTrue(main.b.hasVar("func"));
+        Assertions.assertTrue(main.b.hasVar("func2"));
+        Assertions.assertTrue(main.b.hasVar("func3"));
+        Assertions.assertEquals(5, main.b.getVar("a").asInteger().get());
+        Assertions.assertEquals(10, main.b.getVar("b").asInteger().get());
+        Assertions.assertEquals(80, main.b.getVar("c").asInteger().get());
+        Assertions.assertEquals(0, main.b.getVar("func").asFunction().getParams().size());
+        Assertions.assertEquals(1, main.b.getVar("func2").asFunction().getParams().size());
+        Assertions.assertEquals(1, main.b.getVar("func3").asFunction().getParams().size());
+    }
+
+    @Test
+    public void testFunctionAsParameters() {
+        String input = """
+            DEFINE add-numbers a WITH (b):
+              RETURN a + b
+            DEFINE subtract-numbers a WITH (b):
+              RETURN a - b
+            DEFINE multiply-numbers a WITH (b):
+              RETURN a * b
+            DEFINE combineFunc func1 WITH (func2, a, b):
+              func1 a as ret1
+                WITH b: a
+              func1 b as ret2
+                WITH b: b
+              func2 ret1 as ret
+                WITH b: ret2
+              RETURN ret
+            combineFunc add-numbers as x
+              WITH func2: subtract-numbers
+              WITH a: 10
+              WITH b: 8
+            combineFunc multiply-numbers as y
+              WITH func2: subtract-numbers
+              WITH a: -13
+              WITH b: 50
+            """;
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b, main.a);
+        Assertions.assertTrue(main.b.hasVar("x"));
+        Assertions.assertTrue(main.b.hasVar("y"));
+        Assertions.assertTrue(main.b.hasVar("add-numbers"));
+        Assertions.assertTrue(main.b.hasVar("subtract-numbers"));
+        Assertions.assertTrue(main.b.hasVar("multiply-numbers"));
+        Assertions.assertTrue(main.b.hasVar("combinefunc"));
+        Assertions.assertEquals(4, main.b.getVar("x").asInteger().get());
+        Assertions.assertEquals(-2331, main.b.getVar("y").asInteger().get());
+        Assertions.assertEquals(2, main.b.getVar("add-numbers").asFunction().getParams().size());
+        Assertions.assertEquals(2, main.b.getVar("subtract-numbers").asFunction().getParams().size());
+        Assertions.assertEquals(2, main.b.getVar("multiply-numbers").asFunction().getParams().size());
+        Assertions.assertEquals(4, main.b.getVar("combinefunc").asFunction().getParams().size());
     }
 
     @Test

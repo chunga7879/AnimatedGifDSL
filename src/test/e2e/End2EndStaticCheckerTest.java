@@ -466,4 +466,97 @@ public class End2EndStaticCheckerTest {
             Assertions.assertEquals(2, e.getColumnPosition());
         }
     }
+
+    @Test
+    public void testFunctionOverlapsVariable() {
+        String input = """
+            SET 0 as func
+            DEFINE func:
+              SET 10 AS x
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow functions to be named the same as variables");
+        } catch (FunctionNameException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(2, e.getLinePosition());
+        }
+    }
+
+    @Test
+    public void testVariableOverlapsFunction() {
+        String input = """
+            DEFINE func:
+              SET 10 AS x
+            SET 0 as func
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow variables to be named the same as functions");
+        } catch (FunctionNameException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(3, e.getLinePosition());
+        }
+    }
+
+    @Test
+    public void testParameterOverlapsFunction() {
+        String input = """
+            DEFINE func WITH (x):
+              RETURN x
+            DEFINE func2 WITH (func):
+              func
+                WITH x: 10
+            func2
+              WITH func: 10
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow function name that is overlapped to be used as a function");
+        } catch (TypeError e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(4, e.getLinePosition());
+            Assertions.assertEquals(2, e.getColumnPosition());
+        }
+    }
+
+    @Test
+    public void testVariablesAndFunctionsOverlapConstant() {
+        String inputVariable = """
+            SET #FFFFFF as white
+            """;
+        String inputFunction = """
+            DEFINE black WITH (x):
+              RETURN x
+            """;
+        String inputFunctionTarget = """
+            DEFINE func black:
+              SET 0 AS black
+              RETURN black
+            """;
+        String inputFunctionParameter = """
+            DEFINE fun WITH (blue):
+              RETURN blue
+            """;
+        String inputLoop = """
+            LOOP black IN 1 TO 10:
+              SET black AS x
+            """;
+        List<String> inputs = new ArrayList<>() {{
+            add(inputVariable);
+            add(inputFunction);
+            add(inputFunctionTarget);
+            add(inputFunctionParameter);
+            add(inputLoop);
+        }};
+        for (String input : inputs) {
+            try {
+                compiler.compile(CharStreams.fromString(input));
+                Assertions.fail("Should not allow variables, functions, and function parameters to use constant names");
+            } catch (FunctionException e) {
+                System.out.println(e.getMessage());
+                Assertions.assertEquals(1, e.getLinePosition());
+            }
+        }
+    }
 }

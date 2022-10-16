@@ -127,7 +127,6 @@ public class GifDSLConverter {
             Expression target = convertExpression(functionCtx.function_target().expression());
             args.put(AbstractFunction.PARAM_TARGET, target);
         }
-        // TODO: add shortcut for as
         for (With_statementContext withStatementContext : withCtx) {
             String parameterName = getVariableName(withStatementContext.VARIABLE());
             Expression inputValue = convertExpression(withStatementContext.expression());
@@ -170,7 +169,8 @@ public class GifDSLConverter {
         List<Statement> statements = new ArrayList<>();
         if (defineCtx.define_target() != null) {
             parameters.put(AbstractFunction.PARAM_TARGET, Unknown.NAME);
-            statements.add(new VariableAssignment(getVariableName(defineCtx.define_target().VARIABLE()), new VariableExpression("$target"), true));
+            VariableAssignment targetAssignment = new VariableAssignment(getVariableName(defineCtx.define_target().VARIABLE()), new VariableExpression("$target"), true);
+            statements.add(withStatementLine(targetAssignment, defineCtx.define_target()));
         }
         if (defineCtx.define_params() != null) {
             List<TerminalNode> parameterNodes = defineCtx.define_params().VARIABLE();

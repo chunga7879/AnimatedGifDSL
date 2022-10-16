@@ -1,5 +1,6 @@
 package core.checkers;
 
+import core.Node;
 import core.Scope;
 import core.exceptions.*;
 import core.expressions.*;
@@ -8,9 +9,8 @@ import core.values.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-public class StaticChecker implements ExpressionVisitor<Scope, Value>, StatementVisitor<Scope, Value> {
+public class StaticChecker implements ExpressionVisitor<Scope, Value>, StatementVisitor<Scope, Void> {
     private List<String> constants;
 
     public StaticChecker(List<String> constants) {
@@ -19,10 +19,10 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, ArithmeticExpression ae) {
-        String expressionA = ae.a().accept(ctx, this).getTypeName();
-        String expressionB = ae.b().accept(ctx, this).getTypeName();
-        if (!(expressionA.equals(IntegerValue.NAME) || expressionA.equals(Unknown.NAME)) ||
-            !(expressionB.equals(IntegerValue.NAME) || expressionB.equals(Unknown.NAME))) {
+        Value valueA = ae.a().accept(ctx, this);
+        Value valueB = ae.b().accept(ctx, this);
+        if (!TypeChecker.checkValueIsTypeOrUnknown(valueA, IntegerValue.NAME) ||
+            !TypeChecker.checkValueIsTypeOrUnknown(valueB, IntegerValue.NAME)) {
             throw new TypeError("Invalid arithmetic expression").withPosition(ae);
         }
         return new IntegerValue(0);
@@ -30,10 +30,10 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, ComparisonExpression ce) {
-        String expressionA = ce.a().accept(ctx, this).getTypeName();
-        String expressionB = ce.b().accept(ctx, this).getTypeName();
-        if (!(expressionA.equals(IntegerValue.NAME) || expressionA.equals(Unknown.NAME)) ||
-            !(expressionB.equals(IntegerValue.NAME) || expressionB.equals(Unknown.NAME))) {
+        Value valueA = ce.a().accept(ctx, this);
+        Value valueB = ce.b().accept(ctx, this);
+        if (!TypeChecker.checkValueIsTypeOrUnknown(valueA, IntegerValue.NAME) ||
+            !TypeChecker.checkValueIsTypeOrUnknown(valueB, IntegerValue.NAME)) {
             throw new TypeError("Invalid comparison expression").withPosition(ce);
         }
         return new BooleanValue(true);
@@ -50,6 +50,9 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
             funcScope.setLocalVar(entry.getKey(), entry.getValue().accept(ctx, this));
         }
         try {
+            if (TypeChecker.checkValueIsUnknown(ctx.getVar(name))) {
+                return new Unknown();
+            }
             return ctx.getVar(name).asFunction().accept(funcScope, this);
         } catch (DSLException e) {
             throw e.withPosition(fc);
@@ -93,7 +96,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, Program program) {
+    public Void visit(Scope ctx, Program program) {
         for (Statement s : program.statements()) {
             s.accept(ctx, this);
         }
@@ -101,11 +104,13 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, FunctionDefinition fd) {
+    public Void visit(Scope ctx, FunctionDefinition fd) {
         String name = fd.name();
 
+        failIfConstantName(name, false, fd);
+
         if (ctx.hasVar(name)) {
-            throw new FunctionNameException("Declared function \"" + name + "\" already exists").withPosition(fd);
+            throw new FunctionNameException("Function or variable \"" + name + "\" already exists").withPosition(fd);
         }
 
         for (Statement statement : fd.statements()) {
@@ -117,6 +122,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         // Check what would happen if defined function is called
         Scope childScope = ctx.getGlobalScope().newChildScope();
         for (Map.Entry<String, String> entry : fd.params().entrySet()) {
+            failIfConstantName(entry.getKey(), false, fd);
             childScope.setLocalVar(entry.getKey(), new Unknown());
         }
         try {
@@ -131,7 +137,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, IfStatement is) {
+    public Void visit(Scope ctx, IfStatement is) {
         is.cond().accept(ctx, this);
         for (Statement s : is.statements()) {
             failIfFunctionDefinition(s);
@@ -141,13 +147,18 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, LoopStatement ls) {
+    public Void visit(Scope ctx, LoopStatement ls) {
         Value value = ls.array().accept(ctx, this);
-        if (!Objects.equals(value.getTypeName(), Array.NAME))
+
+        failIfConstantName(ls.loopVar(), false, ls);
+
+        if (!TypeChecker.checkValueIsTypeOrUnknown(value, Array.NAME))
             throw new TypeError("Cannot loop over non-array value").withPosition(ls.array());
+
         Array array = value.asArray();
         Scope loopScope = ctx.newChildScope();
         loopScope.setLocalVar(ls.loopVar(), array.get().size() > 0 ? array.get().get(0) : new Unknown());
+
         for (Statement s : ls.statements()) {
             failIfFunctionDefinition(s);
             s.accept(loopScope, this);
@@ -156,36 +167,35 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     }
 
     @Override
-    public Value visit(Scope ctx, Return r) {
+    public Void visit(Scope ctx, Return r) {
         throw new StatementException("Return can only be inside of Define").withPosition(r);
     }
 
     @Override
-    public Value visit(Scope ctx, VariableAssignment va) {
+    public Void visit(Scope ctx, VariableAssignment va) {
         String dest = va.dest();
-        if (constants.contains(dest)) {
-            throw new VariableException("Cannot edit constant: " + dest).withPosition(va);
-        }
-        if (ctx.hasVar(dest)) {
-            Value prevVal = ctx.getVar(va.dest());
-            if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME))
-                throw new FunctionNameException("Cannot redefine function: " + va.dest()).withPosition(va);
+
+        failIfConstantName(dest, !va.local(), va);
+
+        if (!va.local() && ctx.hasVar(dest)) {
+            Value prevVal = ctx.getVar(dest);
+            if (TypeChecker.checkValueIsType(prevVal, AbstractFunction.NAME))
+                throw new FunctionNameException("Cannot redefine function \"" + dest + "\"").withPosition(va);
         }
 
         Value returnValue = va.expr().accept(ctx, this);
-
         if (returnValue instanceof Null) throw new VariableException("Expression does not return a value").withPosition(va);
 
         if (va.local()) {
-            ctx.setLocalVar(va.dest(), returnValue);
+            ctx.setLocalVar(dest, returnValue);
         } else {
-            ctx.setVar(va.dest(), returnValue);
+            ctx.setVar(dest, returnValue);
         }
         return null;
     }
 
     @Override
-    public Value visit(Scope ctx, ExpressionWrapper ew) {
+    public Void visit(Scope ctx, ExpressionWrapper ew) {
         ew.e().accept(ctx, this);
         return null;
     }
@@ -197,6 +207,18 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     private void failIfFunctionDefinition(Statement statement) {
         if (statement instanceof FunctionDefinition) {
             throw new StatementException("Can only define functions at the base level").withPosition(statement);
+        }
+    }
+
+    /**
+     * Throw exception if name is a constant name
+     * @param name
+     * @param isEdit
+     * @param node
+     */
+    private void failIfConstantName(String name, boolean isEdit, Node node) {
+        if (constants.contains(name)) {
+            throw new VariableException((isEdit ? "Cannot edit constant \"" : "Cannot use constant name \"" ) + name + "\"").withPosition(node);
         }
     }
 }
