@@ -1,10 +1,5 @@
 package e2e;
 
-import core.exceptions.FunctionException;
-import core.exceptions.FunctionNameException;
-import core.exceptions.NameError;
-import core.exceptions.TypeError;
-import builtin.functions.*;
 import core.exceptions.*;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
