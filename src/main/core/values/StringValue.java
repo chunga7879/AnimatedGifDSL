@@ -1,12 +1,11 @@
 package core.values;
 
 import core.Scope;
-import core.expressions.Expression;
 import core.expressions.arithmetic.ArithmeticVisitor;
 import core.expressions.comparison.ComparisonVisitor;
 
 public class StringValue extends Value {
-    public static final String NAME = "string";
+    public static final String NAME = "String";
 
     private final String s;
 

@@ -36,9 +36,8 @@ public class SetOpacity extends AbstractFunction {
     }
 
     @Override
-    public Image checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-        return checkReturn();
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package builtin.functions.colour;
 
 import core.Scope;
-import core.checkers.ArgumentChecker;
 import core.values.AbstractFunction;
 import core.values.Colour;
 import core.values.IntegerValue;
@@ -19,9 +18,8 @@ public class GetR extends AbstractFunction {
     }
 
     @Override
-    public IntegerValue checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-        return new IntegerValue(0);
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override

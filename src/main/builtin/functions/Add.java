@@ -1,8 +1,10 @@
 package builtin.functions;
 
 import core.Scope;
-import core.checkers.ArgumentChecker;
-import core.values.*;
+import core.values.AbstractFunction;
+import core.values.Array;
+import core.values.Unknown;
+import core.values.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,10 +21,8 @@ public class Add extends AbstractFunction {
     }
 
     @Override
-    public Array checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-
-        return checkReturn();
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override
