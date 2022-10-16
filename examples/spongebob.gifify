@@ -1,0 +1,34 @@
+// spongebob gif
+LOAD "examples/spongebob.png" as krabbyPatty
+
+CREATE-LIST AS Frames
+
+CREATE-RECTANGLE AS background
+  WITH width: 500
+  WITH height: 500
+  WITH colour: #ADD8E6
+
+RESIZE krabbyPatty
+  WITH width: 200
+  WITH height: 200
+
+GET-WIDTH krabbyPatty as krabbyPattyWidth
+GET-HEIGHT krabbyPatty as krabbyPattyHeight
+
+LOOP i in 1 TO 5:
+  RESIZE krabbyPatty
+    WITH width: krabbyPattyWidth
+    WITH height: krabbyPattyHeight
+  set krabbyPattyWidth / 2 AS tempX
+  set krabbyPattyHeight / 2 AS tempY
+  OVERLAY krabbyPatty ON background as frame
+    WITH x: 250 - tempX
+    WITH y: 250 - tempY
+  ADD frames
+    WITH item: frame
+  SET tempX AS krabbyPattyWidth
+  SET tempY AS krabbyPattyHeight
+
+SAVE frames
+  WITH duration: 5
+  WITH location: "examples/spongebob.gif"
