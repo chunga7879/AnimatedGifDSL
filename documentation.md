@@ -161,16 +161,51 @@ SAVE [list of images]
   WITH location: [file path]
 ```
 #### Images
+
+Crop - crop image with width and height
+```
+CROP [target image] AS [variable name]
+  WITH width: [number]
+  WITH height: [number]
+```
+
+Resize - resize image with width and height
+```
+RESIZE [target image] AS [variable name]
+  WITH width: [number]
+  WITH height: [number]
+```
+
+
+Rotate - rotate image with angle
+```
+ROTATE [target image] AS [variable name]
+  WITH angle: [number]
+```
+
 Overlay - Create an image with an overlay of an image on top of another image
 - X: x position of the top-left corner of the above image
 - Y: y position of the top-left corner of the above image
-- Rotation: degrees in rotation of image (clock-wise)
 ```
 OVERLAY [above image] ON [below image] AS [variable name]
   WITH x: [x position]
   WITH y: [y: position]
-  WITH rotation: [degrees]
 ```
+GetHeight - get height of image
+```
+GET-HEIGHT [target image] AS [variable name]
+```
+GetWidth - get width of image
+```
+GET-WIDTH [target image] AS [variable name]
+```
+Translate - translate image with x, y
+```
+TRANSLATE [target image] AS [variable name]
+  WITH x: [x position]
+  WITH y: [y: position]
+```
+
 Rectangle - Create a rectangle image with size and colour
 ```
 CREATE-RECTANGLE AS [variable name]
@@ -180,9 +215,14 @@ CREATE-RECTANGLE AS [variable name]
 ```
 Write - Write text as an image
 ```
+// style can be plain, italic, bold (if other thing is added, it will use plain as style)
+// write put text at the center of image with width, height
 WRITE [text] AS [variable name]
-  WITH size: [font size]
-  WITH font: [font]
+  WITH size: [font size(number)]
+  WITH font: [font(string)]
+  WITH style: [style(string)]
+  WITH width: [number]
+  WITH height: [number]
 ```
 Colour Fill - Fill each pixel of an image with a colour but maintain its transparency
 ```
