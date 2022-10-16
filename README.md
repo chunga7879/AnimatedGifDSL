@@ -10,6 +10,13 @@
 - Perform manipulations to images (e.g. rotate, crop, overlay, etc...)
 - Apply filters to images (e.g. greyscale, sepia, blur, etc...)
 
+### Setup with IntelliJ
+1. Clone the repo
+2. Open the project in IntelliJ
+3. Go to `File` > `Project Structure`
+4. Under `Project Settings` > `Project`, set up JDK (version 18) and compiler output
+5. In the project, for both `src/main/parser/GifDSLLexer.g4` & `src/main/parser/GifDSLParser.g4`, right-click and click `Generate ANTLR Recognizer`
+
 ### How to run the program
 The entry point to our program is `./src/main/Main.java`. You must specify the language code file as the first argument and add any additional arguments afterwards. These are the additional arguments that can be used:
 
