@@ -1,6 +1,5 @@
 package e2e;
 
-import builtin.functions.*;
 import core.Scope;
 import core.evaluators.Evaluator;
 import core.exceptions.DSLException;
@@ -20,20 +19,6 @@ public class End2EndTest {
     @BeforeEach
     public void runBefore() {
         compiler = new GifDSLCompiler();
-        compiler.addPredefinedValues(Print.ACTUAL_NAME, new Print());
-        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
-        compiler.addPredefinedValues(Random.ACTUAL_NAME, new Random());
-        compiler.addPredefinedValues(ColourFill.ACTUAL_NAME, new ColourFill());
-        compiler.addPredefinedValues(Save.ACTUAL_NAME, new Save());
-        compiler.addPredefinedValues(Add.ACTUAL_NAME, new Add());
-        compiler.addPredefinedValues(Rotate.ACTUAL_NAME, new Rotate());
-        compiler.addPredefinedValues(Overlay.ACTUAL_NAME, new Overlay());
-        compiler.addPredefinedValues(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
-        compiler.addPredefinedValues(CreateList.ACTUAL_NAME, new CreateList());
-        compiler.addPredefinedValues(Load.ACTUAL_NAME, new Load());
-        compiler.addPredefinedValues(Resize.ACTUAL_NAME, new Resize());
-        compiler.setEnableStaticChecker(true);
-        compiler.setEnableShortcuts(true);
         evaluator = new Evaluator();
     }
 

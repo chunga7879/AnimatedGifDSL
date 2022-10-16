@@ -17,7 +17,7 @@ class GetWidthTest {
     @Test
     public void getHeightSuccess() throws FileNotFoundException {
         Scope scope = new Scope();
-        ImmutableImage dvd = FileSystem.openImage("dvd-logo.png");
+        ImmutableImage dvd = FileSystem.openImage("src/test/image/inputs/dvd-logo.png");
         scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
         GetWidth getWidth = new GetWidth();
         IntegerValue width = (IntegerValue) getWidth.call(scope);

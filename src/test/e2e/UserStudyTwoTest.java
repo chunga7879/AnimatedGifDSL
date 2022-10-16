@@ -1,7 +1,5 @@
 package e2e;
 
-import builtin.functions.*;
-import builtin.functions.colour.CreateColour;
 import core.Scope;
 import core.evaluators.Evaluator;
 import core.statements.Program;
@@ -50,17 +48,6 @@ public class UserStudyTwoTest {
               WITH location: "src/test/e2e/userStudyImages/halloween.gif"
             """;
         GifDSLCompiler compiler = new GifDSLCompiler();
-        compiler.addPredefinedValues("create-rectangle", new CreateRectangle());
-        compiler.addPredefinedValues("create-colour", new CreateColour());
-        compiler.addPredefinedValues("rotate", new Rotate());
-        compiler.addPredefinedValues("overlay", new Overlay());
-        compiler.addPredefinedValues("load", new Load());
-        compiler.addPredefinedValues("create-list", new CreateList());
-        compiler.addPredefinedValues("set", new Set());
-        compiler.addPredefinedValues("colour-fill", new ColourFill());
-        compiler.addPredefinedValues("add", new Add());
-        compiler.addPredefinedValues("save", new Save());
-
         Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
         Evaluator evaluator = new Evaluator();
         evaluator.visit(main.b, main.a);

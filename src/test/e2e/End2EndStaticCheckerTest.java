@@ -1,6 +1,5 @@
 package e2e;
 
-import builtin.functions.*;
 import core.exceptions.*;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
@@ -18,15 +17,6 @@ public class End2EndStaticCheckerTest {
     @BeforeEach
     public void runBefore() {
         compiler = new GifDSLCompiler();
-        compiler.addPredefinedValues(Print.ACTUAL_NAME, new Print());
-        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
-        compiler.addPredefinedValues(Random.ACTUAL_NAME, new Random());
-        compiler.addPredefinedValues(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
-        compiler.addPredefinedValues(CreateList.ACTUAL_NAME, new CreateList());
-        compiler.addPredefinedValues(Add.ACTUAL_NAME, new Add());
-        compiler.addPredefinedValues(Save.ACTUAL_NAME, new Save());
-        compiler.setEnableStaticChecker(true);
-        compiler.setEnableShortcuts(true);
     }
 
     @Test

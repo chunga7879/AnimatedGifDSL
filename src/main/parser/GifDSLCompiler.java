@@ -1,103 +1,51 @@
 package parser;
 
-import core.Scope;
-import core.checkers.StaticChecker;
-import core.statements.Program;
-import core.values.Value;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ConsoleErrorListener;
-import org.antlr.v4.runtime.TokenStream;
-import org.antlr.v4.runtime.misc.Pair;
-import parser.exceptions.DSLParserErrorListener;
-import parser.exceptions.DSLTokenizerErrorListener;
+import builtin.functions.*;
+import builtin.functions.colour.CreateColour;
+import builtin.functions.colour.GetB;
+import builtin.functions.colour.GetG;
+import builtin.functions.colour.GetR;
+import core.values.AbstractFunction;
 import utils.ColourConstant;
 
+import java.util.Arrays;
 import java.util.List;
 
-public final class GifDSLCompiler {
-    private boolean enableStaticCheck;
-    private boolean enableShortcuts;
-    private boolean verbose;
-    private Scope rootScope;
-    private List<String> constants;
-
+public class GifDSLCompiler extends DSLCompiler {
     public GifDSLCompiler() {
-        this.enableStaticCheck = true;
-        this.enableShortcuts = true;
-        this.verbose = true;
-        this.rootScope = new Scope();
-        this.constants = ColourConstant.getNameList();
+        super();
+        // Add built-in functions
+        List<AbstractFunction> builtInFunctions = Arrays.asList(
+            new Set(),
+            new CreateColour(),
+            new GetB(),
+            new GetG(),
+            new GetR(),
+            new Add(),
+            new ColourFill(),
+            new CreateList(),
+            new CreateRectangle(),
+            new Crop(),
+            new Filter(),
+            new GetHeight(),
+            new GetWidth(),
+            new Load(),
+            new Overlay(),
+            new Print(),
+            new Random(),
+            new Resize(),
+            new Rotate(),
+            new Save(),
+            new SetOpacity(),
+            new Translate(),
+            new Write()
+        );
+        for (AbstractFunction function : builtInFunctions) {
+            addPredefinedValues(function.getFunctionName(), function);
+        }
+        // Add constants
         for (ColourConstant c: ColourConstant.values()) {
-            addPredefinedValues(c.getName(), c.createColour());
+            addConstantValues(c.getName(), c.createColour());
         }
     }
-
-    /**
-     * Set whether to run the static checker
-     * @param enableStaticCheck
-     */
-    public void setEnableStaticChecker(boolean enableStaticCheck) {
-        this.enableStaticCheck = enableStaticCheck;
-    }
-
-    /**
-     * Set whether to enable shortcuts
-     * @param enableShortcuts
-     */
-    public void setEnableShortcuts(boolean enableShortcuts) {
-        this.enableShortcuts = enableShortcuts;
-    }
-
-    /**
-     * Add predefined values (constants & functions)
-     */
-    public void addPredefinedValues(String name, Value value) {
-        this.rootScope.setVar(name.toLowerCase(), value);
-    }
-
-    /**
-     * Compile the text input to the GifDSL
-     * @param input
-     * @return
-     */
-    public Pair<Program, Scope> compile(CharStream input) {
-        print("Starting compilation");
-
-        print("Starting tokenization");
-        GifDSLLexer lexer = new GifDSLLexer(input);
-        lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
-        lexer.addErrorListener(new DSLTokenizerErrorListener());
-        TokenStream tokens = new CommonTokenStream(lexer);
-        print("Finished tokenization");
-
-        print("Starting parsing");
-        GifDSLParser parser = new GifDSLParser(tokens);
-        parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
-        parser.addErrorListener(new DSLParserErrorListener());
-        print("Finished parsing");
-
-        print("Started AST conversion");
-        GifDSLConverter converter = new GifDSLConverter();
-        Program main = converter.convertProgram(parser.program());
-        print("Finished AST conversion");
-
-        if (enableStaticCheck) {
-            print("Started static checker");
-            new StaticChecker(constants).visit(rootScope.copy(), main);
-            if (enableShortcuts) {
-                main = new ShortcutsProcessor().visit(rootScope.copy(), main);
-                new StaticChecker(constants).visit(rootScope.copy(), main);
-            }
-            print("Finished static checker");
-        }
-
-        print("Finished compilation");
-        return new Pair<>(main, rootScope);
-    }
-
-    private void print(String msg) {
-        if (verbose) System.out.println("[Gif DSL Compiler] " + msg);
-    }
-
 }
