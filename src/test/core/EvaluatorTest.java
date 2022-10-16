@@ -58,8 +58,7 @@ public class EvaluatorTest {
             }
 
             @Override
-            public Value checkArgs(Scope scope) {
-                // do nothing
+            public String getFunctionName() {
                 return null;
             }
 

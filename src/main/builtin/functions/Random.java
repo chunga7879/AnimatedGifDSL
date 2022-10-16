@@ -1,7 +1,6 @@
 package builtin.functions;
 
 import core.Scope;
-import core.checkers.ArgumentChecker;
 import core.values.AbstractFunction;
 import core.values.IntegerValue;
 import utils.RandomNumber;
@@ -24,9 +23,8 @@ public class Random extends AbstractFunction {
     }
 
     @Override
-    public IntegerValue checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-        return new IntegerValue(0);
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override

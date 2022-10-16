@@ -1,7 +1,6 @@
 package builtin.functions;
 
 import core.Scope;
-import core.checkers.ArgumentChecker;
 import core.values.AbstractFunction;
 import core.values.Unknown;
 import core.values.Value;
@@ -18,8 +17,13 @@ public class Set extends AbstractFunction {
     }
 
     @Override
+    public String getFunctionName() {
+        return ACTUAL_NAME;
+    }
+
+    @Override
     public Value checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
+        super.checkArgs(scope);
         return scope.getVar(AbstractFunction.PARAM_TARGET);
     }
 

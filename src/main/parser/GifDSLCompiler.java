@@ -9,6 +9,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.misc.Pair;
+import parser.exceptions.DSLParserErrorListener;
+import parser.exceptions.DSLTokenizerErrorListener;
 import utils.ColourConstant;
 
 import java.util.List;
@@ -65,14 +67,14 @@ public final class GifDSLCompiler {
         print("Starting tokenization");
         GifDSLLexer lexer = new GifDSLLexer(input);
         lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
-        lexer.addErrorListener(new GifDSLErrorListener(GifDSLErrorListener.PREFIX_LEXER_ERROR));
+        lexer.addErrorListener(new DSLTokenizerErrorListener());
         TokenStream tokens = new CommonTokenStream(lexer);
         print("Finished tokenization");
 
         print("Starting parsing");
         GifDSLParser parser = new GifDSLParser(tokens);
         parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
-        parser.addErrorListener(new GifDSLErrorListener(GifDSLErrorListener.PREFIX_PARSER_ERROR));
+        parser.addErrorListener(new DSLParserErrorListener());
         print("Finished parsing");
 
         print("Started AST conversion");

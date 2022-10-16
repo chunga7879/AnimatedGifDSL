@@ -2,7 +2,6 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
-import core.checkers.ArgumentChecker;
 import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
@@ -21,9 +20,8 @@ public class GetHeight extends AbstractFunction {
     }
 
     @Override
-    public IntegerValue checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-        return new IntegerValue(0);
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override

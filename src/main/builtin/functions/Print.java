@@ -1,7 +1,6 @@
 package builtin.functions;
 
 import core.Scope;
-import core.checkers.ArgumentChecker;
 import core.values.AbstractFunction;
 import core.values.Null;
 import core.values.StringValue;
@@ -19,9 +18,8 @@ public class Print extends AbstractFunction {
     }
 
     @Override
-    public Null checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-        return checkReturn();
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override

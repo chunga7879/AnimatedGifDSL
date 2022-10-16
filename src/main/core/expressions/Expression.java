@@ -1,8 +1,7 @@
 package core.expressions;
 
-import core.Scope;
-import core.values.Value;
+import core.Node;
 
-public interface Expression {
-    <C, T> T accept(C ctx, ExpressionVisitor<C, T> v);
+public abstract class Expression extends Node {
+    public abstract <C, T> T accept(C ctx, ExpressionVisitor<C, T> v);
 }
