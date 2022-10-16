@@ -142,4 +142,4 @@ LOOP i IN 1 TO 50:
                 
 SAVE frames
   WITH duration: 10
-  WITH location: "src/test/e2e/testImages/videoExample.gif"
+  WITH location: "./video/videoExample.gif"

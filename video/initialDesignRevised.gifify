@@ -1,3 +1,4 @@
+// CAUTION: This is from an old version of the DSL and will not compile
 // Can now reuse this colour everywhere
 CREATE-COLOUR colour
   WITH r: 0

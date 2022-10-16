@@ -163,7 +163,7 @@ public class VideoExample {
                 
             SAVE frames
               WITH duration: 12
-              WITH location: "video/videoExample.gif"
+              WITH location: "./src/test/e2e/testImages/videoExample.gif"
             """;
         Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
         Evaluator evaluator = new Evaluator();
