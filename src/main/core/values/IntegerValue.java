@@ -1,7 +1,6 @@
 package core.values;
 
 import core.Scope;
-import core.expressions.Expression;
 import core.expressions.arithmetic.ArithmeticVisitor;
 import core.expressions.comparison.ComparisonVisitor;
 
@@ -31,5 +30,10 @@ public class IntegerValue extends Value {
     @Override
     public Value accept(ArithmeticVisitor av, Value b, Scope s) {
         return av.visit(this, b, s);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.n);
     }
 }

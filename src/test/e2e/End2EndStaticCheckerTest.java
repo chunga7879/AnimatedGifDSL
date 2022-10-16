@@ -451,6 +451,23 @@ public class End2EndStaticCheckerTest {
     }
 
     @Test
+    public void testRecursiveCall() {
+        String input = """
+            DEFINE func WITH (x):
+              func
+                WITH x: 10
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow statements after return");
+        } catch (FunctionNameException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(2, e.getLinePosition());
+            Assertions.assertEquals(2, e.getColumnPosition());
+        }
+    }
+
+    @Test
     public void testFunctionOverlapsVariable() {
         String input = """
             SET 0 as func
