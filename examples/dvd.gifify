@@ -17,7 +17,7 @@ DEFINE RANDOM-COLOUR image WITH (min, max):
     WITH colour: colour
   RETURN image
 
-LOAD "examples/dvd-logo.png" AS dvd
+LOAD "examples/exampleImages/dvd-logo.png" AS dvd
 
 RESIZE dvd AS dvd
   WITH width: 40
@@ -88,4 +88,4 @@ LOOP f IN frames:
 
 SAVE editedFrames
   WITH duration: 4
-  WITH location: "examples/dvd.gif"
+  WITH location: "examples/exampleOutputs/final.gif"
