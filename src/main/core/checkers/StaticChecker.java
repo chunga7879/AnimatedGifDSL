@@ -78,10 +78,18 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     @Override
     public Value visit(Scope ctx, Function f) {
         f.checkArgs(ctx);
+        Value returnValue = Null.NULL;
         for (Statement s : f.getStatements()) {
-            s.accept(ctx, this);
+            if (!(returnValue instanceof Null)) {
+                throw new StatementException("Cannot have statements after Return").withPosition(s);
+            }
+            if (s instanceof Return r) {
+                returnValue = r.e().accept(ctx, this);
+            } else {
+                s.accept(ctx, this);
+            }
         }
-        return new Unknown();
+        return returnValue;
     }
 
     @Override
@@ -98,6 +106,10 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
         if (ctx.hasVar(name)) {
             throw new FunctionNameException("Declared function \"" + name + "\" already exists").withPosition(fd);
+        }
+
+        for (Statement statement : fd.statements()) {
+            failIfFunctionDefinition(statement);
         }
 
         Function function = new Function(fd.statements(), fd.params());
@@ -121,6 +133,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     public Value visit(Scope ctx, IfStatement is) {
         is.cond().accept(ctx, this);
         for (Statement s : is.statements()) {
+            failIfFunctionDefinition(s);
             s.accept(ctx, this);
         }
         return null;
@@ -135,6 +148,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
         Scope loopScope = ctx.newChildScope();
         loopScope.setLocalVar(ls.loopVar(), array.get().size() > 0 ? array.get().get(0) : new Unknown());
         for (Statement s : ls.statements()) {
+            failIfFunctionDefinition(s);
             s.accept(loopScope, this);
         }
         return null;
@@ -142,7 +156,7 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
 
     @Override
     public Value visit(Scope ctx, Return r) {
-        return r.e().accept(ctx, this);
+        throw new StatementException("Return can only be inside of Define").withPosition(r);
     }
 
     @Override
@@ -156,10 +170,15 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
             if (Objects.equals(prevVal.getTypeName(), AbstractFunction.NAME))
                 throw new FunctionNameException("Cannot redefine function: " + va.dest()).withPosition(va);
         }
+
+        Value returnValue = va.expr().accept(ctx, this);
+
+        if (returnValue instanceof Null) throw new VariableException("Expression does not return a value").withPosition(va);
+
         if (va.local()) {
-            ctx.setLocalVar(va.dest(), va.expr().accept(ctx, this));
+            ctx.setLocalVar(va.dest(), returnValue);
         } else {
-            ctx.setVar(va.dest(), va.expr().accept(ctx, this));
+            ctx.setVar(va.dest(), returnValue);
         }
         return null;
     }
@@ -168,5 +187,15 @@ public class StaticChecker implements ExpressionVisitor<Scope, Value>, Statement
     public Value visit(Scope ctx, ExpressionWrapper ew) {
         ew.e().accept(ctx, this);
         return null;
+    }
+
+    /**
+     * Throw exception if statement is a FunctionDefinition
+     * @param statement
+     */
+    private void failIfFunctionDefinition(Statement statement) {
+        if (statement instanceof FunctionDefinition) {
+            throw new StatementException("Can only define functions at the base level").withPosition(statement);
+        }
     }
 }

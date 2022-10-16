@@ -1,14 +1,16 @@
 package e2e;
 
-import builtin.functions.Print;
-import builtin.functions.Random;
-import builtin.functions.Set;
+import builtin.functions.*;
 import core.exceptions.*;
 import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import parser.GifDSLCompiler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class End2EndStaticCheckerTest {
     private GifDSLCompiler compiler;
@@ -19,6 +21,10 @@ public class End2EndStaticCheckerTest {
         compiler.addPredefinedValues(Print.ACTUAL_NAME, new Print());
         compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
         compiler.addPredefinedValues(Random.ACTUAL_NAME, new Random());
+        compiler.addPredefinedValues(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
+        compiler.addPredefinedValues(CreateList.ACTUAL_NAME, new CreateList());
+        compiler.addPredefinedValues(Add.ACTUAL_NAME, new Add());
+        compiler.addPredefinedValues(Save.ACTUAL_NAME, new Save());
         compiler.setEnableStaticChecker(true);
         compiler.setEnableShortcuts(true);
     }
@@ -286,5 +292,171 @@ public class End2EndStaticCheckerTest {
               RETURN a + b
             """;
         compiler.compile(CharStreams.fromString(goodInput));
+    }
+
+    @Test
+    public void testDefineInNonBaseLevel() {
+        List<String> inputs = new ArrayList<>() {{
+            add("""
+            DEFINE func:
+              DEFINE func2:
+                PRINT "hi"
+            """);
+            add("""
+            IF (10 > 0):
+              DEFINE func:
+                PRINT "hi"
+            """);
+            add("""
+            LOOP x IN 1 TO 2:
+              DEFINE func:
+                PRINT "hi"
+            """);
+        }};
+        for (String input : inputs) {
+            try {
+                compiler.compile(CharStreams.fromString(input));
+                Assertions.fail("Should not allow define inside other control statements");
+            } catch (StatementException e) {
+                System.out.println(e.getMessage());
+                Assertions.assertEquals(2, e.getLinePosition());
+            }
+        }
+    }
+
+    @Test
+    public void testReturnNotInDefine() {
+        List<String> inputs = new ArrayList<>() {{
+            add("""
+            // empty
+            PRINT "hi"
+            RETURN 2
+            """);
+            add("""
+            PRINT "hello world"
+            IF (10 < 11):
+              RETURN 3
+            """);
+            add("""
+            SET 12 AS x
+            IF (10 < x):
+              RETURN 3
+            """);
+            add("""
+            DEFINE func WITH (a):
+              IF (10 > 0):
+                RETURN a
+            """);
+            add("""
+            DEFINE func WITH (b):
+              LOOP i IN 10 TO 0:
+                RETURN b
+            """);
+        }};
+        for (String input : inputs) {
+            try {
+                compiler.compile(CharStreams.fromString(input));
+                Assertions.fail("Should not allow define inside other control statements");
+            } catch (StatementException e) {
+                System.out.println(e.getMessage());
+                Assertions.assertEquals(3, e.getLinePosition());
+            }
+        }
+    }
+
+    @Test
+    public void testUsingUserDefinedFunctionReturn() {
+        String input = """
+            DEFINE func WITH (x):
+              RETURN x
+            func as a
+              WITH x: "hi"
+            PRINT a
+            """;
+        compiler.compile(CharStreams.fromString(input));
+    }
+
+    @Test
+    public void testUsingUserDefinedFunctionReturnAsWrongType() {
+        String input = """
+            DEFINE func WITH (x):
+              SET x AS i
+              RETURN i
+            func as a
+              WITH x: "hi"
+            func as b
+              WITH x: 100
+            PRINT a
+            PRINT b
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow operation with wrong type");
+        } catch (FunctionException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(9, e.getLinePosition());
+        }
+    }
+
+    @Test
+    public void testNoReturnFunctions() {
+        String inputPrint = """
+            SET "hello, world" as a
+            PRINT "hi"
+            PRINT a
+            PRINT "hi" as b
+            """;
+        String inputSave = """
+            CREATE-RECTANGLE as image
+              WITH width: 100
+              WITH height: 100
+              WITH colour: #FFFFFF
+            CREATE-LIST AS frames
+            ADD frames
+              WITH item: image
+            SAVE frames as this
+              WITH duration: 10
+              WITH location: "./test.gif"
+            """;
+        String inputUserDefined = """
+            SET 2 as var
+            DEFINE func a:
+              SET 10 AS a
+            func var
+            func var AS var
+            """;
+        List<Pair<String, Integer>> inputs = new ArrayList<>() {{
+            add(new Pair<>(inputPrint, 4));
+            add(new Pair<>(inputSave, 8));
+            add(new Pair<>(inputUserDefined, 5));
+        }};
+        for (Pair<String, Integer> input : inputs) {
+            try {
+                compiler.compile(CharStreams.fromString(input.a));
+                Assertions.fail("Should not allow 'as' for functions with no return");
+            } catch (FunctionException e) {
+                System.out.println(e.getMessage());
+                Assertions.assertEquals(input.b, e.getLinePosition());
+            }
+        }
+    }
+
+    @Test
+    public void testStatementsAfterReturn() {
+        String input = """
+            DEFINE func WITH (x):
+              SET x + 5 AS x
+              RETURN x
+              SET 10 AS x
+            func as a
+              WITH x: 10
+            """;
+        try {
+            compiler.compile(CharStreams.fromString(input));
+            Assertions.fail("Should not allow statements after return");
+        } catch (StatementException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(4, e.getLinePosition());
+        }
     }
 }
