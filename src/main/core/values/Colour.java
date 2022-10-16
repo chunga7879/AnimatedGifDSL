@@ -1,5 +1,7 @@
 package core.values;
 
+import core.exceptions.InvalidArgumentException;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +16,7 @@ public class Colour extends Value {
         super(NAME);
 
         if (r < 0 || g < 0 || b < 0 || r > 255 || g > 255 || b > 255) {
-            throw new IllegalArgumentException("r,g,b values out of range");
+            throw new InvalidArgumentException("r,g,b values out of range");
         }
 
         this.r = r;
@@ -28,7 +30,7 @@ public class Colour extends Value {
         if (hex.startsWith("#")) {
             hex = hex.substring(1);
         } else {
-            throw new IllegalArgumentException("Colours in hex format should start with #");
+            throw new InvalidArgumentException("Colours in hex format should start with #");
         }
 
         // Check that there are no values ^[A-F0-9]
@@ -37,7 +39,7 @@ public class Colour extends Value {
         boolean containsInvalidCharacter = matcher.find();
 
         if (hex.length() != 6 || containsInvalidCharacter) {
-            throw new IllegalArgumentException("Invalid hex colour");
+            throw new InvalidArgumentException("Invalid hex colour");
         }
 
         this.r = Integer.parseInt(hex.substring(0, 2), 16);

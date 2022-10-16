@@ -3,7 +3,7 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.color.RGBColor;
 import core.Scope;
-import core.checkers.ArgumentChecker;
+import core.exceptions.InvalidArgumentException;
 import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
@@ -19,7 +19,7 @@ public class SetOpacity extends AbstractFunction {
         IntegerValue opacityAmount = scope.getLocalVar("amount").asInteger();
 
         if (opacityAmount.get() > 100 || opacityAmount.get() < 0) {
-            throw new IllegalArgumentException("Opacity value should be within [0, 100]");
+            throw new InvalidArgumentException("Opacity value should be within [0, 100]");
         }
 
         // scrimage library accepts alpha range from 0 - 255

@@ -4,6 +4,7 @@ import builtin.functions.Filter;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.nio.PngWriter;
 import core.Scope;
+import core.exceptions.InvalidArgumentException;
 import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.StringValue;
@@ -122,7 +123,7 @@ public class FilterTest {
             Filter filter = new Filter();
             filter.call(scope);
             Assertions.fail();
-        } catch (IllegalArgumentException exception) {
+        } catch (InvalidArgumentException exception) {
             Assertions.assertTrue(true);
         }
     }

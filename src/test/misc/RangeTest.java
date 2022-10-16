@@ -20,7 +20,7 @@ public class RangeTest {
         Scope s = new Scope();
         s.setVar("start", new IntegerValue(start));
         s.setVar("end", new IntegerValue(end));
-        Value v = f.call(new Scope());
+        Value v = f.call(s);
         ArrayList<Value> a = v.asArray().get();
         assertEquals(a.size(), end);
         for (int i = start; i < end; i++) {

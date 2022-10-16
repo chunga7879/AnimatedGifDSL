@@ -108,6 +108,8 @@ public class Evaluator implements StatementVisitor<Scope, Void>, ExpressionVisit
             return ctx.getVar(fc.identifier()).asFunction().accept(funcScope, this);
         } catch (DSLException e) {
             throw e.withPosition(fc);
+        } catch (Exception e) {
+            throw new InternalException(e.getMessage()).withPosition(fc);
         }
     }
 

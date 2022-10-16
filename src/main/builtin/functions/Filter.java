@@ -2,7 +2,7 @@ package builtin.functions;
 
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
-import core.checkers.ArgumentChecker;
+import core.exceptions.InvalidArgumentException;
 import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.StringValue;
@@ -64,7 +64,7 @@ public class Filter extends AbstractFunction {
                 filteredImage = FilterApplicator.chrome(image);
                 break;
             default:
-                throw new IllegalArgumentException("Filter not supported.");
+                throw new InvalidArgumentException("Filter not supported.");
         }
         return filteredImage;
     }
