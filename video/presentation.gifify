@@ -1,0 +1,282 @@
+// video.gliffy
+DEFINE RANDOM-COLOUR image WITH (min, max):
+  RANDOM AS r
+    WITH min: min
+    WITH max: max
+  RANDOM AS g
+    WITH min: min
+    WITH max: max
+  RANDOM AS b
+    WITH min: min
+    WITH max: max
+  CREATE-COLOUR AS colour
+    WITH r: r
+    WITH g: g
+    WITH b: b
+  COLOUR-FILL image AS image
+    WITH colour: colour
+  RETURN image
+
+DEFINE WRITE-TITLE title:
+  WRITE title AS titleElement
+    WITH size: 20
+    WITH font: "Sepia"
+    WITH style: "Bold"
+    WITH width: 400
+    WITH height: 50
+  RETURN titleElement
+DEFINE OVERLAY-TEXT-IMAGE image WITH (text, background):
+  OVERLAY image ON background AS imageBackground
+    WITH x: 125
+    WITH y: 150
+
+  OVERLAY text ON imageBackground AS textBackground
+    WITH x: 0
+    WITH y: 100
+
+  RETURN textBackground
+
+DEFINE VIDEO-EXAMPLE:
+  CREATE-LIST as frames2
+  SET 400 AS backgroundWidth
+  SET 400 AS backgroundHeight
+
+  CREATE-RECTANGLE AS background
+    WITH height: backgroundHeight
+    WITH width: backgroundWidth
+    WITH colour: #000000
+
+  LOAD "src/test/e2e/testImages/alex_summers.png" AS professor
+  LOAD "src/test/e2e/testImages/snowy-background.jpeg" AS snowBackground
+
+  RESIZE snowBackground AS snowBackground
+    WITH height: 400
+    WITH width: 400
+
+  SET 150 AS professorHeight
+  SET 150 AS professorWidth
+
+  RESIZE professor AS professor
+    WITH height: professorHeight
+    WITH width: professorWidth
+
+
+  WRITE-TITLE "Alex Summers" AS alexSummers
+  WRITE-TITLE "Alex Winters" AS alexWinters
+  WRITE-TITLE "Alex Disappears" AS alexDisappears
+  WRITE-TITLE "Thanks for watching" AS thanks
+
+
+  LOOP i IN (1, 25):
+    OVERLAY-TEXT-IMAGE professor AS regularProfessor
+      WITH text: alexSummers
+      WITH background: background
+
+    ADD frames2
+      WITH item: regularProfessor
+
+  LOOP i in (1, 25):
+    OVERLAY-TEXT-IMAGE professor AS winterProfessor
+      WITH text: alexWinters
+      WITH background: snowBackground
+
+    ADD frames2
+      WITH item: winterProfessor
+
+  LOOP i in (1, 50):
+    ROTATE professor AS rotatedProfessor
+      WITH angle: i * 6
+
+    SET i * 2 AS opacityAmount
+    SET-OPACITY rotatedProfessor AS goneProfessor
+      WITH amount: 100 - opacityAmount
+
+    OVERLAY-TEXT-IMAGE goneProfessor AS disappearingProfessor
+      WITH text: alexDisappears
+      WITH background: background
+
+    ADD frames2
+      WITH item: disappearingProfessor
+
+  SET backgroundWidth / 2 AS positionX
+  SET backgroundHeight / 2 AS positionY
+  RANDOM AS directionX
+    WITH min: 1
+    WITH max: 10
+  SET 11 - directionX AS directionY
+
+  LOOP i IN (1, 50):
+    SET positionX + directionX AS positionX
+    SET positionY + directionY AS positionY
+    IF (positionX < 0):
+      SET 0 AS positionX
+      SET directionX * -1 AS directionX
+      RANDOM-COLOUR professor AS professor
+        WITH min: 0
+        WITH max: 200
+    IF (positionX > backgroundWidth - professorWidth):
+      SET backgroundWidth - professorWidth AS positionX
+      SET directionX * -1 AS directionX
+      RANDOM-COLOUR professor AS professor
+        WITH min: 0
+        WITH max: 200
+    IF (positionY < 0):
+      SET 0 AS positionY
+      SET directionY * -1 AS directionY
+      RANDOM-COLOUR professor AS professor
+        WITH min: 0
+        WITH max: 200
+    IF (positionY > backgroundHeight - professorHeight):
+      SET backgroundHeight - professorHeight AS positionY
+      SET directionY * -1 AS directionY
+      RANDOM-COLOUR professor AS professor
+        WITH min: 0
+        WITH max: 200
+      OVERLAY professor ON background AS profMoving
+        WITH x: positionX
+        WITH y: positionY
+      OVERLAY thanks ON profMoving AS frame
+        WITH x: 0
+        WITH y: 175
+      ADD frames2
+        WITH item: frame
+  RETURN frames2
+
+// user study 1
+DEFINE MOVE-ROTATE image WITH (background, angle, x, y):
+  ROTATE image
+    WITH angle: angle
+  OVERLAY image ON background
+    WITH x: x
+    WITH y: y
+  RETURN image
+DEFINE USER-STUDY2 WITH (i):
+  CREATE-RECTANGLE AS background
+    WITH width: 300
+    WITH height: 300
+    WITH colour: black
+  LOAD "src/test/e2e/userStudyImages/pumpkin.png" AS pumpkin
+
+  RESIZE pumpkin AS pumpkin
+    with width: 100
+    with height: 100
+
+  CREATE-LIST AS frames3
+  SET 70 AS x
+  SET 50 AS y
+
+  SET x + 3 as x
+  SET y + 3 as y
+  IF (x = 100):
+    COLOUR-FILL pumpkin
+      WITH colour: white
+  IF (y = 100):
+    COLOUR-FILL pumpkin
+      WITH colour: white
+  MOVE-ROTATE pumpkin AS frame
+    WITH background: background
+    WITH angle: i * 10
+    WITH x: x
+    WITH y: y
+  RETURN frame
+
+// user study 1
+DEFINE USER-STUDY1 WITH (i):
+  CREATE-COLOUR AS colour
+    WITH r: 0
+    WITH g: 0
+    WITH b: 0
+
+  CREATE-RECTANGLE AS background
+    WITH width: 400
+    WITH height: 400
+    WITH colour: colour
+
+  // TODO change path to userStudyImages folder (#89)
+  LOAD "./src/test/e2e/testImages/cat.png" AS cat
+
+  RESIZE cat AS cat
+    with width: 100
+    with height: 100
+
+  CREATE-LIST AS frames4
+
+  SET 200 AS y
+  SET 300 AS x
+
+  ROTATE cat AS rotatedCat
+    WITH angle: i * 10
+  OVERLAY rotatedCat ON background AS frame
+    WITH x: x
+    WITH y: y
+  RETURN frame
+
+CREATE-LIST as frames
+
+LOOP i in (1, 12):
+  SET 100 as timing
+  IF (i = 1):
+    SET 10 as timing
+  IF (i = 12):
+    SET 10 as timing
+
+  CREATE-LIST as paths
+  ADD paths
+      WITH item: "video/slides/slide"
+  ADD paths
+      WITH item: i
+  ADD paths
+      WITH item: ".png"
+  CONCAT as file
+      WITH v: paths
+  LOAD file as f
+
+  IF (i != 10):
+    IF (i != 8):
+      RANGE as r
+        with start: 0
+        with end: timing
+      LOOP i in r:
+        ADD frames
+          WITH item: f
+  IF (i = 8):
+    ADD frames
+      WITH item: f
+
+    LOOP i in (1, 35):
+      USER-STUDY1 as us1
+        WITH i: i
+      USER-STUDY2 as us2
+        WITH i: i
+      RESIZE us1 as us1
+        WITH width: 582
+        WITH height: 582
+      OVERLAY us1 ON f as f2
+        WITH x: 299
+        WITH y: 394
+      RESIZE us2 as us2
+        WITH width: 582
+        WITH height: 582
+      OVERLAY us2 ON f2 as f2
+        WITH x: 1060
+        WITH y: 394
+      ADD frames
+        with item: f2
+  IF (i = 10):
+    ADD frames
+      WITH item: f
+    VIDEO-EXAMPLE as ve
+
+    LOOP f2 in ve:
+      RESIZE f2 as f2
+        WITH width: 1035
+        WITH height: 1035
+      OVERLAY f2 ON f as f2
+        WITH x: 712
+        WITH y: 44
+      ADD frames
+        WITH item: f2
+
+SAVE frames
+    WITH duration: 160
+    WITH location: "video/presentation.gif"

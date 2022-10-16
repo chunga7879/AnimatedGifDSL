@@ -38,7 +38,9 @@ public class GifDSLCompiler extends DSLCompiler {
             new Save(),
             new SetOpacity(),
             new Translate(),
-            new Write()
+            new Write(),
+            new Range(),
+            new Concat()
         );
         for (AbstractFunction function : builtInFunctions) {
             addPredefinedValues(function.getFunctionName(), function);
