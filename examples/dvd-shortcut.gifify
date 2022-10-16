@@ -88,4 +88,4 @@ LOOP f IN frames:
 
 SAVE editedFrames
   WITH duration: 4
-  WITH location: "examples/exampleOutputs/final.gif"
+  WITH location: "examples/exampleOutputs/dvd.gif"

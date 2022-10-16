@@ -1,4 +1,5 @@
-LOAD "./examples/cat.png" AS cat
+// jumping cat gif
+LOAD "./examples/exampleImages/cat.png" AS cat
 CREATE-LIST AS frames
 
 SET 155 AS y
@@ -42,4 +43,4 @@ LOOP i IN 1 TO 15:
 
 SAVE frames
   WITH duration: 10
-  WITH location: "./examples/jumping-cat.gif"
+  WITH location: "./examples/exampleOutputs/jumping-cat.gif"

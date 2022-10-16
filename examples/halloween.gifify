@@ -1,4 +1,4 @@
-LOAD "./examples/pumpkin.png" AS pumpkin
+LOAD "./examples/exampleImages/pumpkin.png" AS pumpkin
 
 CREATE-RECTANGLE AS background
   WITH width: 500
@@ -35,4 +35,4 @@ LOOP i in 0 to 50:
 
 SAVE frames
   WITH duration: 5
-  WITH location: "./examples/halloween.gif"
+  WITH location: "./examples/exampleOutputs/halloween.gif"

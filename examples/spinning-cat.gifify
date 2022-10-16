@@ -1,4 +1,5 @@
-LOAD "./examples/cat.png" AS cat
+// spinning cat gif
+LOAD "./examples/exampleImages/cat.png" AS cat
 
 CREATE-COLOUR AS colour
   WITH r: 0
@@ -30,4 +31,4 @@ LOOP i in 1 TO 360:
 
 SAVE frames
   WITH duration: 5
-  WITH location: "./examples/spinning-cat.gif"
+  WITH location: "./examples/exampleOutputs/spinning-cat.gif"

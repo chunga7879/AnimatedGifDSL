@@ -40,4 +40,4 @@ LOOP i in 1 TO 100:
 
 SAVE frames
   with duration: 8
-  with location: "./examples/car.gif"
+  with location: "./examples/exampleOutputs/car.gif"
