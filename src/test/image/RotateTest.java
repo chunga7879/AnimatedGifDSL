@@ -1,9 +1,9 @@
 package image;
 
-import builtin.functions.Resize;
 import builtin.functions.Rotate;
 import com.sksamuel.scrimage.ImmutableImage;
 import core.Scope;
+import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
 import files.filesystem.FileSystem;
@@ -17,7 +17,7 @@ class RotateTest {
     public void rotateSuccess() throws FileNotFoundException {
         Scope scope = new Scope();
         ImmutableImage dvd = FileSystem.openImage("dvd-logo.png");
-        scope.setVar("$target", new Image(dvd));
+        scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
         scope.setVar("angle", new IntegerValue(45));
 
         Rotate rotate = new Rotate();
@@ -29,5 +29,34 @@ class RotateTest {
         Assertions.assertEquals(dvd.width, resultImage.get().width);
         Assertions.assertEquals(dvd.height, resultImage.get().height);
         Assertions.assertNotNull(resultImage.get());
+    }
+
+    @Test
+    public void rotateSuccessTwo() throws FileNotFoundException {
+        Scope scope = new Scope();
+        ImmutableImage dvd = FileSystem.openImage("pumpkin.png");
+        scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
+        scope.setVar("angle", new IntegerValue(10));
+
+        Rotate rotate = new Rotate();
+
+        Image resultImage = (Image) rotate.call(scope);
+
+        FileSystem.saveImage(resultImage.get(), "src/test/image/files/pumpkin-rotate-test.png");
+
+        Assertions.assertEquals(dvd.width, resultImage.get().width);
+        Assertions.assertEquals(dvd.height, resultImage.get().height);
+        Assertions.assertNotNull(resultImage.get());
+    }
+
+    @Test
+    public void rotateSuccessLocal() throws FileNotFoundException {
+        ImmutableImage dvd = FileSystem.openImage("pumpkin.png");
+
+        Rotate rotate = new Rotate();
+
+        dvd = rotate.rotate(dvd, 180);
+
+        FileSystem.saveImage(dvd, "src/test/image/files/pumpkin--local-rotate-test.png");
     }
 }

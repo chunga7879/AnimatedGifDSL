@@ -34,7 +34,7 @@ This is the updated documentation file after Milestone 3.
 - User-defined variables cannot have the same name as constants
 - All constants
   - Colours:
-    - Black, Grey, White, Red, Green, Blue, Yellow, Cyan, Magenta, Orange, Purple
+    - Black, Grey, White, Red, Orange, Yellow, Green, Blue, Cyan, Magenta, Purple
 
 ### Functions
 - Functions are statements that performs an action
@@ -78,9 +78,9 @@ IF ([value] [>=, <=, >, <, =, !=] [value]):
   [...]
 ```
 Loop - Loop over the inner statements from numbers "from" to "to"
-- *Iterator variable* is assigned each number from "from" to "to" during the loop iterations
+- *Iterator variable* is assigned each number from "from" to "to" (inclusive) during the loop iterations
 ```
-LOOP [iterator variable] IN ([from], [to]):
+LOOP [iterator variable] IN [from] TO [to]:
   [...]
 ```
 Loop - Loop over the inner statements for each of the elements in the list
@@ -97,7 +97,7 @@ Indents indicate function parameters and functions inside of if/loop/defines. Th
 
 ### Built-in Functions
 #### File System
-Load - Create an image variable from a image file
+Load - Create an image variable from an image file
 ```
 LOAD [file path] AS [variable name]
 ```
@@ -188,7 +188,7 @@ Filter - Apply a filter to an image
 *Supported Filters:* `"invert"`, `"greyscale"`, `"blur"`, `"sharpen"`, `"sepia"`, `"chrome"`
 ```
 FILTER [image] AS [variable name]
-  WITH filter: [filter name]
+  WITH filtering: [filter name]
 ```
 #### Custom Functions
 Define - Create a custom function
@@ -228,12 +228,6 @@ Add - Add a copy of an item to list
 ```
 ADD [list]
   WITH item: [item]
-```
-Add - Add a list to another list (items will be copied)
-- The final result will have order: `list1`, `list2`
-```
-ADD [list1]
-  WITH list: [item2]
 ```
 Create Colour - Create a colour from RGB values
 ```

@@ -1,0 +1,72 @@
+import builtin.functions.*;
+import builtin.functions.colour.CreateColour;
+import builtin.functions.colour.GetB;
+import builtin.functions.colour.GetG;
+import builtin.functions.colour.GetR;
+import core.Scope;
+import core.evaluators.Evaluator;
+import core.statements.Program;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.misc.Pair;
+import parser.GifDSLCompiler;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            boolean staticCheck = true;
+            boolean shortcuts = false;
+            if (args.length < 1) {
+                throw new IOException("Requires input file as arg");
+            }
+            HashSet<String> parameters = new HashSet<>(List.of(args).subList(1, args.length));
+            if (parameters.contains("-nocheck")) {
+                staticCheck = false;
+            }
+            if (parameters.contains("-shortcuts")) {
+                shortcuts = true;
+            }
+            GifDSLCompiler compiler = new GifDSLCompiler();
+            compiler.setEnableStaticChecker(staticCheck);
+            compiler.setEnableShortcuts(shortcuts);
+
+            // Add built-in functions
+            compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
+            compiler.addPredefinedValues(CreateColour.ACTUAL_NAME, new CreateColour());
+            compiler.addPredefinedValues(GetB.ACTUAL_NAME, new GetB());
+            compiler.addPredefinedValues(GetG.ACTUAL_NAME, new GetG());
+            compiler.addPredefinedValues(GetR.ACTUAL_NAME, new GetR());
+            compiler.addPredefinedValues(Add.ACTUAL_NAME, new Add());
+            compiler.addPredefinedValues(ColourFill.ACTUAL_NAME, new ColourFill());
+            compiler.addPredefinedValues(CreateList.ACTUAL_NAME, new CreateList());
+            compiler.addPredefinedValues(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
+            compiler.addPredefinedValues(Crop.ACTUAL_NAME, new Crop());
+            compiler.addPredefinedValues(Filter.ACTUAL_NAME, new Filter());
+            compiler.addPredefinedValues(GetHeight.ACTUAL_NAME, new GetHeight());
+            compiler.addPredefinedValues(GetWidth.ACTUAL_NAME, new GetWidth());
+            compiler.addPredefinedValues(Load.ACTUAL_NAME, new Load());
+            compiler.addPredefinedValues(Overlay.ACTUAL_NAME, new Overlay());
+            compiler.addPredefinedValues(Print.ACTUAL_NAME, new Print());
+            compiler.addPredefinedValues(Random.ACTUAL_NAME, new Random());
+            compiler.addPredefinedValues(Resize.ACTUAL_NAME, new Resize());
+            compiler.addPredefinedValues(Rotate.ACTUAL_NAME, new Rotate());
+            compiler.addPredefinedValues(Save.ACTUAL_NAME, new Save());
+            compiler.addPredefinedValues(SetOpacity.ACTUAL_NAME, new SetOpacity());
+            compiler.addPredefinedValues(Translate.ACTUAL_NAME, new Translate());
+            compiler.addPredefinedValues(Write.ACTUAL_NAME, new Write());
+
+            Pair<Program, Scope> main = compiler.compile(CharStreams.fromFileName(args[0]));
+
+            System.out.println("[Gif DSL Runner] Starting runner");
+            Evaluator evaluator = new Evaluator();
+            evaluator.visit(main.b, main.a);
+            System.out.println("[Gif DSL Runner] Finished runner");
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+//            throw e;
+        }
+    }
+}
