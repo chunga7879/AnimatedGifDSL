@@ -1,13 +1,10 @@
 package e2e;
 
-import builtin.functions.*;
-import builtin.functions.colour.CreateColour;
 import core.Scope;
 import core.evaluators.Evaluator;
 import core.statements.Program;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import parser.GifDSLCompiler;
@@ -17,20 +14,6 @@ public class VideoExample {
     @BeforeEach
     public void beforeEach() {
         compiler = new GifDSLCompiler();
-        compiler.addPredefinedValues(ColourFill.ACTUAL_NAME, new ColourFill());
-        compiler.addPredefinedValues(Save.ACTUAL_NAME, new Save());
-        compiler.addPredefinedValues(Add.ACTUAL_NAME, new Add());
-        compiler.addPredefinedValues(Rotate.ACTUAL_NAME, new Rotate());
-        compiler.addPredefinedValues(Overlay.ACTUAL_NAME, new Overlay());
-        compiler.addPredefinedValues(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
-        compiler.addPredefinedValues(CreateList.ACTUAL_NAME, new CreateList());
-        compiler.addPredefinedValues(Load.ACTUAL_NAME, new Load());
-        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
-        compiler.addPredefinedValues(Resize.ACTUAL_NAME, new Resize());
-        compiler.addPredefinedValues(SetOpacity.ACTUAL_NAME, new SetOpacity());
-        compiler.addPredefinedValues(Write.ACTUAL_NAME, new Write());
-        compiler.addPredefinedValues(Random.ACTUAL_NAME, new Random());
-        compiler.addPredefinedValues(CreateColour.ACTUAL_NAME, new CreateColour());
     }
 
     @Test

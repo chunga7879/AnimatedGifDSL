@@ -17,7 +17,7 @@ class GetHeightTest {
     @Test
     public void getHeightSuccess() throws FileNotFoundException {
         Scope scope = new Scope();
-        ImmutableImage dvd = FileSystem.openImage("dvd-logo.png");
+        ImmutableImage dvd = FileSystem.openImage("src/test/image/inputs/dvd-logo.png");
         scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
         GetHeight getHeight = new GetHeight();
         IntegerValue height = (IntegerValue) getHeight.call(scope);

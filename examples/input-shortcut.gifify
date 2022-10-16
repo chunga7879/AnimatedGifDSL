@@ -17,7 +17,7 @@ DEFINE RANDOM-COLOUR image WITH (min, max):
     WITH colour: colour
   RETURN image
 
-LOAD "dvd-logo.png" AS dvd
+LOAD "examples/dvd-logo.png" AS dvd
 
 RESIZE dvd
   WITH width: 40
@@ -45,7 +45,7 @@ RANDOM AS directionX
   WITH max: 10
 SET 11 - directionX AS directionY
 
-LOOP i IN (1, 360):
+LOOP i IN 1 TO 360:
   SET positionX + directionX AS positionX
   SET positionY + directionY AS positionY
   IF (positionX < 0):
@@ -88,4 +88,4 @@ LOOP f IN frames:
 
 SAVE editedFrames
   WITH duration: 4
-  WITH location: "final.gif"
+  WITH location: "examples/final.gif"

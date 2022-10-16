@@ -16,7 +16,7 @@ class CropTest {
     @Test
     public void cropSuccess() throws FileNotFoundException {
         Scope scope = new Scope();
-        ImmutableImage dvd = FileSystem.openImage("dvd-logo.png");
+        ImmutableImage dvd = FileSystem.openImage("src/test/image/inputs/dvd-logo.png");
         scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
         scope.setVar("width", new IntegerValue(1000));
         scope.setVar("height", new IntegerValue(300));

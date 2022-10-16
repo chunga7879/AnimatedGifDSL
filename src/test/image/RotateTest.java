@@ -16,7 +16,7 @@ class RotateTest {
     @Test
     public void rotateSuccess() throws FileNotFoundException {
         Scope scope = new Scope();
-        ImmutableImage dvd = FileSystem.openImage("dvd-logo.png");
+        ImmutableImage dvd = FileSystem.openImage("src/test/image/inputs/dvd-logo.png");
         scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
         scope.setVar("angle", new IntegerValue(45));
 
@@ -34,7 +34,7 @@ class RotateTest {
     @Test
     public void rotateSuccessTwo() throws FileNotFoundException {
         Scope scope = new Scope();
-        ImmutableImage dvd = FileSystem.openImage("pumpkin.png");
+        ImmutableImage dvd = FileSystem.openImage("src/test/image/inputs/pumpkin.png");
         scope.setVar(AbstractFunction.PARAM_TARGET, new Image(dvd));
         scope.setVar("angle", new IntegerValue(10));
 
@@ -51,7 +51,7 @@ class RotateTest {
 
     @Test
     public void rotateSuccessLocal() throws FileNotFoundException {
-        ImmutableImage dvd = FileSystem.openImage("pumpkin.png");
+        ImmutableImage dvd = FileSystem.openImage("src/test/image/inputs/pumpkin.png");
 
         Rotate rotate = new Rotate();
 

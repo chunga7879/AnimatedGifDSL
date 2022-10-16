@@ -1,9 +1,9 @@
 package e2e;
 
-import builtin.functions.Print;
-import builtin.functions.Random;
-import builtin.functions.Set;
-import core.exceptions.*;
+import core.exceptions.FunctionException;
+import core.exceptions.FunctionNameException;
+import core.exceptions.NameError;
+import core.exceptions.TypeError;
 import org.antlr.v4.runtime.CharStreams;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,11 +16,6 @@ public class End2EndStaticCheckerTest {
     @BeforeEach
     public void runBefore() {
         compiler = new GifDSLCompiler();
-        compiler.addPredefinedValues(Print.ACTUAL_NAME, new Print());
-        compiler.addPredefinedValues(Set.ACTUAL_NAME, new Set());
-        compiler.addPredefinedValues(Random.ACTUAL_NAME, new Random());
-        compiler.setEnableStaticChecker(true);
-        compiler.setEnableShortcuts(true);
     }
 
     @Test

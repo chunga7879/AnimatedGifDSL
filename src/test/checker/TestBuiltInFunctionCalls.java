@@ -14,7 +14,7 @@ import core.expressions.FunctionCall;
 import core.values.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.ColourConstant;
+import parser.GifDSLCompiler;
 
 import java.util.HashMap;
 
@@ -28,14 +28,14 @@ public class TestBuiltInFunctionCalls {
 
     @BeforeEach
     public void runBefore() {
-        scope = new Scope();
-        setUpScope();
-        staticChecker = new StaticChecker(ColourConstant.getNameList());
+        GifDSLCompiler compiler = new GifDSLCompiler();
+        scope = compiler.getRootScope();
+        staticChecker = compiler.createStaticChecker();
     }
 
     public void testFunctionCallHelper(String functionName, HashMap<String, Expression> args) {
         try {
-            staticChecker.visit(scope, new FunctionCall(functionName, args));
+            staticChecker.visit(scope, new FunctionCall(functionName.toLowerCase(), args));
         } catch (DSLException e) {
             System.out.println(e);
             fail(CATCH_BLOCK_FAIL);
@@ -250,30 +250,5 @@ public class TestBuiltInFunctionCalls {
             put("style", new StringValue("italic"));
         }};
         testFunctionCallHelper(Write.ACTUAL_NAME, args);
-    }
-
-    private void setUpScope() {
-        scope.setVar(CreateColour.ACTUAL_NAME, new CreateColour());
-        scope.setVar(GetB.ACTUAL_NAME, new GetB());
-        scope.setVar(GetG.ACTUAL_NAME, new GetG());
-        scope.setVar(GetR.ACTUAL_NAME, new GetR());
-        scope.setVar(Add.ACTUAL_NAME, new Add());
-        scope.setVar(ColourFill.ACTUAL_NAME, new ColourFill());
-        scope.setVar(CreateList.ACTUAL_NAME, new CreateList());
-        scope.setVar(CreateRectangle.ACTUAL_NAME, new CreateRectangle());
-        scope.setVar(Crop.ACTUAL_NAME, new Crop());
-        scope.setVar(Filter.ACTUAL_NAME, new Filter());
-        scope.setVar(GetHeight.ACTUAL_NAME, new GetHeight());
-        scope.setVar(GetWidth.ACTUAL_NAME, new GetWidth());
-        scope.setVar(Load.ACTUAL_NAME, new Load());
-        scope.setVar(Overlay.ACTUAL_NAME, new Overlay());
-        scope.setVar(Print.ACTUAL_NAME, new Print());
-        scope.setVar(Random.ACTUAL_NAME, new Random());
-        scope.setVar(Resize.ACTUAL_NAME, new Resize());
-        scope.setVar(Rotate.ACTUAL_NAME, new Rotate());
-        scope.setVar(Save.ACTUAL_NAME, new Save());
-        scope.setVar(SetOpacity.ACTUAL_NAME, new SetOpacity());
-        scope.setVar(Translate.ACTUAL_NAME, new Translate());
-        scope.setVar(Write.ACTUAL_NAME, new Write());
     }
 }
