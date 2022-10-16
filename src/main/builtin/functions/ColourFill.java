@@ -3,7 +3,6 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.color.RGBColor;
 import core.Scope;
-import core.checkers.ArgumentChecker;
 import core.values.AbstractFunction;
 import core.values.Colour;
 import core.values.Image;
@@ -29,9 +28,8 @@ public class ColourFill extends AbstractFunction {
     }
 
     @Override
-    public Image checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-        return checkReturn();
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override

@@ -7,8 +7,7 @@ public class InvalidOperation extends DSLException {
     private final String op;
 
     public InvalidOperation(Value v) {
-        this.type = v.getTypeName();
-        this.op = "";
+        this(v, "");
     }
 
     public InvalidOperation(Value v, String op) {

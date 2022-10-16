@@ -1,7 +1,6 @@
 package core.values;
 
 import core.Scope;
-import core.checkers.ArgumentChecker;
 import core.exceptions.InternalException;
 import core.expressions.ExpressionVisitor;
 import core.statements.Statement;
@@ -11,6 +10,7 @@ import java.util.Map;
 
 // A user defined function (or main).
 public class Function extends AbstractFunction {
+    private static final String ACTUAL_NAME = "User-Defined Function";
     private final List<Statement> statements;
     private final Map<String, String> params;
 
@@ -32,10 +32,13 @@ public class Function extends AbstractFunction {
         throw new InternalException("remove me");
     }
 
+    /**
+     * Get name of the function
+     * @return
+     */
     @Override
-    public Value checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, params, "user defined function");
-        return checkReturn();
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override

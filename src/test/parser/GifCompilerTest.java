@@ -12,6 +12,10 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.misc.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import parser.exceptions.DSLConverterError;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -214,6 +218,105 @@ public class GifCompilerTest {
             DO #001122
             """;
         compile(input);
+    }
+
+    @Test
+    public void testNonWithStatementInFunctionCall() {
+        String input = """
+            DO x
+              IF (x > 0):
+                PRINT "hi"
+            """;
+        try {
+            compile(input);
+            Assertions.fail("Should not allow non-with statements inside of function calls");
+        } catch (DSLConverterError e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(2, e.getLinePosition());
+            Assertions.assertEquals(0, e.getColumnPosition());
+        }
+    }
+
+    @Test
+    public void testWithOnBaseLevel() {
+        List<String> inputs = new ArrayList<>() {{
+            add("""
+            PRINT "a"
+            PRINT "hello"
+            WITH x: 0
+            """);
+            add("""
+            IF (x > 0):
+              PRINT "hello"
+              WITH x: 0
+            """);
+            add("""
+            LOOP x IN 1 TO 2:
+              PRINT "hello"
+              WITH x: 0
+            """);
+            add("""
+            DEFINE func:
+              PRINT "hello"
+              WITH x: 0
+            """);
+        }};
+        for (String input : inputs) {
+            try {
+                compile(input);
+                Assertions.fail("Should not allow with statements outside of function calls");
+            } catch (DSLConverterError e) {
+                System.out.println(e.getMessage());
+                Assertions.assertEquals(3, e.getLinePosition());
+                Assertions.assertEquals(0, e.getColumnPosition());
+            }
+        }
+    }
+
+    @Test
+    public void testBadColorFormat() {
+        String input = """
+            DO #FF00FF00FF
+            """;
+        try {
+            compile(input);
+            Assertions.fail("Should not allow bad colour format");
+        } catch (DSLConverterError e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(1, e.getLinePosition());
+            Assertions.assertEquals(3, e.getColumnPosition());
+        }
+    }
+
+    @Test
+    public void testAboveMaxInteger() {
+        String input = """
+            DO 2147483648
+            """;
+        try {
+            compile(input);
+            Assertions.fail("Should not allow above max integer");
+        } catch (DSLConverterError e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(1, e.getLinePosition());
+            Assertions.assertEquals(3, e.getColumnPosition());
+        }
+    }
+
+    @Test
+    public void testBadIntegerInLoop() {
+        String input = """
+            LOOP i IN -2147483649 TO 3:
+              DO i
+            """;
+        try {
+            compile(input);
+            Assertions.fail("Should not allow above max integer");
+        } catch (DSLConverterError e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(1, e.getLinePosition());
+            Assertions.assertEquals(10, e.getColumnPosition());
+        }
     }
 
     private Pair<Program, Scope> compile(String input) {

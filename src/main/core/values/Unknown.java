@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Unknown type, introduced to help static checking
  */
 public class Unknown extends Value {
-    public static final String NAME = "unknown";
+    public static final String NAME = "Unknown";
 
     public Unknown() {
         super(NAME);

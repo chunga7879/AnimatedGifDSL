@@ -41,7 +41,7 @@ public class CoreDemo {
         try {
             mainFunc.accept(rootScope, evaluator);
         } catch (DSLException e) {
-            System.out.println("Got dsl exception: " + e.message());
+            System.out.println("Got dsl exception: " + e.getMessage());
         }
     }
 }

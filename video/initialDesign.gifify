@@ -1,0 +1,39 @@
+// A simple where a cat just spins around in a circle 
+
+RECTANGLE AS background
+  WITH width: 400
+  WITH height: 400
+  WITH r: 0
+  WITH b: 0
+  WITH g: 0
+
+LOAD "./cat.png" AS cat
+LIST AS frames
+
+SET 200 AS y
+SET 300 AS x
+
+LOOP i in (1, 360):
+  OVERLAY cat ON background AS frame
+    WITH x: x
+    WITH y: y
+    WITH angle: i
+  ADD frames
+    WITH item: frame
+
+COLOR cat AS colouredCat
+  WITH r: 0
+  WITH b: 100
+  WITH g: 0
+
+OVERLAY colouredCat ON background AS frame
+  WITH x: x
+  WITH y: y
+  WITH angle: 0
+
+ADD frames
+  WITH item: frame
+
+SAVE frames
+  WITH duration: 5
+  WITH location: "./newGif.gif"

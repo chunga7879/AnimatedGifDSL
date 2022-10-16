@@ -1,14 +1,10 @@
 package core.exceptions;
 
-public class VariableException extends DSLException {
-    private final String msg;
-
+/**
+ * Exception for variables
+ */
+public class VariableException extends FunctionException {
     public VariableException(String msg) {
-        this.msg = msg;
-    }
-
-    @Override
-    public String message() {
-        return this.msg;
+        super(msg);
     }
 }

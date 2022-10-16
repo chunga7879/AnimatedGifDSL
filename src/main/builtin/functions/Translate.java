@@ -3,7 +3,6 @@ package builtin.functions;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.color.Colors;
 import core.Scope;
-import core.checkers.ArgumentChecker;
 import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
@@ -24,9 +23,8 @@ public class Translate extends AbstractFunction {
     }
 
     @Override
-    public Image checkArgs(Scope scope) {
-        ArgumentChecker.check(scope, getParams(), ACTUAL_NAME);
-        return checkReturn();
+    public String getFunctionName() {
+        return ACTUAL_NAME;
     }
 
     @Override

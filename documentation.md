@@ -97,7 +97,7 @@ Indents indicate function parameters and functions inside of if/loop/defines. Th
 
 ### Built-in Functions
 #### File System
-Load - Create an image variable from a image file
+Load - Create an image variable from an image file
 ```
 LOAD [file path] AS [variable name]
 ```
@@ -188,12 +188,6 @@ Add - Add a copy of an item to list
 ```
 ADD [list]
   WITH item: [item]
-```
-Add - Add a list to another list (items will be copied)
-- The final result will have order: `list1`, `list2`
-```
-ADD [list1]
-  WITH list: [item2]
 ```
 Create Colour - Create a colour from RGB values
 ```
