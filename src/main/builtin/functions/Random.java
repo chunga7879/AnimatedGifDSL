@@ -1,6 +1,7 @@
 package builtin.functions;
 
 import core.Scope;
+import core.exceptions.InvalidArgumentException;
 import core.values.AbstractFunction;
 import core.values.IntegerValue;
 import utils.RandomNumber;
@@ -18,6 +19,7 @@ public class Random extends AbstractFunction {
     public IntegerValue call(Scope scope) {
         int min = scope.getLocalVar("min").asInteger().get();
         int max = scope.getLocalVar("max").asInteger().get();
+        if (min > max) throw new InvalidArgumentException("Min is greater than max");
         int num = RandomNumber.getRandomNumber(min, max);
         return new IntegerValue(num);
     }

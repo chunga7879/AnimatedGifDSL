@@ -4,6 +4,7 @@ import builtin.functions.SetOpacity;
 import com.sksamuel.scrimage.ImmutableImage;
 import com.sksamuel.scrimage.nio.PngWriter;
 import core.Scope;
+import core.exceptions.InvalidArgumentException;
 import core.values.AbstractFunction;
 import core.values.Image;
 import core.values.IntegerValue;
@@ -66,8 +67,8 @@ public class SetOpacityTest {
             Assertions.fail("Illegal argument exception should have been thrown.");
         } catch (IOException exception) {
             Assertions.fail(exception.getMessage());
-        } catch (IllegalArgumentException illegalArgumentException) {
-            // Should catch IllegalArgumentException
+        } catch (InvalidArgumentException invalidArgumentException) {
+            // Should catch InvalidArgumentException
         }
     }
 }

@@ -3,6 +3,7 @@ package e2e;
 import core.Scope;
 import core.evaluators.Evaluator;
 import core.exceptions.DSLException;
+import core.exceptions.InvalidArgumentException;
 import core.exceptions.NameError;
 import core.statements.Program;
 import org.antlr.v4.runtime.CharStreams;
@@ -11,6 +12,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import parser.GifDSLCompiler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class End2EndTest {
     private GifDSLCompiler compiler;
@@ -399,6 +403,54 @@ public class End2EndTest {
             Assertions.fail("Should not allow editing of constant");
         } catch (DSLException e) {
             // expected
+        }
+    }
+
+    @Test
+    public void testInvalidInputs() {
+        String inputCreateColour = """
+            CREATE-COLOUR AS colour
+              WITH r: 256
+              WITH g: 0
+              WITH b: 0
+            """;
+        String inputFilter = """
+            CREATE-RECTANGLE as img
+              WITH width: 10
+              WITH height: 10
+              WITH colour: black
+            FILTER img
+              WITH filtering: "non-existent"
+            """;
+        String inputOpacity = """
+            CREATE-RECTANGLE as img
+              WITH width: 10
+              WITH height: 10
+              WITH colour: black
+            SET-OPACITY img
+              WITH amount: 101
+            """;
+        String inputRandom = """
+            RANDOM as rand
+              WITH min: 100
+              WITH max: 10
+            """;
+        List<Pair<String, Integer>> inputs = new ArrayList<>() {{
+            add(new Pair<>(inputCreateColour, 1));
+            add(new Pair<>(inputFilter, 5));
+            add(new Pair<>(inputOpacity, 5));
+            add(new Pair<>(inputRandom, 1));
+        }};
+        for (Pair<String, Integer> input : inputs) {
+            Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input.a));
+            Evaluator evaluator = new Evaluator();
+            try {
+                evaluator.visit(main.b, main.a);
+                Assertions.fail("Should not allow invalid arguments to functions");
+            } catch (InvalidArgumentException e) {
+                System.out.println(e.getMessage());
+                Assertions.assertEquals(input.b, e.getLinePosition());
+            }
         }
     }
 }

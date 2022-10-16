@@ -1,5 +1,6 @@
 package colour;
 
+import core.exceptions.InvalidArgumentException;
 import core.values.Colour;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class ColourTest {
         try {
             Colour colour = new Colour(100, 300, 210);
             Assertions.assertFalse(true);
-        } catch (IllegalArgumentException exception) {
+        } catch (InvalidArgumentException exception) {
             Assertions.assertTrue(true);
         }
     }
@@ -37,7 +38,7 @@ public class ColourTest {
         try {
             Colour colour = new Colour("#ZKKKKK");
             Assertions.assertFalse(true);
-        } catch (IllegalArgumentException exception) {
+        } catch (InvalidArgumentException exception) {
             Assertions.assertTrue(true);
         }
     }
@@ -47,7 +48,7 @@ public class ColourTest {
         try {
             Colour colour = new Colour("#12345");
             Assertions.assertFalse(true);
-        } catch (IllegalArgumentException exception) {
+        } catch (InvalidArgumentException exception) {
             Assertions.assertTrue(true);
         }
     }
