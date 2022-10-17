@@ -1,0 +1,61 @@
+
+LOAD "examples/exampleImages/Sheep-PNG-Image.png" AS sheep
+
+CREATE-RECTANGLE AS background
+  WITH width: 600
+  WITH height: 400
+  WITH colour: green
+
+CREATE-LIST AS frames
+
+RESIZE sheep
+  WITH width: 70
+  WITH height: 70
+
+FILTER sheep AS blurredSheep
+  WITH filtering: "blur"
+
+SET 300 AS x
+SET 200 AS y
+
+SET 2 AS xDirection
+
+LOOP i IN 1 TO 500:
+  SET x + xDirection AS x
+  IF (x < 0):
+    SET 0 AS x
+    SET 2 AS xDirection
+  IF (x > 530):
+    SET 530 AS x
+    SET -2 AS xDirection
+  OVERLAY blurredSheep ON background AS frame
+    WITH x: x
+    WITH y: y
+  ADD frames
+    WITH item: frame
+
+FILTER sheep AS sepiaSheep
+  WITH filtering: "sepia"
+
+OVERLAY sepiaSheep ON background AS frame
+  WITH x: x
+  WITH y: y
+
+LOOP i IN 1 TO 10:
+  ADD frames
+    WITH item: frame
+
+ROTATE sepiaSheep
+  WITH angle: 180
+
+OVERLAY sepiaSheep ON background AS frame
+  WITH x: x
+  WITH y: y
+
+LOOP i in 1 TO 10:
+  ADD frames
+    WITH item: frame
+
+SAVE frames
+  WITH duration: 10
+  WITH location: "examples/exampleOutputs/sheep.gif"
