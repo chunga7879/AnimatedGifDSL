@@ -1,7 +1,7 @@
 # Examples
 
-Click each GIF to view it's source code.
+Click each GIF/title to view it's source code.
 
-## Car
+## [Car](examples/car.gifify)
 
 [![car.gif](examples/exampleOutputs/car.gif)](examples/car.gifify)
