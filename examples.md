@@ -1,6 +1,6 @@
 # Examples
 
-Click each GIF or title to view it's source code.
+Click each GIF or title to view its source code.
 
 ## [Car](examples/car.gifify)
 
@@ -25,6 +25,10 @@ Click each GIF or title to view it's source code.
 ## [Spongebob](examples/spongebob.gifify)
 
 [![spongebob.gif](examples/exampleOutputs/spongebob.gif)](examples/spongebob.gifify)
+
+## [Colourful Sheep](examples/colourful-sheep.gifify)
+
+## [![sheep.gif](examples/exampleOutputs/sheep.gif)](examples/colourful-sheep.gifify)
 
 ## [Presentation](video/presentation.gifify)
 
