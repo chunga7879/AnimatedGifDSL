@@ -26,6 +26,8 @@ The entry point to our program is `./src/main/Main.java`. You must specify the l
 | `-onlycheck` | No      | Executes everything up to the static checker. If enabled, it does not run the program.                                                                     |
 | `-shortcuts` | Yes     | Enables shortcuts for function call syntax (see [**Function**](../main/documentation.md#functions) section on API). Requires static checker to be enabled. |
 
+See the Examples folder or [examples.md](examples.md) for example DSL input files.
+
 ### How to write the code
 Our language is similar to programming languages like Python with syntax that reflects natural language.
 

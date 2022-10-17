@@ -1,11 +1,43 @@
 // car gif
-LOAD "examples/car-1.png" as car1
-LOAD "examples/car-2.png" as car2
-LOAD "examples/road.jpg" as road
+LOAD "examples/exampleImages/car-1.png" as car1
+LOAD "examples/exampleImages/car-2.png" as car2
+LOAD "examples/exampleImages/road.jpg" as road
 
 CREATE-LIST AS frames
 
-LOOP i in 1 TO 10:
-  OVERLAY car 1
+RESIZE road
+  WITH height: 400
+  WITH width: 600
 
+RESIZE car1
+  WITH height: 150
+  WITH width: 250
 
+RESIZE car2
+  WITH height: 150
+  WITH width: 250
+
+SET 350 AS car1X
+SET 225 AS car1Y
+
+SET 0 AS car2X
+SET 25 AS car2Y
+
+SET 20 AS car1Speed
+SET 25 AS car2Speed
+
+LOOP i in 1 TO 100:
+  OVERLAY car1 ON road AS frame
+    WITH x: car1X
+    with y: car1Y
+  OVERLAY car2 ON frame AS frame
+    WITH x: car2X
+    with y: car2Y
+  ADD frames
+    WITH item: frame
+  SET car1X - car1Speed AS car1X
+  SET car2X + car2Speed AS car2X
+
+SAVE frames
+  with duration: 8
+  with location: "./examples/exampleOutputs/car.gif"

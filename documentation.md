@@ -18,8 +18,8 @@ This is the updated documentation file after Milestone 3.
     - Stores string characters
   - Colour:
     - Stores r, g, b values
-    - Set by hex values
-      - e.g. '#FFFFFF'
+    - Set by hex values or colour constants
+      - e.g. '#FFFFFF', 'green'
   - List:
     - Stores a list of images
 - Variables are created when `AS [variable]` is used when a function is called

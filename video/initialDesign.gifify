@@ -1,4 +1,5 @@
-// A simple where a cat just spins around in a circle 
+// CAUTION: This is from an old version of the DSL and will not compile
+// A simple where a cat just spins around in a circle
 
 RECTANGLE AS background
   WITH width: 400
