@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Concat extends AbstractFunction {
-    private final static String ACTUAL_NAME = "Concat";
+    public final static String ACTUAL_NAME = "Concat";
 
     @Override
     public Value call(Scope scope) {
