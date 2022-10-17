@@ -562,4 +562,50 @@ public class End2EndTest {
             }
         }
     }
+
+    @Test
+    public void testIndexInBounds() {
+        String input = """
+            CREATE-LIST AS list
+            SET 1 AS x
+            SET 5 AS y
+            ADD list
+              WITH item: x
+            ADD list
+              WITH item: y
+            INDEX as z
+              WITH a: list
+              WITH i: 1
+            """;
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        evaluator.visit(main.b, main.a);
+        Assertions.assertTrue(main.b.hasVar("z"));
+        Assertions.assertEquals(5, main.b.getVar("z").asInteger().get());
+    }
+
+    @Test
+    public void testIndexOutOfBounds() {
+        String input = """
+            CREATE-LIST AS list
+            SET 1 AS x
+            SET 2 AS y
+            ADD list
+              WITH item: x
+            ADD list
+              WITH item: y
+            INDEX as z
+              WITH a: list
+              WITH i: 2
+            """;
+        Pair<Program, Scope> main = compiler.compile(CharStreams.fromString(input));
+        Evaluator evaluator = new Evaluator();
+        try {
+            evaluator.visit(main.b, main.a);
+            Assertions.fail("Should not allow invalid index");
+        } catch (InvalidArgumentException e) {
+            System.out.println(e.getMessage());
+            Assertions.assertEquals(8, e.getLinePosition());
+        }
+    }
 }
