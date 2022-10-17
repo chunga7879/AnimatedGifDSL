@@ -193,7 +193,7 @@ INDEX as idx1
 
 INDEX as idx2
   WITH a: strings
-  WITH i: 0
+  WITH i: 1
 // idx2 = "b"
 ```
 #### File System
